@@ -1,0 +1,7 @@
+export { default as HeaderContent } from './header-content'
+export { default as CardLink } from './card-link'
+export { default as Content } from './content'
+export { default as Footer } from './footer'
+export { default as Title, H1, H2, H3, H4, H5, H6 } from './title'
+export { default as PizzasGrid } from './pizzas-grid'
+export { default as Divider } from './divider'
