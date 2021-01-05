@@ -5,8 +5,7 @@ export default [
     time: 60,
     price: {
       0: 100,
-      1: 200,
-      2: 300
+      1: 200
     }
   },
   {
@@ -14,9 +13,9 @@ export default [
     name: "Micropigmentação Fio a Fio",
     time: 60,
     price: {
-      0: 100,
-      1: 200,
-      2: 300
+      0: 145.50,
+      1: 178,
+      2: 257
     }
   },
   {
@@ -30,7 +29,7 @@ export default [
     }
   },
   {
-    id:2,
+    id:3,
     name: "Cílios Fio a Fio",
     time: 40,
     price: {
@@ -40,7 +39,7 @@ export default [
     }
   },
   {
-    id:2,
+    id:4,
     name: "Cílios Volume Russo",
     time: 40,
     price: {
@@ -50,7 +49,7 @@ export default [
     }
   },
   {
-    id:2,
+    id:5,
     name: "Oxxybioplacent",
     time: 60,
     price: {
@@ -60,7 +59,7 @@ export default [
     }
   },
   {
-    id:2,
+    id:6,
     name: "Rose de Mer Facial",
     time: 60,
     price: {
@@ -70,7 +69,7 @@ export default [
     }
   },
   {
-    id:2,
+    id:7,
     name: "Enzimas Gordura Localizada",
     time: 30,
     price: {
@@ -80,7 +79,7 @@ export default [
     }
   },
   {
-    id:2,
+    id:8,
     name: "CCglow",
     time: 40,
     price: {
@@ -90,7 +89,7 @@ export default [
     }
   },
   {
-    id:2,
+    id:9,
     name: "Capilary",
     time: 40,
     price: {

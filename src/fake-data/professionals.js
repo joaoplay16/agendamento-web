@@ -1,14 +1,11 @@
-export default [
-  {
-    id:0,
+export default {
+  0:{
     name: 'Larissa Morais'
   },
-  {
-    id:1,
+  1:{
     name: 'Hercules Queiroz'
   },
-  {
-    id:2,
+  2:{
     name: 'Raisse Queiroz'
-  },
-]
+  }
+}

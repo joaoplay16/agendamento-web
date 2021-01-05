@@ -1,22 +1,45 @@
-import React from 'react'
+import React, { useState } from 'react'
 import styled from 'styled-components'
 import {
-  List,
+  List as MaterialList,
   ListItem,
   ListItemText,
   Divider,
-  Button,
-  Grid
+  Button as MaterialButton,
+  Grid as MaterialGrid,
+  TextField as MaterialTextField,
+  InputLabel
 } from '@material-ui/core'
-import {
-  Content,
-} from 'ui'
-import procedures from 'fake-data/procedures'
+
+import mockProcedures from 'fake-data/procedures'
+import { Link } from 'react-router-dom'
+import { CHOOSE_PROFESSIONAL } from 'routes'
+import accentRemove from 'utils/accent-remove'
+
 const Scheduling = () => {
+  const [procedures, setProcedures] = useState(() => mockProcedures)
+
+  const handleSearch = (e) => {
+    const procedureName = accentRemove(e.target.value)
+    const regex = new RegExp(procedureName, 'ig')
+    const result = mockProcedures.filter((procedure) => {
+      const match = accentRemove(procedure.name).search(regex) != -1 ? true : false
+      return match
+    })
+    setProcedures(result)
+  }
 
   return (
-    <Content>
-      <Grid container alignItems='align-content-xs-center' justify='justify-xs-center'>
+    <ScheduleContainer>
+      <Grid>
+        <InputLabel>Escolha um serviço</InputLabel>
+        <TextField
+          xs={2}
+          label="Buscar"
+          variant='outlined'
+          autoFocus
+          onChange={handleSearch}
+        />
         <List component='nav'>
           {procedures.map((procedure) => (
             <>
@@ -26,17 +49,56 @@ const Scheduling = () => {
                 <ListItemText
                   primary={procedure.name}
                   secondary={`${procedure.time} min`} />
-                <Button variant='outlined' color='primary'>Reservar</Button>
+
+                <Button
+                  to={{
+                    pathname: CHOOSE_PROFESSIONAL,
+                    state: {procedure}
+                  }}
+                  variant='outlined'
+                  color='primary'>
+                  Reservar
+                  </Button>
+
+
               </ListItem>
               <Divider />
             </>
           ))}
         </List>
       </Grid>
-    </Content>
+    </ScheduleContainer>
   )
 }
 
+const Button = styled(MaterialButton).attrs({
+  component: Link
+})`
+`
+
+const ScheduleContainer = styled.main`
+  display: flex;
+  justify-content: center;
+  margin-top: ${({ theme }) => theme.spacing(3)}px;
+`
+
+const Grid = styled(MaterialGrid).attrs({
+  container: true,
+  xs: 12,
+  sm: 8
+})`
+  display: flex;
+  flex-direction: column;
+  justify-content: center;
+`
+
+const List = styled(MaterialList)`
+  width: 100%;
+`
+const TextField = styled(MaterialTextField)`
+  margin-bottom: ${({ theme }) => theme.spacing(3)}px;
+  margin-top: ${({ theme }) => theme.spacing(1)}px;
+`
 
 
 export default Scheduling

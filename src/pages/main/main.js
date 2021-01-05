@@ -16,6 +16,10 @@ const Schedule = React.lazy(
   () => import('pages/schedule')
 )
 
+const ChooseProfessional = React.lazy(
+  () => import('pages/choose-professional')
+)
+
 const Main = () => {
   return (
     <>
@@ -26,10 +30,13 @@ const Main = () => {
           <Route path={routes.HOME} exact component={Scheduling} />
           <Route path={routes.RESERVATIONS} component={Scheduling} />
           <Route path={routes.SCHEDULE} component={Schedule} />
+          <Route path={routes.CHOOSE_PROFESSIONAL} component={ChooseProfessional} />
           <Route path={routes.MORE} component={Scheduling} />
         </Switch>
       </Suspense>
     <Footer/>
+    <Spacer />
+
     </>
   )
 }

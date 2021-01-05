@@ -2,6 +2,7 @@ import React from 'react'
 import styled from 'styled-components'
 import { Grid as MaterialGrid, Card as MaterialCard } from '@material-ui/core'
 import { CardLink, Content, Footer, H3, H4, H5, HeaderContent } from 'ui'
+import { SCHEDULE, RESERVATIONS } from 'routes'
 
 const Scheduling = () => {
 
@@ -13,12 +14,12 @@ const Scheduling = () => {
       </HeaderContent>
       <Grid >
         <Card backgroundColor="#1db198">
-          <CardLink to='/'>
+          <CardLink to={SCHEDULE}>
             <H5>AGENDAR</H5>
           </CardLink>
         </Card>
         <Card backgroundColor="#34425a">
-          <CardLink to='/checkout' >
+          <CardLink to={RESERVATIONS} >
             <H5>RESERVAS</H5>
           </CardLink>
         </Card>
