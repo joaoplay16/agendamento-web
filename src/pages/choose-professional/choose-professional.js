@@ -1,25 +1,28 @@
 import React, { useEffect, useState } from 'react'
-import { Link } from 'react-router-dom'
 import styled from 'styled-components'
 import {
+  Avatar,
   List as MaterialList,
   ListItem,
   ListItemText,
-  Divider,
-  Button as MaterialButton,
+  ListItemAvatar,
+  ListItemSecondaryAction,
   Grid as MaterialGrid,
-  InputLabel,
-  Typography
 } from '@material-ui/core'
 import mockProfessionals from 'fake-data/professionals'
 import { toMoney } from 'utils/index'
-const Scheduling = ({ location }) => {
+import {
+  Button, 
+  H4, H6,
+ } from 'ui'
+import { CHOOSE_DATE } from 'routes'
+const ChooseProfessional = ({ location }) => {
   const [professionals, setProfessionals] = useState(() => [])
   const { procedure } = location.state
 
   useEffect(() => {
-    const professionalPrices = Object.keys(procedure.price)
-    const result = professionalPrices.map((professionalID) => ({
+    const professionalsKeys = Object.keys(procedure.price)
+    const result = professionalsKeys.map((professionalID) => ({
       ...mockProfessionals[professionalID],
       price: procedure.price[professionalID]
     }))
@@ -34,22 +37,35 @@ const Scheduling = ({ location }) => {
   return (
     <ProfessionalsContainer>
       <Grid>
-        <Typography variant='h4'>{procedure.name}</Typography>
+        <H4 >{procedure.name}</H4>
+        <H6 > Escolha um profissional</H6>
         <List component='nav'>
           {professionals.map((professional) => (
             <ListItem
-              alignItems="flex-center"
+              alignItems="flex-start"
             >
+              <ListItemAvatar>
+                <Avatar alt="Remy Sharp" src={professional.photo} />
+              </ListItemAvatar>
               <ListItemText
                 primary={professional.name}
                 secondary={toMoney(professional.price)}
-                />
+              />
 
-              <Button
-                variant='outlined'
-                color='primary'>
-                Escolher
+              <ListItemSecondaryAction>
+                <Button
+                  to={{
+                    pathname: CHOOSE_DATE,
+                    state: {
+                      procedure,
+                      professional
+                    }
+                  }}
+                  variant='outlined'
+                  color='primary'>
+                  Escolher
                   </Button>
+              </ListItemSecondaryAction>
             </ListItem>
           ))}
         </List>
@@ -57,11 +73,6 @@ const Scheduling = ({ location }) => {
     </ProfessionalsContainer>
   )
 }
-
-const Button = styled(Link).attrs({
-  component: MaterialButton
-})`
-`
 
 const ProfessionalsContainer = styled.main`
   display: flex;
@@ -83,4 +94,4 @@ const List = styled(MaterialList)`
   width: 100%;
 `
 
-export default Scheduling
+export default ChooseProfessional

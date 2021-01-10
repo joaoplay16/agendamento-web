@@ -4,6 +4,7 @@ import {
   List as MaterialList,
   ListItem,
   ListItemText,
+  ListItemSecondaryAction,
   Divider,
   Button as MaterialButton,
   Grid as MaterialGrid,
@@ -20,7 +21,8 @@ const Scheduling = () => {
   const [procedures, setProcedures] = useState(() => mockProcedures)
 
   const handleSearch = (e) => {
-    const procedureName = accentRemove(e.target.value)
+    let procedureName = accentRemove(e.target.value)
+    procedureName = procedureName.replace(/[^\w\s]+/g, '') // remove symbols
     const regex = new RegExp(procedureName, 'ig')
     const result = mockProcedures.filter((procedure) => {
       const match = accentRemove(procedure.name).search(regex) != -1 ? true : false
@@ -31,15 +33,16 @@ const Scheduling = () => {
 
   return (
     <ScheduleContainer>
-      <Grid>
+      <Grid container justify='center' style={{padding: 10}}>
         <InputLabel>Escolha um serviço</InputLabel>
         <TextField
-          xs={2}
           label="Buscar"
           variant='outlined'
           autoFocus
           onChange={handleSearch}
         />
+      </Grid>
+      <Grid>
         <List component='nav'>
           {procedures.map((procedure) => (
             <>
@@ -49,18 +52,18 @@ const Scheduling = () => {
                 <ListItemText
                   primary={procedure.name}
                   secondary={`${procedure.time} min`} />
-
-                <Button
-                  to={{
-                    pathname: CHOOSE_PROFESSIONAL,
-                    state: {procedure}
-                  }}
-                  variant='outlined'
-                  color='primary'>
-                  Reservar
+                <ListItemSecondaryAction>
+                  <Button
+                    to={{
+                      pathname: CHOOSE_PROFESSIONAL,
+                      state: { procedure }
+                    }}
+                    variant='outlined'
+                    color='primary'
+                    size='small'>
+                    Reservar
                   </Button>
-
-
+                </ListItemSecondaryAction>
               </ListItem>
               <Divider />
             </>
@@ -78,7 +81,8 @@ const Button = styled(MaterialButton).attrs({
 
 const ScheduleContainer = styled.main`
   display: flex;
-  justify-content: center;
+  flex-direction: column;
+  align-items: center;
   margin-top: ${({ theme }) => theme.spacing(3)}px;
 `
 

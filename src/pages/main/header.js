@@ -12,10 +12,9 @@ import {
 import { ReactComponent as MainLogo } from 'images/logo-react-zzaria.svg'
 import { useAuth } from 'hooks'
 import { Link } from 'react-router-dom'
-import { HOME } from 'routes'
 
 const Header = () => {
-  const { userInfo, logout } = useAuth()
+  // const { userInfo, logout } = useAuth()
   const [anchorElement, setAnchorElement] = useState(null)
 
   const handleOpenMenu = (e) => {
@@ -29,13 +28,13 @@ const Header = () => {
     <AppBar>
       <Toolbar>
         <LogoContainer>
-          <LinkLogo to={HOME}>
+          {/* <LinkLogo to={HOME}>
             <Logo />
-          </LinkLogo>
+          </LinkLogo> */}
         </LogoContainer>
 
         <Typography color='inherit'>
-          Olá {userInfo.user.firstName}
+          {/* Olá {userInfo.user.firstName} */}
         </Typography>
         <IconButton color='inherit' onClick={handleOpenMenu}>
           <AccountCircle />
@@ -46,7 +45,7 @@ const Header = () => {
           onClose={handleClose}
           anchorEl={anchorElement}
         >
-          <MenuItem onClick={logout}>Sair</MenuItem>
+          {/* <MenuItem onClick={logout}>Sair</MenuItem> */}
         </Menu>
       </Toolbar>
     </AppBar>

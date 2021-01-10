@@ -1,101 +1,106 @@
-import React from 'react'
-import t from 'prop-types'
+import React, { useEffect } from 'react'
 import styled from 'styled-components'
+import { format } from 'date-fns'
 import {
   Grid,
-  List,
-  ListItem,
+  Card as MaterialCard,
+  CardContent as MaterialCardContent,
+  CardActions,
   Paper,
-  TextField as MaterialTextField,
-  Typography
+  Typography,
+  IconButton
 } from '@material-ui/core'
 import {
-  Content,
-  Title as UiTitle
+  DeleteSharp
+} from '@material-ui/icons'
+import {
+  Content
 } from 'ui'
-import { useOrder } from 'hooks'
-import { singularOrPlural } from 'utils'
-function Checkout () {
-  const { order } = useOrder()
-  console.log('order', order)
+import { useShoppingCart } from 'hooks'
+import { singularOrPlural, toMoney } from 'utils'
+function Checkout ({ location }) {
+  const { schedules } = useShoppingCart()
+
+  useEffect(() => {
+    console.log('schedules', schedules)
+    document.title = location.pathname.replace(/^\//, '')
+  }, [])
+
   return (
     <Content>
-      <Grid container spacing={4}>
-        <Grid item xs={12} md={6}>
-          <Title>Qual o endereço para entrega</Title>
-          <PaperContainer>
-            <Grid container spacing={2}>
-              <TextField label='CEP' xs={4} autoFocus />
-              <Grid item xs={8} />
-              <TextField label='Rua' xs={9} />
-              <TextField label='Número' xs={3} />
-              <TextField label='Complemento' xs={12} />
-              <TextField label='Cidade' xs={9} />
-              <TextField label='Estado' xs={3} />
-            </Grid>
-          </PaperContainer>
-
-          <Title>Qual o seu telefone?</Title>
-          <PaperContainer>
-            <TextField label='Telefone' xs={12} />
-          </PaperContainer>
-        </Grid>
-        <Grid item xs={12} md={6}>
-          <Title>Informações do seu pedido</Title>
-          <PaperContainer>
-            <List>
-              {order.pizzas.map((pizza, index) => {
-                const { pizzaFlavours, pizzaSize, quantity } = pizza
-                const { name, slices, flavours } = pizzaSize
-                return (
-                  <ListItem key={index}>
-                    <Typography>
-                      {quantity} {' '}
-                      {singularOrPlural(quantity, 'pizza', 'pizzas')}  {' '}
-                      <b>{name.toUpperCase()}</b> {'- '}
-                      ({slices} {singularOrPlural(slices, 'fatia', 'fatias')}, {' '}
-                      {flavours} {singularOrPlural(flavours, 'sabor', 'sabores')})
-
-                    <br />
-
-                      {singularOrPlural(pizzaFlavours.length, 'no sabor', 'nos sabores')} {' '}
-                      <b>{pizzaFlavours.map(({ name }) => name).join(', ')}</b>
-                    </Typography>
-                  </ListItem>
-                )
-              })}
-
-            </List>
-          </PaperContainer>
+      <Grid container justify='center'>
+        <Grid item sm={8} lg={6} md={6} xs={12}>
+          <Grid container spacing={2}>
+            {schedules.map((order) => (
+              <Card>
+                <CardContent className='first-card-content'>
+                  <CardText variant='subtitle1'>
+                    {new Date(order.selectedDate)
+                      .toLocaleDateString('pt-BR', {weekday: 'short'})}
+                    </CardText>
+                  <CardText variant='h5'>
+                    {format(new Date(order.selectedDate), 'dd')}
+                    </CardText>
+                  <CardText variant='subtitle1'>{order.selectedTime}</CardText>
+                </CardContent>
+                <CardContent className='card-info'>
+                  <CardText variant='h6' noWrap>{order.procedure.name}</CardText>
+                  <CardText variant='subtitle1' noWrap>{order.professional.name}</CardText>
+                  <CardText variant='subtitle1' >{toMoney(order.professional.price)}</CardText>
+                </CardContent>
+                <CardContent className='card-action'>
+                  <CardActions>
+                    <IconButton >
+                      <DeleteSharp />
+                    </IconButton>
+                  </CardActions>
+                </CardContent>
+              </Card>
+            ))}
+          </Grid>
         </Grid>
       </Grid>
     </Content>
   )
 }
 
-function TextField ({ xs, autoFocus, ...props }) {
-  return (
-    <Grid item xs={xs}>
-      <MaterialTextField
-        fullWidth
-        variant='outlined'
-        inputProps={{
-          autoFocus
-        }}
-        {...props} />
-    </Grid>
-  )
-}
+const Card = styled(MaterialCard)`
+  display: flex;
+  flex-direction: row;
+  flex-grow:1;
+  border-left: 5px solid cyan;
+  margin-bottom: ${({ theme }) => theme.spacing(1)}px; 
+`
+const CardContent = styled(MaterialCardContent)`
+  display: flex;
+  flex-direction: column;
+  align-items: flex-start;
+  flex-wrap: wrap;
+  margin-top: ${({ theme }) => theme.spacing(1)}px; 
+  margin-bottom: ${({ theme }) => theme.spacing(1)}px; 
+  padding-left: ${({ theme }) => theme.spacing(1)}px;
+  padding-right: ${({ theme }) => theme.spacing(1)}px;
+  padding-top: 0px;
+  padding-bottom: 0px;
 
-TextField.propTypes = {
-  autoFocus: t.bool,
-  xs: t.number
-}
+  &&.first-card-content{
+    border-right: 2px solid #111;
+  }
 
-const Title = styled(UiTitle).attrs({
-  variant: 'h6'
-})`
-  text-align: left;
+  &&.card-info{
+    max-width: 58%;
+  }
+
+  &&.card-action{
+    flex-grow: 1;
+    align-items: flex-end;
+    justify-content: center;
+  }
+`
+
+const CardText = styled(Typography)`
+  max-width: 100%;
+  width: 100%;
 `
 
 const PaperContainer = styled(Paper)`

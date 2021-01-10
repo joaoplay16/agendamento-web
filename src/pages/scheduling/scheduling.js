@@ -53,6 +53,7 @@ const Card = styled(MaterialCard).attrs({
   background-color: ${({ backgroundColor }) => backgroundColor}; 
   justify-content: center;
   margin-right: ${({ theme }) => theme.spacing(1)}px;
+  min-width: 180px;
 `
 
 

@@ -1,28 +1,30 @@
 import React, { createContext, useState } from 'react'
 import t from 'prop-types'
-const OrderContext = createContext()
+const ShoppingCartContext = createContext()
 
-function OrderProvider ({ children }) {
-  const [pizzas, addPizza] = useState([])
+function ShoppingCartProvider ({ children }) {
+  const [schedules, addSchedule] = useState([])
 
-  function addPizzaToOrder (pizza) {
-    addPizza((pizzas) => pizzas.concat(pizza))
-    console.log('pedido', pizza)
+  function addScheduleToShoppingCart (schedule) {
+    addSchedule((schedules) => schedules.concat(schedule))
   }
+
+  function removeScheduleFromShoppingCart(){
+    
+  }
+
   return (
-    <OrderContext.Provider value={{
-      order: {
-        pizzas
-      },
-      addPizzaToOrder
+    <ShoppingCartContext.Provider value={{
+      schedules,
+      addScheduleToShoppingCart
     }}>
       {children}
-    </OrderContext.Provider>
+    </ShoppingCartContext.Provider>
   )
 }
 
-OrderProvider.propTypes = {
+ShoppingCartProvider.propTypes = {
   children: t.node.isRequired
 }
 
-export { OrderProvider, OrderContext }
+export { ShoppingCartProvider, ShoppingCartContext }
