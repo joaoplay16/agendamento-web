@@ -84,6 +84,7 @@ const ScheduleContainer = styled.main`
   flex-direction: column;
   align-items: center;
   margin-top: ${({ theme }) => theme.spacing(3)}px;
+  margin-bottom: ${({ theme }) => theme.spacing(8)}px;
 `
 
 const Grid = styled(MaterialGrid).attrs({

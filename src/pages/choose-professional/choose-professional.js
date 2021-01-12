@@ -40,8 +40,8 @@ const ChooseProfessional = ({ location }) => {
         <H4 >{procedure.name}</H4>
         <H6 > Escolha um profissional</H6>
         <List component='nav'>
-          {professionals.map((professional) => (
-            <ListItem
+          {professionals.map((professional, index) => (
+            <ListItem key={index}
               alignItems="flex-start"
             >
               <ListItemAvatar>

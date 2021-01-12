@@ -3,20 +3,21 @@ import t from 'prop-types'
 const ShoppingCartContext = createContext()
 
 function ShoppingCartProvider ({ children }) {
-  const [schedules, addSchedule] = useState([])
+  const [schedules, addSchedule] = useState(() => [])
 
   function addScheduleToShoppingCart (schedule) {
     addSchedule((schedules) => schedules.concat(schedule))
   }
 
-  function removeScheduleFromShoppingCart(){
-    
+  function removeScheduleFromShoppingCart(scheduleToRemove){
+    addSchedule((schedules) => schedules.filter(item => item !== scheduleToRemove))
   }
 
   return (
     <ShoppingCartContext.Provider value={{
       schedules,
-      addScheduleToShoppingCart
+      addScheduleToShoppingCart,
+      removeScheduleFromShoppingCart
     }}>
       {children}
     </ShoppingCartContext.Provider>
