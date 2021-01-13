@@ -73,7 +73,6 @@ function Checkout ({ location }) {
             ))}
           </Grid>
           <Spacer />
-
           <Grid item xs={12}>
             <Grid container justify='center'>
               <Button
@@ -109,9 +108,9 @@ function Checkout ({ location }) {
             <Spacer />
             <FormControl>
               <RadioGroup>
-                <FormControlLabel value="card" control={<Radio color='secondary'/>} label="Cartão de crédito" />
-                <FormControlLabel value="spot" control={<Radio color='secondary'/>} label="Pagamento no local" />
-                <FormControlLabel value="bank-slip" control={<Radio color='secondary'/>} label="Boleto" />
+                <FormControlLabel value="card" control={<Radio color='secondary' />} label="Cartão de crédito" />
+                <FormControlLabel value="spot" control={<Radio color='secondary' />} label="Pagamento no local" />
+                <FormControlLabel value="bank-slip" control={<Radio color='secondary' />} label="Boleto" />
               </RadioGroup>
             </FormControl>
             <Spacer />
@@ -122,6 +121,8 @@ function Checkout ({ location }) {
                 color='primary'>
                 Concluir agendamento
               </Button>
+              <Spacer />
+              <Spacer />
             </Grid>
           </Grid>
         </Grid>

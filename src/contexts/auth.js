@@ -17,7 +17,6 @@ function AuthProvider ({ children }) {
   const login = useCallback(() => {
     const provider = new firebase.auth.GoogleAuthProvider()
     firebase.auth().signInWithRedirect(provider)
-    console.log('login')
   }, [])
 
   const logout = useCallback(() => {

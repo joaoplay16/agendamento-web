@@ -1,7 +1,7 @@
 import React from 'react'
 import styled from 'styled-components'
 import { Button, Grid } from '@material-ui/core'
-import { ReactComponent as MainLogo } from 'images/logo-react-zzaria.svg'
+// import { ReactComponent as MainLogo } from 'images/logo-react-zzaria.svg'
 import { useAuth } from 'hooks'
 function Login () {
   const { login } = useAuth()
@@ -9,12 +9,12 @@ function Login () {
   return (
     <Container>
       <Grid container justify='center' spacing={5}>
-        <Grid item>
+        {/* <Grid item>
           <Logo />
-        </Grid>
+        </Grid> */}
         <Grid item xs={12} container justify='center'>
           <GitHubButton onClick={login}>
-            Entrar com GitHub
+            Entrar com Google
           </GitHubButton>
         </Grid>
       </Grid>
@@ -25,9 +25,9 @@ function Login () {
 const Container = styled.div`
   padding: ${({ theme }) => theme.spacing(3)}px;
 `
-const Logo = styled(MainLogo)`
-  width: 100%;
-`
+// const Logo = styled(MainLogo)`
+//   width: 100%;
+// `
 const GitHubButton = styled(Button).attrs({
   variant: 'contained',
   fullWidth: true
