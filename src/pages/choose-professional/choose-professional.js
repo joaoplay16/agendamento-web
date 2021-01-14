@@ -9,30 +9,34 @@ import {
   ListItemSecondaryAction,
   Grid as MaterialGrid,
 } from '@material-ui/core'
-import mockProfessionals from 'fake-data/professionals'
 import { toMoney } from 'utils/index'
 import {
   Button, 
   H4, H6,
  } from 'ui'
 import { CHOOSE_DATE } from 'routes'
+import { useDatabase } from 'hooks'
 const ChooseProfessional = ({ location }) => {
   const [professionals, setProfessionals] = useState(() => [])
   const { procedure } = location.state
 
+  const {professionals: fetchedProfessionals, fetchProfessionals} = useDatabase()
+
   useEffect(() => {
-    const professionalsKeys = Object.keys(procedure.price)
-    const result = professionalsKeys.map((professionalID) => ({
-      ...mockProfessionals[professionalID],
-      price: procedure.price[professionalID]
-    }))
-    setProfessionals(result)
+    fetchProfessionals()
   }, [])
 
   useEffect(() => {
-
-    console.log("professionals", professionals)
-  })
+    const professionalsKeys = Object.keys(procedure.price)
+    if(fetchedProfessionals !== undefined){
+      const result = professionalsKeys.map((professionalID) => ({
+        ...fetchedProfessionals[professionalID],
+        price: procedure.price[professionalID]
+      }))
+      setProfessionals(result)
+    }
+    console.log("proffisionais", fetchedProfessionals);
+  }, [fetchedProfessionals])
 
   return (
     <ProfessionalsContainer>

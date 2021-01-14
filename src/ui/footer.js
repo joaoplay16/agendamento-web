@@ -7,20 +7,30 @@ import {
 
 import styled from 'styled-components'
 import { useApplication } from 'hooks'
+import { HOME } from 'routes'
 
 function Footer ({ location }) {
 
   const { appState } = useApplication()
   const currentPathName = location.pathname
+
   useEffect(() => {
-    console.log('currentPathName', currentPathName);
+    // console.log('isActiveItem', isActiveItem('/reservas'))
   })
+
+  function isActiveItem (itemPathname) {
+    if (itemPathname === HOME) {
+      return itemPathname === currentPathName
+    }
+    const er = new RegExp(`^${itemPathname}`, 'ig')
+    return currentPathName.search(er) > -1
+  }
 
   return (
     <FooterContent>
       <ToolbarContainer>
         {appState.toolbarItems.map((item, index) => {
-          const isActive = item.to.pathname == currentPathName
+          const isActive = isActiveItem(item.to.pathname)
           return (
             <ToolbarItem
               active={isActive}
@@ -76,7 +86,7 @@ const IconButton = styled(MaterialIconButton)`
       svg{
         path {
           fill: ${({ active, theme }) => active ?
-            theme.palette.primary.main : ''};
+    theme.palette.primary.main : ''};
         }
       }
     };
