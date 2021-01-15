@@ -20,7 +20,7 @@ const ChooseProfessional = ({ location }) => {
   const [professionals, setProfessionals] = useState(() => [])
   const { procedure } = location.state
 
-  const {professionals: fetchedProfessionals, fetchProfessionals} = useDatabase()
+  const { professionals: fetchedProfessionals, fetchProfessionals } = useDatabase()
 
   useEffect(() => {
     fetchProfessionals()
@@ -30,6 +30,7 @@ const ChooseProfessional = ({ location }) => {
     const professionalsKeys = Object.keys(procedure.price)
     if(fetchedProfessionals !== undefined){
       const result = professionalsKeys.map((professionalID) => ({
+        id: professionalID,
         ...fetchedProfessionals[professionalID],
         price: procedure.price[professionalID]
       }))
@@ -44,8 +45,8 @@ const ChooseProfessional = ({ location }) => {
         <H4 >{procedure.name}</H4>
         <H6 > Escolha um profissional</H6>
         <List component='nav'>
-          {professionals.map((professional, index) => (
-            <ListItem key={index}
+          {professionals.map((professional) => (
+            <ListItem key={professional.id}
               alignItems="flex-start"
             >
               <ListItemAvatar>

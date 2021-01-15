@@ -8,6 +8,7 @@ import {
 import styled from 'styled-components'
 import { useApplication } from 'hooks'
 import { HOME } from 'routes'
+import pathStartWith from 'utils/path-comparator'
 
 function Footer ({ location }) {
 
@@ -22,8 +23,8 @@ function Footer ({ location }) {
     if (itemPathname === HOME) {
       return itemPathname === currentPathName
     }
-    const er = new RegExp(`^${itemPathname}`, 'ig')
-    return currentPathName.search(er) > -1
+    
+    return pathStartWith(itemPathname, currentPathName)
   }
 
   return (

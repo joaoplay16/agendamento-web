@@ -14,8 +14,8 @@ function DatabaseProvider ({ children }) {
   const [procedures, setProcedures] = useState(() => [])
   const [professionals, setProfessionals] = useState(() => {})
 
-  const fetchProcedures = useCallback(async () => {
-    await db.collection('admin/scheduling/procedures')
+  const fetchProcedures = useCallback(() => {
+    db.collection('admin/scheduling/procedures')
       .get().then(querySnapshot => {
         let procedures = querySnapshot.docs.map(doc => doc.data())
         setProcedures(procedures)

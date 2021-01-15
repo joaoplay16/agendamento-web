@@ -4,14 +4,12 @@ import {
 } from '@material-ui/core'
 import Header from './header'
 import { Switch, Route } from 'react-router-dom'
-
 import { Footer } from 'ui'
 import { HOME, SCHEDULE, RESERVATIONS, MORE } from 'routes'
 
 const Scheduling = React.lazy(
   () => import('pages/scheduling')
 )
-
 const Reservations = React.lazy(
   () => import('pages/reservations')
 )
@@ -29,7 +27,7 @@ const Main = () => {
           <Route path={HOME} exact component={Scheduling} />
           <Route path={SCHEDULE} component={Schedule} />
           <Route path={RESERVATIONS} component={Reservations} />
-          <Route path={MORE} component={Scheduling} />
+          <Route path={MORE} component={Scheduling} /> 
         </Switch>
       </Suspense>
       <Footer />
