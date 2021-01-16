@@ -1,4 +1,4 @@
-import React, { useEffect, useState } from 'react'
+import React, { useState } from 'react'
 import {
   Button,
   Chip,
@@ -165,8 +165,6 @@ function AddProfessional () {
                   Nenhum horário definido
               </Typography>
               }
-
-
               {timeTable[selectedWeek].map((hour) => (
                 <Grid item>
                   <Chip
@@ -178,7 +176,6 @@ function AddProfessional () {
                 </Grid>
               ))}
               <Divider />
-
               <Grid item xs={12}>
                 <Grid container spacing={1}>
                   {hours.map(hour => (
@@ -205,7 +202,6 @@ function AddProfessional () {
                     type='submit'>
                     Adicionar
                   </Button>
-
                 </Grid>
               </Grid>
             </Grid>

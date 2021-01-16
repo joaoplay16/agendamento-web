@@ -60,9 +60,9 @@ const ChooseDate = ({ location }) => {
   function getTimeTable () {
     const currentWeekDay = selectedDate.getDay()
     const dateString = selectedDate.toLocaleDateString()
-    const time_table = professional.time_table 
-    if (time_table.specific_date.hasOwnProperty(dateString)) {
-      return time_table.specific_date[dateString]
+    const time_table = professional.timeTable 
+    if (time_table.specificDate.hasOwnProperty(dateString)) {
+      return time_table.specificDate[dateString]
     }
     return time_table.week[currentWeekDay]
   }
