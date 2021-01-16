@@ -1,21 +1,10 @@
-import React, { useEffect, useState } from 'react'
-import styled from 'styled-components'
-import {
-  Button,
-  Chip,
-  Grid,
-  FormControl,
-  FormControlLabel,
-  Radio,
-  RadioGroup,
-  ListItem,
-  ListItemText
-} from '@material-ui/core'
-import weekDays from 'static-data/week-days'
-import hours from 'static-data/hours'
-import { Content, PaperContainer, TextField, H5 } from 'ui'
+import React from 'react'
 import { Route, Switch } from 'react-router-dom'
-import { ADMIN_PROFESSIONALS, ADMIN_PROFESSIONALS_ADD } from 'routes'
+import {
+  ADMIN_PROFESSIONALS,
+  ADMIN_PROFESSIONALS_ADD,
+  ADMIN_PROFESSIONALS_UPDATE
+} from 'routes'
 
 const ProfessionalsList = React.lazy(() =>
   import('pages/admin/professionals/main')
@@ -23,12 +12,16 @@ const ProfessionalsList = React.lazy(() =>
 const AddProfessional = React.lazy(() =>
   import('pages/admin/professionals/add')
 )
+const UpdateProfessional = React.lazy(() =>
+  import('pages/admin/professionals/update')
+)
 
 function Professionals () {
   return (
     <Switch>
       <Route exact path={ADMIN_PROFESSIONALS} component={ProfessionalsList} />
       <Route path={ADMIN_PROFESSIONALS_ADD} component={AddProfessional} />
+      <Route path={ADMIN_PROFESSIONALS_UPDATE} component={UpdateProfessional} />
     </Switch>
   )
 }

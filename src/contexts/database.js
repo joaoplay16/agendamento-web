@@ -13,7 +13,7 @@ const PROFESSIONALS = 'admin/scheduling/professionals'
 function DatabaseProvider ({ children }) {
   const db = firebase.firestore()
   const [procedures, setProcedures] = useState(() => [])
-  const [professionals, setProfessionals] = useState(() => { })
+  const [professionals, setProfessionals] = useState(() => {})
 
   const fetchProcedures = useCallback(() => {
     db.collection('admin/scheduling/procedures')
@@ -40,45 +40,41 @@ function DatabaseProvider ({ children }) {
     const res = db.collection(PROFESSIONALS)
       .add(professional)
       .then((docRef) => {
-        console.log("Document written with ID: ", docRef.id)
         return {
           success: true,
-          message:'Profissional adicionado!'
+          message: 'Profissional adicionado!'
         }
       })
       .catch(function (error) {
-        console.error("Error adding document: ", error);
         return {
           success: false,
-          message:'Houve um erro.'
+          message: 'Houve um erro.'
         }
       })
-      return res
+    return res
   }
 
   const updateProfessional = (professional) => {
-    const professionalRef = db.collection(PROFESSIONALS).doc(professional.id)
-      professionalRef.update({
-        ...professional
-      }).then(() => {
-        return {
-          success: true,
-          message:'Profissional atualizado!'
-        }
-      })
-      .catch(function (error) {
+    let {id, ...professionalWithoutID } = professional
+    const professionalRef = db.collection(PROFESSIONALS)
+      .doc(id)
+    const res = professionalRef.update({
+      ...professionalWithoutID
+    }).then(() => {
+      return {
+        success: true,
+        message: 'Profissional atualizado!'
+      }
+    }).catch(function (error) {
+        console.log('updateProfessional error', error)
         return {
           success: false,
-          message:'Houve um erro.'
+          message: 'Houve um erro.'
         }
       })
 
-      return res
+    return res
   }
-
-  const updateProfessional = useCallback((id)=>{
-    
-  },[])
 
   return (
     <DatabaseContext.Provider value={{

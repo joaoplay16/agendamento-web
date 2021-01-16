@@ -116,11 +116,11 @@ function AddProfessional () {
 
   return (
     <Content>
-      <Grid container spacing={1}>
-        <PaperContainer>
-          <Grid item xs={12}><H5>Novo profissional</H5></Grid>
-          <form onSubmit={handleSubmit}>
-            <Grid container spacing={1}>
+      <PaperContainer>
+        <form onSubmit={handleSubmit}>
+          <Grid container spacing={2}>
+            <Grid item xs={12}><H5>Atualizar profissional</H5></Grid>
+            <Grid item md={6} xs={12}>
               <TextField
                 name='name'
                 variant='outlined'
@@ -128,90 +128,89 @@ function AddProfessional () {
                 value={professional.name}
                 xs={12}
                 required
-                onChange={handleChange} />
+                onChange={handleChange}
+              />
+            </Grid>
+            <Grid item md={6} xs={12}>
               <TextField
                 name='photo'
                 variant='outlined'
                 value={professional.photo}
-
                 label='Foto'
                 required
                 xs={12} onChange={handleChange} />
             </Grid>
-            <Grid container spacing={1} justify='center'>
-              <Grid item xs={12}><H5>Horário</H5></Grid>
-              <Grid item xs={12}>
-                <FormControl component="fieldset">
-                  <RadioGroup
-                    row
-                    aria-label="position"
-                    name="position"
-                    defaultValue='0'
-                    onChange={handleWeekChange}>
-                    {weekDays.map(day => (
-                      <FormControlLabel key={day.value}
-                        value={day.value}
-                        control={<Radio color="secondary" />}
-                        label={day.label}
-                        labelPlacement="top"
-                      />
-                    ))}
-                  </RadioGroup>
-                </FormControl>
-              </Grid>
-              <Divider />
-              {timeTable[selectedWeek].length == 0 &&
-                <Typography>
-                  Nenhum horário definido
-              </Typography>
-              }
-
-
-              {timeTable[selectedWeek].map((hour) => (
-                <Grid item>
-                  <Chip
-                    key={hour}
-                    label={hour}
-                    color="secondary"
-                    size="small"
-                    onDelete={removeHour(hour)} />
-                </Grid>
-              ))}
-              <Divider />
-
-              <Grid item xs={12}>
-                <Grid container spacing={1}>
-                  {hours.map(hour => (
-                    <Grid item >
-                      <Button
-                        variant='outlined'
-                        color='secondary'
-                        onClick={addHour(hour)}
-                        disabled={
-                          timeTableOfSelectedWeek.includes(hour)
-                        }>
-                        {hour}
-                      </Button>
-                    </Grid>
+            <Divider />
+            <Grid item xs={12}><H5>Horário</H5></Grid>
+            <Grid container item xs={12} justify='center'>
+              <FormControl component="fieldset">
+                <RadioGroup
+                  row
+                  aria-label="position"
+                  name="position"
+                  defaultValue='0'
+                  onChange={handleWeekChange}>
+                  {weekDays.map(day => (
+                    <FormControlLabel key={day.value}
+                      value={day.value}
+                      control={<Radio color="secondary" />}
+                      label={day.label}
+                      labelPlacement="top"
+                    />
                   ))}
-                </Grid>
-              </Grid>
-              <Spacer />
-              <Grid item xs={12}>
-                <Grid container spacing={1} justify='center'>
-                  <Button
-                    variant='contained'
-                    color='secondary'
-                    type='submit'>
-                    Adicionar
-                  </Button>
-
-                </Grid>
+                </RadioGroup>
+              </FormControl>
+            </Grid>
+            <Divider />
+            <Grid item xs={12}>
+              <Grid container justify='flex-start' spacing={1}>
+                {timeTable[selectedWeek].length == 0 &&
+                  <Typography>
+                    Nenhum horário definido
+              </Typography>
+                }
+                {timeTable[selectedWeek].map((hour) => (
+                  <Grid item>
+                    <Chip
+                      key={hour}
+                      label={hour}
+                      color="secondary"
+                      size="small"
+                      onDelete={removeHour(hour)} />
+                  </Grid>
+                ))}
               </Grid>
             </Grid>
-          </form>
-        </PaperContainer>
-      </Grid>
+            <Divider />
+            <Grid container item xs={12} justify='center' spacing={1}>
+              {hours.map(hour => (
+                <Grid item >
+                  <Button
+                    variant='outlined'
+                    color='secondary'
+                    onClick={addHour(hour)}
+                    disabled={
+                      timeTableOfSelectedWeek.includes(hour)
+                    }>
+                    {hour}
+                  </Button>
+                </Grid>
+              ))}
+            </Grid>
+            <Grid container item xs={12} justify='center' spacing={1}>
+              <Spacer />
+              <Button
+                variant='contained'
+                color='secondary'
+                type='submit'>
+                Atualizar
+                  </Button>
+              <Spacer />
+            </Grid>
+
+          </Grid>
+        </form>
+      </PaperContainer>
       <Snackbar
         open={snackBar.open}
         onClose={handleCloseSnackbar}
