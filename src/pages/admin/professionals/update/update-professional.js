@@ -152,7 +152,7 @@ function UpdateProfessional ({ location }) {
             </Grid>
             <Divider />
             <Grid item xs={12}>
-              <Grid container justify='flex-start' spacing={1}>
+              <Grid container justify='center' spacing={1}>
                 {timeTable[selectedWeek].length == 0 &&
                   <Typography>
                     Nenhum horário definido

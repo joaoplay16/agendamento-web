@@ -119,7 +119,7 @@ function AddProfessional () {
       <PaperContainer>
         <form onSubmit={handleSubmit}>
           <Grid container spacing={2}>
-            <Grid item xs={12}><H5>Atualizar profissional</H5></Grid>
+            <Grid item xs={12}><H5>Adicionar profissional</H5></Grid>
             <Grid item md={6} xs={12}>
               <TextField
                 name='name'
@@ -163,7 +163,7 @@ function AddProfessional () {
             </Grid>
             <Divider />
             <Grid item xs={12}>
-              <Grid container justify='flex-start' spacing={1}>
+              <Grid container justify='center' spacing={1}>
                 {timeTable[selectedWeek].length == 0 &&
                   <Typography>
                     Nenhum horário definido
@@ -203,7 +203,7 @@ function AddProfessional () {
                 variant='contained'
                 color='secondary'
                 type='submit'>
-                Atualizar
+                Salvar
                   </Button>
               <Spacer />
             </Grid>

@@ -1,32 +1,58 @@
-import React from 'react'
+import React, { useEffect } from 'react'
 import styled from 'styled-components'
 import { Grid as MaterialGrid, Card as MaterialCard } from '@material-ui/core'
-import { CardLink, Content, H3, H5, HeaderContent } from 'ui'
+import { CardLink, Content, H3, H4,H5, HeaderContent, Button } from 'ui'
 import { SCHEDULE, RESERVATIONS } from 'routes'
-
+import { Link } from 'react-router-dom'
+import {createCharge} from 'services/juno'
 const Scheduling = () => {
+  useEffect(()=>{
+    createCharge()
+  },[])
   return (
-      <MainContent>
-        <HeaderContent>
+    <MainContent>
+      <Grid
+        direction='column'
+        container spacing={6}
+      >
+        <Grid item xs={12}>
           <MainTitle>Agendamento online</MainTitle>
-        </HeaderContent>
-        <Grid container justify='flex-end'>
-          <Card backgroundColor="#1db198">
-            <CardLink to={SCHEDULE}>
-              <H5>AGENDAR</H5>
-            </CardLink>
-          </Card>
-          <Card backgroundColor="#34425a">
-            <CardLink to={RESERVATIONS} >
-              <H5>RESERVAS</H5>
-            </CardLink>
-          </Card>
         </Grid>
-      </MainContent>
+        <Grid item xs={12}>
+          <ButtonsContainer
+            direction='row'
+            container
+            justify='center'>
+            <BigButton to={SCHEDULE}>Agendar</BigButton>
+            <BigButton backgroundColor='#34425a' to={RESERVATIONS}>Reservar</BigButton>
+          </ButtonsContainer>
+        </Grid>
+      </Grid>
+    </MainContent>
   )
 }
 
+const BigButton = styled(Link)`
+  align-items: center;
+  background-color: ${({theme, backgroundColor}) => 
+    backgroundColor ? backgroundColor : theme.palette.primary.main};
+  border-radius: 8px;
+  color: white;
+  display: flex;
+  flex-direction: column;
+  font-size: 1.3rem;
+  height: 110px;
+  justify-content: center;
+  margin-right: 5px;
+  text-decoration: none;
+  text-transform: uppercase;
+  width: 180px;
+`
+
 const MainContent = styled(Content)`
+display: flex;
+align-content: space-around;
+padding-top: ${({theme}) => theme.spacing(15)}px;
 background: linear-gradient(rgba(254,254,254,0.3),rgba(254,254,254,0.3)),
                url(https://instagram.fthe11-1.fna.fbcdn.net/v/t51.2885-15/e35/89358927_2375870306038400_6794170017724109574_n.jpg?_nc_ht=instagram.fthe11-1.fna.fbcdn.net&_nc_cat=108&_nc_ohc=irBfJ7yRFKAAX8lZSYL&tp=1&oh=9a609413d9c850f6e9e848e2a7217e14&oe=60254AC7);
   /* Background image is centered vertically and horizontally at all times */
@@ -41,10 +67,11 @@ background: linear-gradient(rgba(254,254,254,0.3),rgba(254,254,254,0.3)),
   background-size: cover;
   /* Set a background color that will be displayed
      while the background image is loading */
-position: relative;
 `
 
-const MainTitle = styled(H3)`
+const MainTitle = styled(H4).attrs({
+  display: 'noWrap'
+})`
   color: ${({ theme }) => theme.palette.text.secondary};
   font-family: ${({ theme }) => theme.typography.subtitle2.fontFamily};
   font-weight: ${({ theme }) => theme.typography.subtitle2.fontWeight};
@@ -54,20 +81,21 @@ const MainTitle = styled(H3)`
 `
 
 const Grid = styled(MaterialGrid)`
-  margin-top: ${({ theme }) => theme.spacing(7)}px;
+  flex-wrap: nowrap;
+`
+
+const ButtonsContainer =styled(MaterialGrid)`
   display: flex;
-  flex-direction: row;
   justify-content: center;
+  align-items: flex-end;
   flex-wrap: nowrap;
 `
 
 const Card = styled(MaterialCard).attrs({
   variant: 'outlined',
 })`
-  align-items: center;
   box-shadow: 2px 2px 2px 2px rgba(0, 0, 0, 0.2);
   background-color: ${({ backgroundColor }) => backgroundColor}; 
-  justify-content: center;
   margin-right: ${({ theme }) => theme.spacing(1)}px;
   min-width: 180px;
 `
