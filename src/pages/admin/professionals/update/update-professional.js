@@ -176,7 +176,7 @@ function UpdateProfessional ({ location }) {
             <Divider />
             <Grid container item xs={12} justify='center' spacing={1}>
               {hours.map(hour => (
-                <Grid item >
+                <Grid item key={hour}>
                   <Button
                     variant='outlined'
                     color='secondary'

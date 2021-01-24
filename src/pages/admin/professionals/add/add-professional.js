@@ -8,8 +8,6 @@ import {
   Radio,
   RadioGroup,
   Typography,
-  Slide,
-  Snackbar
 } from '@material-ui/core'
 import { Alert } from '@material-ui/lab'
 import weekDays from 'static-data/week-days'
@@ -20,13 +18,10 @@ import {
   Spacer,
   TextField,
   H5,
-  Divider
+  Divider,
+  Snackbar
 } from 'ui'
 import { useDatabase } from 'hooks'
-
-function SlideTransition (props) {
-  return <Slide {...props} direction="up" />;
-}
 
 function AddProfessional () {
   const { addProfessional } = useDatabase()
@@ -196,7 +191,7 @@ function AddProfessional () {
             <Divider />
             <Grid container item xs={12} justify='center' spacing={1}>
               {hours.map(hour => (
-                <Grid item >
+                <Grid item key={hour}>
                   <Button
                     variant='outlined'
                     color='secondary'
@@ -226,7 +221,6 @@ function AddProfessional () {
       <Snackbar
         open={snackBar.open}
         onClose={handleCloseSnackbar}
-        TransitionComponent={SlideTransition}
         autoHideDuration={3000}
         key={snackBar.message}>
         <Alert variant='filled' severity={snackBar.success ? 'success' : 'error'}>

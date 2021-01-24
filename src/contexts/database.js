@@ -36,7 +36,7 @@ function DatabaseProvider ({ children }) {
       })
   }, [])
 
-  const addProfessional = (professional) => {
+  const addProfessional = useCallback((professional) => {
     const res = db.collection(PROFESSIONALS)
       .add(professional)
       .then((docRef) => {
@@ -52,9 +52,9 @@ function DatabaseProvider ({ children }) {
         }
       })
     return res
-  }
+  }, [])
 
-  const updateProfessional = (professional) => {
+  const updateProfessional = useCallback((professional) => {
     let {id, ...professionalWithoutID } = professional
     const professionalRef = db.collection(PROFESSIONALS)
       .doc(id)
@@ -69,12 +69,31 @@ function DatabaseProvider ({ children }) {
         console.log('updateProfessional error', error)
         return {
           success: false,
-          message: 'Houve um erro.'
+          message: 'Houve um erro ao atualizar.'
         }
       })
 
     return res
-  }
+  }, [])
+
+  const deleteProfessional = useCallback((professional) => {
+    const professionalRef = db.collection(PROFESSIONALS).doc(professional.id)
+    const res = professionalRef.delete()
+    .then(()=> {
+      return {
+        success: true,
+        message: `${professional.name} excluido(a)!`
+      }
+    }).then(data => {
+      return data
+    }).catch(()=>{
+      return {
+        success: true,
+        message: 'Houve um erro ao excluir.'
+      }
+    })
+    return res
+  }, [])
 
   return (
     <DatabaseContext.Provider value={{
@@ -83,7 +102,8 @@ function DatabaseProvider ({ children }) {
       professionals,
       fetchProfessionals,
       addProfessional,
-      updateProfessional
+      updateProfessional,
+      deleteProfessional
     }}
     >
       {children}

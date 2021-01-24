@@ -1,31 +1,30 @@
 import React from 'react'
-import styled from 'styled-components'
+import { Route, Switch } from 'react-router-dom'
 import {
-  Button,
-  Grid,
- 
-} from '@material-ui/core'
-import { Content, PaperContainer, TextField, H5 } from 'ui'
-import weekDays from 'static-data/week-days'
+  ADMIN_PROCEDURES,
+  ADMIN_PROCEDURES_ADD,
+  ADMIN_PROCEDURES_UPDATE
+} from 'routes'
+
+const ProceduresList = React.lazy(() =>
+  import('pages/admin/procedures/procedures-list')
+)
+const AddProcedure = React.lazy(() =>
+  import('pages/admin/procedures/add')
+)
+// const UpdateProfessional = React.lazy(() =>
+//   import('pages/admin/professionals/update')
+// )
+
 function Procedures () {
   return (
-    <Content>
-      <Grid container spacing={4}>
-        <Grid item xs={12}>
-
-          <PaperContainer>
-            <Grid container spacing={1}>
-              <TextField variant='outlined' label='Nome' sm={9} xs={12} />
-              <TextField variant='outlined' label='Tempo' sm={3} xs={4} />
-            </Grid>
-            <H5>preços</H5>
-           
-          </PaperContainer>
-        </Grid>
-
-      </Grid>
-    </Content>
+    <Switch>
+      <Route exact path={ADMIN_PROCEDURES} component={ProceduresList} />
+      <Route path={ADMIN_PROCEDURES_ADD} component={AddProcedure} />
+      {/* <Route path={ADMIN_PROCEDURES_UPDATE} component={UpdateProfessional} /> */}
+    </Switch>
   )
 }
+
 
 export default Procedures
