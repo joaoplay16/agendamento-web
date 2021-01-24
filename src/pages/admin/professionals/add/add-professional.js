@@ -31,7 +31,12 @@ function SlideTransition (props) {
 function AddProfessional () {
   const { addProfessional } = useDatabase()
   const defaultTimeTable = {
-    0: [], 1: [], 2: [], 3: [], 4: [], 5: [], 6: []
+    week: {
+      0: [], 1: [], 2: [], 3: [], 4: [], 5: [], 6: []
+    },
+    specificDate: {
+      0: [], 1: [], 2: [], 3: [], 4: [], 5: [], 6: []
+    }
   }
   const [timeTable, setTimeTable] = useState(() => (defaultTimeTable))
   const [professional, setProfessional] = useState({
@@ -44,25 +49,32 @@ function AddProfessional () {
     message: ''
   }))
   const [selectedWeek, setSelectedWeek] = useState(() => 0)
-  const timeTableOfSelectedWeek = timeTable[selectedWeek]
+  const timeTableOfSelectedWeek = timeTable.week[selectedWeek]
 
   const handleWeekChange = (e) => {
     const selected = e.target.value
     setSelectedWeek(selected)
   }
 
+  useEffect(()=> {
+    console.log('select', timeTable);
+
+  })
+
   const addHour = (hour) => (e) => {
     setTimeTable((timeTable) => ({
       ...timeTable,
-      [selectedWeek]:
-        timeTableOfSelectedWeek.concat(hour).sort(orderHours)
+      week: {
+        ...timeTable.week,
+        [selectedWeek]: timeTableOfSelectedWeek.concat(hour).sort(orderHours)
+      }
     }))
   }
 
   const removeHour = (hour) => (e) => {
     setTimeTable((timeTable) => ({
       ...timeTable,
-      [selectedWeek]: timeTableOfSelectedWeek.filter(h => h !== hour)
+      week: {[selectedWeek]: timeTableOfSelectedWeek.filter(h => h !== hour)}
     }))
   }
 
@@ -164,12 +176,12 @@ function AddProfessional () {
             <Divider />
             <Grid item xs={12}>
               <Grid container justify='center' spacing={1}>
-                {timeTable[selectedWeek].length == 0 &&
+                {timeTable.week[selectedWeek].length == 0 &&
                   <Typography>
                     Nenhum horário definido
               </Typography>
                 }
-                {timeTable[selectedWeek].map((hour) => (
+                {timeTable.week[selectedWeek].map((hour) => (
                   <Grid item>
                     <Chip
                       key={hour}

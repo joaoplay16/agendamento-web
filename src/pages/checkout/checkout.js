@@ -18,11 +18,13 @@ import {
 import {
   Content,
   Button,
-  Spacer
+  Spacer,
+  Modal
 } from 'ui'
 import { useShoppingCart } from 'hooks'
 import { toMoney } from 'utils'
 import { RESERVATIONS, SCHEDULE } from 'routes'
+import MercadoLivreCardForm from './mercado-livre-form'
 function Checkout ({ location }) {
   const { schedules, removeScheduleFromShoppingCart } = useShoppingCart()
 
@@ -121,6 +123,9 @@ function Checkout ({ location }) {
                 color='primary'>
                 Concluir agendamento
               </Button>
+              <Modal>
+                  <MercadoLivreCardForm/>
+              </Modal>
               <Spacer />
               <Spacer />
             </Grid>

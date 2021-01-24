@@ -17,7 +17,7 @@ import {
 import { PaperContainer, H5, Button } from 'ui'
 import { useDatabase } from 'hooks'
 import { Link } from 'react-router-dom'
-import { ADMIN_PROFESSIONALS_UPDATE } from 'routes'
+import { ADMIN_PROFESSIONALS_UPDATE, ADMIN_PROFESSIONALS_ADD } from 'routes'
 function ProfessionalsList () {
   const [professionals, setProfessionals] = useState(() => [])
 
@@ -56,6 +56,7 @@ function ProfessionalsList () {
             justify='flex-end'
             direction='row'>
             <Button
+              to={ADMIN_PROFESSIONALS_ADD}
               variant='contained'
               color='primary'>
               Novo

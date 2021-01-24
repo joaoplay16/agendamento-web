@@ -23,11 +23,11 @@ import { CHECKOUT } from 'routes'
 import scheduleConfigs from 'fake-data/schedule-configs'
 import { useShoppingCart } from 'hooks'
 const ChooseDate = ({ location }) => {
+  const currentDate = new Date()
 
   const { schedules, addScheduleToShoppingCart } = useShoppingCart()
 
   const { procedure, professional } = location.state
-  const currentDate = new Date()
   const [selectedDate, setSelectedDate] = useState(currentDate)
   const { timeTable, disabledDays } = scheduleConfigs
   const handleDateChange = (date) => {

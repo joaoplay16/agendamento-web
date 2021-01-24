@@ -54,11 +54,11 @@ const ChooseProcedure = () => {
       </Grid>
       <Grid>
         <List component='nav'>
-          {procedures.map((procedure, index) => (
+          {procedures.map((procedure) => (
             <>
               <ListItem
-                alignItems="flex-center"
-                key={index}>
+                alignItems="center"
+                key={procedure.id}>
                 <ListItemText
                   primary={procedure.name}
                   secondary={`${procedure.time}`} />

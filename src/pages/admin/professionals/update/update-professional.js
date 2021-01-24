@@ -1,4 +1,4 @@
-import React, { useState } from 'react'
+import React, { useEffect, useState } from 'react'
 import {
   Button,
   Chip,
@@ -45,27 +45,30 @@ function UpdateProfessional ({ location }) {
     message: ''
   }))
   const [selectedWeek, setSelectedWeek] = useState(() => 0)
-  const timeTableOfSelectedWeek = timeTable[selectedWeek]
-
-
+  const timeTableOfSelectedWeek = timeTable.week[selectedWeek]
 
   const handleWeekChange = (e) => {
     const selected = e.target.value
     setSelectedWeek(selected)
   }
-  const addHour = (hour) => () => {
+
+  const addHour = (hour) => (e) => {
     setTimeTable((timeTable) => ({
       ...timeTable,
-      [selectedWeek]:
-        timeTableOfSelectedWeek.concat(hour).sort(orderHours)
+      week: {
+        ...timeTable.week,
+        [selectedWeek]: timeTableOfSelectedWeek.concat(hour).sort(orderHours)
+      }
     }))
   }
-  const removeHour = (hour) => () => {
+
+  const removeHour = (hour) => (e) => {
     setTimeTable((timeTable) => ({
       ...timeTable,
-      [selectedWeek]: timeTableOfSelectedWeek.filter(h => h !== hour)
+      week: {[selectedWeek]: timeTableOfSelectedWeek.filter(h => h !== hour)}
     }))
   }
+
   const handleChange = (e) => {
     const { name, value } = e.target
     setProfessional((state) => ({
@@ -153,12 +156,12 @@ function UpdateProfessional ({ location }) {
             <Divider />
             <Grid item xs={12}>
               <Grid container justify='center' spacing={1}>
-                {timeTable[selectedWeek].length == 0 &&
+                {timeTable.week[selectedWeek].length == 0 &&
                   <Typography>
                     Nenhum horário definido
               </Typography>
                 }
-                {timeTable[selectedWeek].map((hour) => (
+                {timeTable.week[selectedWeek].map((hour) => (
                   <Grid item>
                     <Chip
                       key={hour}

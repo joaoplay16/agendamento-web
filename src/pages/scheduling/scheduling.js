@@ -4,10 +4,10 @@ import { Grid as MaterialGrid, Card as MaterialCard } from '@material-ui/core'
 import { CardLink, Content, H3, H4,H5, HeaderContent, Button } from 'ui'
 import { SCHEDULE, RESERVATIONS } from 'routes'
 import { Link } from 'react-router-dom'
-import {createCharge} from 'services/juno'
+import pay from 'services/mercadopago'
 const Scheduling = () => {
   useEffect(()=>{
-    createCharge()
+    pay()
   },[])
   return (
     <MainContent>
