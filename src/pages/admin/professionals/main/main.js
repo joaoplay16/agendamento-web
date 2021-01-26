@@ -25,8 +25,8 @@ import { Link } from 'react-router-dom'
 import { ADMIN_PROFESSIONALS_UPDATE, ADMIN_PROFESSIONALS_ADD } from 'routes'
 function ProfessionalsList () {
   const [professionals, setProfessionals] = useState(() => [])
-  const [selectedProfessional, setSelectedProfessional] = useState(() => { })
   const { professionals: fetchedProfessionals, fetchProfessionals, deleteProfessional } = useDatabase()
+  const [selectedProfessional, setSelectedProfessional] = useState(() => { })
 
   useEffect(() => {
     fetchProfessionals()

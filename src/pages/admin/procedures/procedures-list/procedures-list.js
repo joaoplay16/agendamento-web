@@ -1,11 +1,9 @@
-import React, { useEffect } from 'react'
-import styled from 'styled-components'
 import {
-  Grid,
- 
+  Grid
 } from '@material-ui/core'
-import { Content, PaperContainer, TextField, H5, Button } from 'ui'
+import React from 'react'
 import { ADMIN_PROCEDURES_ADD } from 'routes'
+import { Button, Content, H5, PaperContainer } from 'ui'
 function ProceduresList () {
 
   
