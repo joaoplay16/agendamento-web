@@ -9,6 +9,7 @@ import firebase from 'services/firebase'
 const DatabaseContext = createContext()
 
 const PROFESSIONALS = 'admin/scheduling/professionals'
+const PROCEDURES = 'admin/scheduling/procedures'
 
 function DatabaseProvider ({ children }) {
   const db = firebase.firestore()
@@ -16,11 +17,29 @@ function DatabaseProvider ({ children }) {
   const [professionals, setProfessionals] = useState(() => {})
 
   const fetchProcedures = useCallback(() => {
-    db.collection('admin/scheduling/procedures')
+    db.collection(PROCEDURES)
       .get().then(querySnapshot => {
         let procedures = querySnapshot.docs.map(doc => doc.data())
         setProcedures(procedures)
       })
+  }, [])
+  
+  const addProcedure = useCallback((procedure) => {
+    const res = db.collection(PROCEDURES)
+      .add(procedure)
+      .then((docRef) => {
+        return {
+          success: true,
+          message: 'Procedimento adicionado!'
+        }
+      })
+      .catch(function (error) {
+        return {
+          success: false,
+          message: 'Houve um erro.'
+        }
+      })
+    return res
   }, [])
 
   const fetchProfessionals = useCallback(() => {
@@ -98,6 +117,7 @@ function DatabaseProvider ({ children }) {
   return (
     <DatabaseContext.Provider value={{
       procedures,
+      addProcedure,
       fetchProcedures,
       professionals,
       fetchProfessionals,
