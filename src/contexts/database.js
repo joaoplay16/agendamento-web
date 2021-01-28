@@ -19,7 +19,7 @@ function DatabaseProvider ({ children }) {
   const fetchProcedures = useCallback(() => {
     db.collection(PROCEDURES)
       .get().then(querySnapshot => {
-        let procedures = querySnapshot.docs.map(doc => doc.data())
+        let procedures = querySnapshot.docs.map(doc => ({id: doc.id, ...doc.data()}))
         setProcedures(procedures)
       })
   }, [])
@@ -53,6 +53,25 @@ function DatabaseProvider ({ children }) {
         })
         setProfessionals(objects)
       })
+  }, [])
+
+  const deleteProcedure = useCallback((procedure) => {
+    const procedureRef = db.collection(PROCEDURES).doc(procedure.id)
+    const res = procedureRef.delete()
+    .then(()=> {
+      return {
+        success: true,
+        message: `${procedure.name} excluido(a)!`
+      }
+    }).then(data => {
+      return data
+    }).catch(()=>{
+      return {
+        success: true,
+        message: 'Houve um erro ao excluir.'
+      }
+    })
+    return res
   }, [])
 
   const addProfessional = useCallback((professional) => {
@@ -119,6 +138,7 @@ function DatabaseProvider ({ children }) {
       procedures,
       addProcedure,
       fetchProcedures,
+      deleteProcedure,
       professionals,
       fetchProfessionals,
       addProfessional,

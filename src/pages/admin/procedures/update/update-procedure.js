@@ -17,17 +17,17 @@ import { Delete as DeleteIcon } from '@material-ui/icons'
 import { Alert } from '@material-ui/lab'
 import { useDatabase } from 'hooks'
 import React, { useEffect, useRef, useState } from 'react'
+import { ADMIN_PROCEDURES } from 'routes'
 import { Button, Content, H5, PaperContainer, Spacer, TextField } from 'ui'
 import { toMoney } from 'utils'
 
-function AddProcedure () {
-  const [professionalsArray, setProfessionalsArray] = useState(() => [])
-  
-  useEffect(() => {
-    fetchProfessionals()
-    // setProfessionalsArray(professionalsArray)
-  }, [])
+function UpdateProcedure ({location}) {
 
+  if (!location.state) {
+    return <Redirect to={ADMIN_PROCEDURES} />
+  }
+
+  const [professionalsArray, setProfessionalsArray] = useState(() => [])
   const { addProcedure } = useDatabase()
 
   const [procedure, setProcedure] = useState(() => ({
@@ -39,6 +39,24 @@ function AddProcedure () {
   const [selectedProfessional, setSelectedProfessional] = useState(() => "")
   const inputPriceRef = useRef()
 
+  useEffect(() => {
+    fetchProfessionals()
+  }, [])
+
+  useEffect(() => {
+    if (professionalsObject) {
+      setProfessionalsArray([
+        ...Object.keys(professionalsObject)
+          .map((key) => ({
+            id: key,
+            ...professionalsObject[key]
+          }))
+      ])
+    }
+  }, [professionalsObject])
+
+
+
   const [snackBar, setSnackbar] = useState(() => ({
     open: false,
     success: false,
@@ -46,7 +64,6 @@ function AddProcedure () {
   }))
 
 
- 
   const hasError = () => {
     let errors = 0
     if (professionalsPrices === undefined || Object.keys(professionalsPrices).length < 1) {
@@ -105,17 +122,7 @@ function AddProcedure () {
     console.log(procedure)
   }
 
-  useEffect(() => {
-    if (professionalsObject) {
-      setProfessionalsArray([
-        ...Object.keys(professionalsObject)
-          .map((key) => ({
-            id: key,
-            ...professionalsObject[key]
-          }))
-      ])
-    }
-  }, [professionalsObject])
+
 
 
   const handleSave = async () => {
@@ -242,4 +249,4 @@ function AddProcedure () {
   )
 }
 
-export default AddProcedure
+export default UpdateProcedure

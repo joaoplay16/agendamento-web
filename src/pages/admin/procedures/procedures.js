@@ -12,16 +12,16 @@ const ProceduresList = React.lazy(() =>
 const AddProcedure = React.lazy(() =>
   import('pages/admin/procedures/add')
 )
-// const UpdateProfessional = React.lazy(() =>
-//   import('pages/admin/professionals/update')
-// )
+const UpdateProcedure = React.lazy(() =>
+  import('pages/admin/procedures/update')
+)
 
 function Procedures () {
   return (
     <Switch>
       <Route exact path={ADMIN_PROCEDURES} component={ProceduresList} />
       <Route path={ADMIN_PROCEDURES_ADD} component={AddProcedure} />
-      {/* <Route path={ADMIN_PROCEDURES_UPDATE} component={UpdateProfessional} /> */}
+      <Route path={ADMIN_PROCEDURES_UPDATE} component={UpdateProcedure} />
     </Switch>
   )
 }

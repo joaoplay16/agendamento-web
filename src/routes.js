@@ -11,8 +11,8 @@ export const ADMIN = `/admin`
 export const ADMIN_LOGIN = `${ADMIN}/login`
 
 export const ADMIN_PROCEDURES = `${ADMIN}/procedimentos`
-export const ADMIN_PROCEDURES_ADD = `${ADMIN}/procedimentos/add`
-export const ADMIN_PROCEDURES_UPDATE = `${ADMIN}/procedimentos/update`
+export const ADMIN_PROCEDURES_ADD = `${ADMIN}/procedimentos/novo`
+export const ADMIN_PROCEDURES_UPDATE = `${ADMIN}/procedimentos/atualizar`
 
 export const ADMIN_PROFESSIONALS = `${ADMIN}/profissionais`
 export const ADMIN_PROFESSIONALS_ADD = `${ADMIN}/profissionais/novo`
