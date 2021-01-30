@@ -34,7 +34,7 @@ function AddProcedure () {
     name: '',
     time: ''
   }))
-  const [professionalsPrices, setProfessionalsPrices] = useState(() => { })
+  const [professionalsPrices, setProfessionalsPrices] = useState(() => ({}))
   const { professionals: professionalsObject, fetchProfessionals } = useDatabase()
   const [selectedProfessional, setSelectedProfessional] = useState(() => "")
   const inputPriceRef = useRef()

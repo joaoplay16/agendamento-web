@@ -1,61 +1,63 @@
 import {
-  Divider,
+  Avatar, Button, Divider,
   FormControl,
   Grid,
-  List,
+  IconButton, List,
   ListItem,
-  Avatar,
   ListItemAvatar,
-  ListItemText,
+  ListItemSecondaryAction, ListItemText,
   MenuItem,
   Select,
-  ListItemSecondaryAction,
-  IconButton,
   Snackbar
 } from '@material-ui/core'
 import { Delete as DeleteIcon } from '@material-ui/icons'
 import { Alert } from '@material-ui/lab'
 import { useDatabase } from 'hooks'
 import React, { useEffect, useRef, useState } from 'react'
+import { Redirect } from 'react-router-dom'
 import { ADMIN_PROCEDURES } from 'routes'
-import { Button, Content, H5, PaperContainer, Spacer, TextField } from 'ui'
+import { Content, H5, PaperContainer, Spacer, TextField } from 'ui'
 import { toMoney } from 'utils'
 
-function UpdateProcedure ({location}) {
+function UpdateProcedure ({ location, history }) {
 
   if (!location.state) {
     return <Redirect to={ADMIN_PROCEDURES} />
   }
 
-  const [professionalsArray, setProfessionalsArray] = useState(() => [])
-  const { addProcedure } = useDatabase()
+  const procedureToUpdate = location.state.procedure
+
+  const { updateProcedure } = useDatabase()
 
   const [procedure, setProcedure] = useState(() => ({
     name: '',
     time: ''
   }))
-  const [professionalsPrices, setProfessionalsPrices] = useState(() => { })
+  const [professionalsPrices, setProfessionalsPrices] = useState(() => procedureToUpdate.price)
   const { professionals: professionalsObject, fetchProfessionals } = useDatabase()
+  const [professionalsArray, setProfessionalsArray] = useState(() => ([]))
   const [selectedProfessional, setSelectedProfessional] = useState(() => "")
   const inputPriceRef = useRef()
 
   useEffect(() => {
     fetchProfessionals()
+    setProcedure({
+      id: procedureToUpdate.id,
+      name: procedureToUpdate.name,
+      time: procedureToUpdate.time
+    })
   }, [])
 
   useEffect(() => {
-    if (professionalsObject) {
-      setProfessionalsArray([
-        ...Object.keys(professionalsObject)
-          .map((key) => ({
-            id: key,
-            ...professionalsObject[key]
-          }))
-      ])
-    }
-  }, [professionalsObject])
+    setProfessionalsArray([
+      ...Object.keys(professionalsObject)
+        .map((key) => ({
+          id: key,
+          ...professionalsObject[key]
+        }))
+    ])
 
-
+  }, [professionalsObject, location])
 
   const [snackBar, setSnackbar] = useState(() => ({
     open: false,
@@ -63,10 +65,9 @@ function UpdateProcedure ({location}) {
     message: ''
   }))
 
-
   const hasError = () => {
     let errors = 0
-    if (professionalsPrices === undefined || Object.keys(professionalsPrices).length < 1) {
+    if (Object.keys(professionalsPrices).length < 1) {
       errors++
     }
     if (procedure.name === "" || procedure.time === "") {
@@ -85,7 +86,9 @@ function UpdateProcedure ({location}) {
 
   }
 
-  const handleClick = () => {
+  const handleClick = (e) => {
+    e.preventDefault()
+
     const inputValue = inputPriceRef.current.value
     if (selectedProfessional) {
       setProfessionalsPrices((prices) => ({
@@ -94,7 +97,6 @@ function UpdateProcedure ({location}) {
       }))
       inputPriceRef.current.value = null
     }
-
   }
 
   const handleDelete = (professionalID) => (e) => {
@@ -109,7 +111,6 @@ function UpdateProcedure ({location}) {
     })
   };
 
-
   const handleProfessionalChanges = (e) => {
     setSelectedProfessional(e.target.value)
   }
@@ -122,24 +123,26 @@ function UpdateProcedure ({location}) {
     console.log(procedure)
   }
 
-
-
-
-  const handleSave = async () => {
+  const handleUpdate = async () => {
     console.log("erro? ", hasError());
     if (!hasError()) {
       const proc = {
         ...procedure,
         price: professionalsPrices
       }
-      const res = await addProcedure(proc)
+      const res = await updateProcedure(proc)
       setSnackbar({
         open: true,
         success: res.success,
         message: res.message
       })
+
+      setTimeout(() => {
+        history.goBack()
+      }, 1800)
+      clearFields()
+
     }
-    clearFields()
   }
 
   return (
@@ -148,7 +151,7 @@ function UpdateProcedure ({location}) {
         <Grid item xs={12}>
           <PaperContainer>
             {hasError() && <Alert variant='filled' severity='error' >Preencha todos os campos e adicione valores</Alert>}
-            <H5>Adicionar procedimento</H5>
+            <H5>Atualizar procedimento</H5>
             <Grid container spacing={1}>
               <TextField value={procedure.name} name='name' onChange={handleProceduresChanges} variant='outlined' label='Procedimento' sm={9} xs={12} />
               <TextField value={procedure.time} name='time' onChange={handleProceduresChanges} variant='outlined' label='Tempo' sm={3} xs={4} />
@@ -160,9 +163,8 @@ function UpdateProcedure ({location}) {
             <Grid item xs={12}>
               <Grid container justify='center'>
                 <Grid item lg={4} md={4} sm={10} xs={12}>
-
                   <List>
-                    {!!professionalsPrices && Object.keys(professionalsPrices).map((key) => {
+                    {Object.keys(professionalsObject) != 0 && Object.keys(professionalsPrices).map((key) => {
                       const currentProfessional = professionalsObject[key]
                       const price = professionalsPrices[key]
                       return (
@@ -185,7 +187,7 @@ function UpdateProcedure ({location}) {
                 </Grid>
               </Grid>
             </Grid>
-            {!!professionalsArray && (
+            {professionalsArray.length > 0 && (
               <Grid item >
                 <Grid container spacing={2} direction="row" justify='center' alignItems='center'>
                   <Grid item sm={4} xs={10}>
@@ -228,10 +230,9 @@ function UpdateProcedure ({location}) {
             <Spacer />
             <Grid container item justify='center'>
               <Button
-                onClick={handleSave}
-                to="#"
+                onClick={handleUpdate}
                 variant='contained'
-                color='primary'>Salvar</Button>
+                color='primary'>Atualizar</Button>
             </Grid>
           </PaperContainer>
           <Snackbar

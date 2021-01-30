@@ -13,8 +13,8 @@ const PROCEDURES = 'admin/scheduling/procedures'
 
 function DatabaseProvider ({ children }) {
   const db = firebase.firestore()
-  const [procedures, setProcedures] = useState(() => [])
-  const [professionals, setProfessionals] = useState(() => {})
+  const [procedures, setProcedures] = useState(() => ({}))
+  const [professionals, setProfessionals] = useState(() => ({}))
 
   const fetchProcedures = useCallback(() => {
     db.collection(PROCEDURES)
@@ -42,8 +42,32 @@ function DatabaseProvider ({ children }) {
     return res
   }, [])
 
+  const updateProcedure = useCallback((procedure) => {
+    let {id, ...procedureWithoutID } = procedure
+    console.log('document id', id)
+
+    const procedureRef = db.collection(PROCEDURES)
+      .doc(id)
+    const res = procedureRef.update({
+      ...procedureWithoutID
+    }).then(() => {
+      return {
+        success: true,
+        message: 'Procedimento atualizado!'
+      }
+    }).catch(function (error) {
+        console.log('updateProcedure error', error)
+        return {
+          success: false,
+          message: 'Houve um erro ao atualizar.'
+        }
+      })
+
+    return res
+  }, [])
+
   const fetchProfessionals = useCallback(() => {
-    db.collection(PROFESSIONALS)
+    return db.collection(PROFESSIONALS)
       .get().then(querySnapshot => {
         let objects = {}
         querySnapshot.forEach(doc => {
@@ -137,6 +161,7 @@ function DatabaseProvider ({ children }) {
     <DatabaseContext.Provider value={{
       procedures,
       addProcedure,
+      updateProcedure,
       fetchProcedures,
       deleteProcedure,
       professionals,
