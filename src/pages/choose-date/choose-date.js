@@ -105,7 +105,7 @@ const ChooseDate = ({ location }) => {
                 <H6>Horários</H6>
                 <TimeTable>
                   {getTimeTable().map((time) => (
-                    <Box p={2}>
+                    <Box p={2} key={time}>
                       <Button 
                       onClick={addSchedule(time)}
                       to={{
