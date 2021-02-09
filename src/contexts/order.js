@@ -4,6 +4,7 @@ const ShoppingCartContext = createContext()
 
 function ShoppingCartProvider ({ children }) {
   const [schedules, addSchedule] = useState(() => [])
+  const [paymentDetails, setPaymentDetails] = useState(() => ({}))
 
   function addScheduleToShoppingCart (schedule) {
     addSchedule((schedules) => schedules.concat(schedule))
@@ -13,11 +14,17 @@ function ShoppingCartProvider ({ children }) {
     addSchedule((schedules) => schedules.filter(item => item !== scheduleToRemove))
   }
 
+  function setPaymentStatusDetails (paymentStatusDetails) {
+    setPaymentDetails(paymentStatusDetails)
+  }
+
   return (
     <ShoppingCartContext.Provider value={{
       schedules,
       addScheduleToShoppingCart,
-      removeScheduleFromShoppingCart
+      removeScheduleFromShoppingCart,
+      paymentDetails,
+      setPaymentStatusDetails
     }}>
       {children}
     </ShoppingCartContext.Provider>

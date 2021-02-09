@@ -1,11 +1,25 @@
 import { Select } from "@material-ui/core"
 import React, { useEffect, useState } from "react"
 import { TextField } from "ui"
+import mpInsertionErros from "strings/mercadopago-insertion-errors"
+import axios from "axios"
 import "./style.css"
-const MercadoLivreCardForm = ({ schedules, price, userInfo }) => {
+import { useShoppingCart } from "hooks"
+import * as mpApi from 'services/mercadopago-api'
+
+const MercadoLivreCardForm = ({ schedules, price, userInfo, onModalResult }) => {
   const [doSubmit, setDoSubmit] = useState(false)
 
+  const [formData, setFormData] = useState({
+    cardNumber: "6062826786276634",
+  })
+
+  const { setPaymentStatusDetails } = useShoppingCart()
+
   useEffect(() => {
+    //para poder fazer outra compra com o mesmo cartão
+    window.Mercadopago.clearSession()
+
     window.Mercadopago.setPublishableKey(
       "TEST-72a91e7b-462c-4ed6-be2c-5485b30eeb3b"
     )
@@ -13,11 +27,12 @@ const MercadoLivreCardForm = ({ schedules, price, userInfo }) => {
     window.Mercadopago.getIdentificationTypes()
 
     document.getElementById("description").value = getDescription(true)
-
-    console.log("price", price)
-    console.log("schedules", schedules)
-    console.log(getDescription())
   }, [])
+
+  useEffect(() => {
+    guessPaymentMethod(formData.cardNumber)
+    console.log("STATE", formData)
+  }, [formData.cardNumber])
 
   const getDescription = (withBrand = false) => {
     let decription = withBrand ? "Raisse Queiroz & Hercules Queiroz - " : ""
@@ -33,10 +48,12 @@ const MercadoLivreCardForm = ({ schedules, price, userInfo }) => {
     return decription
   }
 
-  const handleCardChange = (e) => {
-    let cardNumber = e.target.value
-    console.log(cardNumber)
-    guessPaymentMethod(cardNumber)
+  const handleChange = (e) => {
+    let { name, value } = e.target
+    setFormData( state => ({
+      ...state,
+      [name]:value
+    }))
   }
 
   function guessPaymentMethod(cardNumber) {
@@ -70,7 +87,9 @@ const MercadoLivreCardForm = ({ schedules, price, userInfo }) => {
         getInstallments(paymentMethod.id, price)
       }
     } else {
-      alert(`payment method info error: ${response}`)
+      alert(`payment method info error: ${response.message}`)
+      console.log(`payment method info `,response);
+
     }
   }
 
@@ -142,34 +161,63 @@ const MercadoLivreCardForm = ({ schedules, price, userInfo }) => {
   }
 
   const handleSubmit = (e) => {
+    e.preventDefault()
     getCardToken(e)
+  }
+
+  const pay = async () => {
+    const paymentMethodId = document.getElementById("paymentMethodId").value
+    const installments = document.getElementById("installments").value
+    const email = document.getElementById("email").value
+    const transactionAmount = document.getElementById("amount").value
+    const token = document.getElementById("token").value
+    const description = getDescription()
+    const data = {
+      email,
+      description,
+      installments,
+      paymentMethodId,
+      transactionAmount,
+      token
+    }
+    // const res = await mpApi.post('/process_payment',data)
+   const res = await mpApi.payNow(data) 
+    setPaymentStatusDetails(res.data)
+    console.log("RESULT", res.data)
+    console.log("DADOS", data)
   }
 
   function getCardToken(event) {
     event.preventDefault()
 
     if (!doSubmit) {
-      let $form = document.getElementById("paymentForm")
-      console.log("evento", event)
-      console.log("form normal ", $form)
-      window.Mercadopago.createToken($form, setCardTokenAndPay)
-
+      let form = document.getElementById("paymentForm")
+      window.Mercadopago.createToken(form, setCardTokenAndPay)
       return false
     }
   }
 
   function setCardTokenAndPay(status, response) {
     if (status == 200 || status == 201) {
-      let form = document.getElementById("paymentForm")
-      let card = document.createElement("input")
-      card.setAttribute("name", "token")
-      card.setAttribute("type", "hidden")
-      card.setAttribute("value", response.id)
-      form.appendChild(card)
-      setDoSubmit(true)
-      form.submit() //Submit form data to your backend
+      let card = document.getElementById("token")
+      card.value = response.id
+      // let form = document.getElementById("paymentForm")
+      // let card = document.createElement("input")
+      // card.setAttribute("name", "token")
+      // card.setAttribute("type", "hidden")
+      // card.setAttribute("value", response.id)
+      // form.appendChild(card)
+      // setDoSubmit(true)
+      // form.submit()
+    pay()
+
+
+      console.log("response", response.id)
     } else {
-      alert("Verify filled data!\n" + JSON.stringify(response, null, 4))
+      alert(
+        "Verifique os dados inseridos!\n" + JSON.stringify(response, null, 4)
+      )
+      // alert("Verifique os dados inseridos!\n" + mpInsertionErros[response.cause[0].code])
     }
   }
 
@@ -218,22 +266,17 @@ const MercadoLivreCardForm = ({ schedules, price, userInfo }) => {
                 </div>
               </div>
               <div class="payment-details">
-                <form
-                  action="http://localhost:8080/process_payment"
-                  onSubmit={handleSubmit}
-                  method="post"
-                  id="paymentForm"
-                >
+                <form onSubmit={handleSubmit} id="paymentForm">
                   <h3 class="title">Suas informações</h3>
                   <div class="row">
                     <div class="form-group col">
                       <label for="email">E-Mail</label>
-                      <TextField
-                        defaultValue={userInfo.user.email}
-                        id="email"
-                        name="email"
-                        type="text"
-                      />
+                      <TextField 
+                      required 
+                      defaultValue='seijiyokai@gmail.com'
+                      id="email" 
+                      name="email" 
+                      type="text" />
                     </div>
                   </div>
                   <div class="row">
@@ -255,7 +298,8 @@ const MercadoLivreCardForm = ({ schedules, price, userInfo }) => {
                     <div class="form-group col-sm-7">
                       <label for="docNumber">CPF</label>
                       <TextField
-                      defaultValue="76185675900"
+                        required
+                        defaultValue="76185675900"
                         id="docNumber"
                         name="docNumber"
                         inputProps={{
@@ -273,8 +317,10 @@ const MercadoLivreCardForm = ({ schedules, price, userInfo }) => {
                         Nome do proprietário do cartão
                       </label>
                       <TextField
+                        required
                         defaultValue="Otimista"
                         id="cardholderName"
+                        name="cardholderName"
                         inputProps={{
                           "data-checkout": "cardholderName",
                         }}
@@ -285,11 +331,12 @@ const MercadoLivreCardForm = ({ schedules, price, userInfo }) => {
                       <label for="">Válido até</label>
                       <div class="input-group expiration-date">
                         <TextField
-                        defaultValue="12"
-
+                          required
+                          defaultValue='12'
                           type="text"
                           placeholder="MM"
                           id="cardExpirationMonth"
+                          name="cardExpirationMonth"
                           inputProps={{
                             "data-checkout": "cardExpirationMonth",
                           }}
@@ -303,11 +350,12 @@ const MercadoLivreCardForm = ({ schedules, price, userInfo }) => {
                         />
                         <span class="date-separator">/</span>
                         <TextField
-                        defaultValue="22"
-
+                          required
+                          defaultValue='22'
                           type="text"
                           placeholder="YY"
                           id="cardExpirationYear"
+                          name="cardExpirationYear"
                           inputProps={{
                             "data-checkout": "cardExpirationYear",
                           }}
@@ -324,16 +372,18 @@ const MercadoLivreCardForm = ({ schedules, price, userInfo }) => {
                     <div class="form-group col-sm-8">
                       <label for="cardNumber">Numero do cartão</label>
                       <TextField
-                        defaultValue="6062826786276634"
+                        required
+                
                         type="text"
                         id="cardNumber"
+                        name="cardNumber"
+                        onChange={handleChange}
+                        value={formData.cardNumber}
                         inputProps={{
                           "data-checkout": "cardNumber",
                           class: "input-background",
                         }}
-                        onChange={handleCardChange}
                         onselectStart={() => false}
-                        onPaste={() => false}
                         onCopy={() => false}
                         onCut={() => false}
                         onDrag={() => false}
@@ -344,8 +394,10 @@ const MercadoLivreCardForm = ({ schedules, price, userInfo }) => {
                     <div class="form-group col-sm-4">
                       <label for="securityCode">CVV</label>
                       <TextField
+                        required
                         defaultValue="123"
                         id="securityCode"
+                        name="securityCode"
                         inputProps={{
                           "data-checkout": "securityCode",
                         }}
@@ -363,10 +415,10 @@ const MercadoLivreCardForm = ({ schedules, price, userInfo }) => {
                       <label for="issuer">Issuer</label>
                       <Select
                         native
-                        onChange={handleIssuerChange}
                         inputProps={{
                           "data-checkout": "issuer",
                         }}
+                        onChange={handleIssuerChange}
                         id="issuer"
                         name="issuer"
                         class="form-control"
@@ -378,7 +430,6 @@ const MercadoLivreCardForm = ({ schedules, price, userInfo }) => {
                         native
                         type="text"
                         id="installments"
-                        name="installments"
                         variant="outlined"
                       />
                     </div>
@@ -398,6 +449,11 @@ const MercadoLivreCardForm = ({ schedules, price, userInfo }) => {
                         type="hidden"
                         name="description"
                         id="description"
+                      />
+                      <input
+                        type="hidden"
+                        name="token"
+                        id="token"
                       />
                       <br />
                       <button type="submit" class="btn btn-primary btn-block">
