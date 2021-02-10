@@ -52,13 +52,14 @@ function Checkout({ location, match }) {
 
   useEffect(()=>{
     console.log("CHECKOUT", paymentDetails)
-    // if (Object.keys(paymentDetails).length > 0) {
-    //   alert(mpResponseStrings[paymentDetails.status][paymentDetails.status_detail])
-    // }
+    if (paymentDetails && paymentDetails.hasOwnProperty("status")) {
+      alert(mpResponseStrings[paymentDetails.status][paymentDetails.status_detail])
+    }
 
     if(paymentDetails && paymentDetails.hasOwnProperty("cause")){
       alert(mpResponseStrings[paymentDetails.cause[0].code])
     }
+
   }, [paymentDetails])
 
 

@@ -6,10 +6,12 @@ const DatabaseContext = createContext()
 
 const PROFESSIONALS = "admin/scheduling/professionals"
 const PROCEDURES = "admin/scheduling/procedures"
+const SCHEDULES = "schedules"
 
 function DatabaseProvider({ children }) {
   const db = firebase.firestore()
-  const [procedures, setProcedures] = useState(() => ([]))
+  const [procedures, setProcedures] = useState(() => [])
+  const [schedules, setSchedules] = useState(() => [])
   const [professionals, setProfessionals] = useState(() => ({}))
 
   const fetchProcedures = useCallback(() => {
@@ -32,6 +34,39 @@ function DatabaseProvider({ children }) {
         return {
           success: true,
           message: "Procedimento adicionado!",
+        }
+      })
+      .catch(function (error) {
+        return {
+          success: false,
+          message: "Houve um erro.",
+        }
+      })
+    return res
+  }, [])
+  
+
+   
+
+  const fetchSchedules = useCallback(() => {
+    db.collection(SCHEDULES).onSnapshot((snapshot) => {
+      let schedules = snapshot.docs.map((doc) => ({
+        id: doc.id,
+        ...doc.data(),
+      }))
+      setSchedules(schedules)
+    })
+  }, [])
+
+
+  const submitSchedule = useCallback((transation) => {
+    const res = db
+      .collection(SCHEDULES)
+      .add(transation)
+      .then((docRef) => {
+        return {
+          success: true,
+          message: "Pagamento salvo!",
         }
       })
       .catch(function (error) {
@@ -175,6 +210,9 @@ function DatabaseProvider({ children }) {
       value={{
         procedures,
         addProcedure,
+        schedules,
+        fetchSchedules,
+        submitSchedule,
         updateProcedure,
         fetchProcedures,
         deleteProcedure,

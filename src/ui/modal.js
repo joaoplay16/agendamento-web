@@ -32,7 +32,7 @@ export default function FullScreenDialog({ children }) {
   const [open, setOpen] = React.useState(false)
 
   useEffect(()=> {
-    console.log("MODAL STATUS", paymentDetails);
+    // console.log("MODAL STATUS", paymentDetails);
     if(paymentDetails.status == 'approved'){
       setOpen(false)
     }

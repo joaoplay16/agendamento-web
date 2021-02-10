@@ -1,13 +1,20 @@
-import React from 'react'
+import React , { useEffect}from 'react'
 import styled from 'styled-components'
 import { Button, Grid, TextField } from '@material-ui/core'
-import { useAuth } from 'hooks'
+import { useAuth, useDatabase } from 'hooks'
 import { Content } from 'ui'
 function Dashboard () {
   // const { login } = useAuth()
+  const { schedules, fetchSchedules } = useDatabase()
+
+  useEffect(()=> {
+    fetchSchedules()
+  }, [])
   return (
    <Content>
-      <h1>conteudo</h1>
+      {schedules.length > 0 && schedules.map(schedule => (
+        <p>{schedule.paymentInfo.id}  {schedule.paymentInfo.description} {` -->> `} {schedule.paymentInfo.status}</p>
+      ))}
    </Content>
   )
 }
