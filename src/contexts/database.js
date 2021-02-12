@@ -44,9 +44,6 @@ function DatabaseProvider({ children }) {
       })
     return res
   }, [])
-  
-
-   
 
   const fetchSchedules = useCallback(() => {
     db.collection(SCHEDULES).onSnapshot((snapshot) => {
@@ -57,7 +54,6 @@ function DatabaseProvider({ children }) {
       setSchedules(schedules)
     })
   }, [])
-
 
   const submitSchedule = useCallback((transation) => {
     const res = db

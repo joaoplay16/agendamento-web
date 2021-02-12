@@ -19,8 +19,13 @@ import { Button, Content, Modal, Spacer } from "ui"
 import { toMoney } from "utils"
 import MercadoLivreCardForm from "./mercado-livre-form"
 import mpResponseStrings from "strings/mercadopago-response"
-function Checkout({ location, match }) {
-  const { schedules, removeScheduleFromShoppingCart, paymentDetails } = useShoppingCart()
+function Checkout({ location }) {
+  const {
+    schedules,
+    removeScheduleFromShoppingCart,
+    paymentDetails,
+    setPaymentStatusDetails,
+  } = useShoppingCart()
   const { userInfo } = useAuth()
   const getPrice = () => {
     let total = 0
@@ -46,22 +51,22 @@ function Checkout({ location, match }) {
       pathname.lastIndexOf("/") + 1,
       pathname.length
     )
-
-    
   }, [])
 
-  useEffect(()=>{
+  useEffect(() => {
     console.log("CHECKOUT", paymentDetails)
     if (paymentDetails && paymentDetails.hasOwnProperty("status")) {
-      alert(mpResponseStrings[paymentDetails.status][paymentDetails.status_detail])
+      alert(
+        mpResponseStrings[paymentDetails.status][paymentDetails.status_detail]
+      )
+      setPaymentStatusDetails({})
     }
 
-    if(paymentDetails && paymentDetails.hasOwnProperty("cause")){
+    if (paymentDetails && paymentDetails.hasOwnProperty("cause")) {
       alert(mpResponseStrings[paymentDetails.cause[0].code])
+      setPaymentStatusDetails({})
     }
-
   }, [paymentDetails])
-
 
   const removeSchedule = (schedule) => () => {
     removeScheduleFromShoppingCart(schedule)
@@ -183,7 +188,7 @@ function Checkout({ location, match }) {
               <Button to="/reservas" variant="contained" color="primary">
                 Concluir agendamento
               </Button>
-              <Modal >
+              <Modal>
                 <MercadoLivreCardForm
                   schedules={schedules}
                   price={price.payment}

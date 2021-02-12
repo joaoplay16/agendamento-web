@@ -7,12 +7,7 @@ import "./style.css"
 import { useDatabase, useShoppingCart } from "hooks"
 import * as mpApi from "services/mercadopago-api"
 
-const MercadoLivreCardForm = ({
-  schedules,
-  price,
-  userInfo,
-  onModalResult,
-}) => {
+const MercadoLivreCardForm = ({ schedules, price, userInfo }) => {
   const [doSubmit, setDoSubmit] = useState(false)
 
   const [formData, setFormData] = useState({
@@ -179,7 +174,7 @@ const MercadoLivreCardForm = ({
     const transactionAmount = document.getElementById("amount").value
     const token = document.getElementById("token").value
     const description = getDescription()
-    const data = {
+    const paymentData = {
       email,
       description,
       installments,
@@ -187,23 +182,42 @@ const MercadoLivreCardForm = ({
       transactionAmount,
       token,
     }
-    // const res = await mpApi.post('/process_payment',data)
-    const res = await mpApi.payNow(data)
-    if(res.data.hasOwnProperty("status")){
-      if(res.data.status === "approved"){
+
+    const filteredSchedules = schedules.map((schedule) => {
+      return {
+        procedure: {
+          id: schedule.procedure.id,
+          name: schedule.procedure.name,
+          time: schedule.procedure.time,
+        },
+        professional: {
+          id: schedule.professional.id,
+          name: schedule.professional.name,
+          photo: schedule.professional.photo,
+          price: parseFloat(schedule.professional.price),
+        },
+        scheduleDate: schedule.selectedDate,
+        scheduleTime: schedule.selectedTime,
+      }
+    })
+
+    const res = await mpApi.payNow(paymentData)
+    if (res.data.hasOwnProperty("status")) {
+      if (res.data.status === "approved") {
         const { user } = userInfo
         const response = await submitSchedule({
           userId: user.uid,
           userName: user.displayName,
           userPhoto: user.photoURL,
           email: user.email,
+          schedules: filteredSchedules,
           paymentInfo: res.data,
         })
 
-        console.log("SALVOU?", response);
+        console.log("SALVOU?", response)
       }
     }
-   
+
     setPaymentStatusDetails(res.data)
     // console.log("RESULT", res.data)
   }
@@ -231,7 +245,6 @@ const MercadoLivreCardForm = ({
       // setDoSubmit(true)
       // form.submit()
       pay()
-
     } else {
       alert(
         "Verifique os dados inseridos!\n" + JSON.stringify(response, null, 4)
