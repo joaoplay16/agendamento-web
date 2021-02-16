@@ -13,16 +13,18 @@ import {
 import { DeleteSharp } from "@material-ui/icons"
 import { useAuth, useShoppingCart } from "hooks"
 import React, { useEffect } from "react"
-import { SCHEDULE } from "routes"
+import { SCHEDULE, RESERVATIONS } from "routes"
 import styled from "styled-components"
 import { Button, Content, Modal, Spacer } from "ui"
 import { toMoney } from "utils"
 import MercadoLivreCardForm from "./mercado-livre-form"
 import mpResponseStrings from "strings/mercadopago-response"
-function Checkout({ location }) {
+import { Redirect } from "react-router-dom"
+function Checkout({ location, history }) {
   const {
     schedules,
     removeScheduleFromShoppingCart,
+    resetShoppingCart,
     paymentDetails,
     setPaymentStatusDetails,
   } = useShoppingCart()
@@ -56,10 +58,12 @@ function Checkout({ location }) {
   useEffect(() => {
     console.log("CHECKOUT", paymentDetails)
     if (paymentDetails && paymentDetails.hasOwnProperty("status")) {
+      resetShoppingCart()
       alert(
         mpResponseStrings[paymentDetails.status][paymentDetails.status_detail]
       )
       setPaymentStatusDetails({})
+        history.push(RESERVATIONS)
     }
 
     if (paymentDetails && paymentDetails.hasOwnProperty("cause")) {

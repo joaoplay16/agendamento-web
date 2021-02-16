@@ -1,7 +1,6 @@
 import React, { createContext, useCallback, useState } from "react"
 import PropTypes from "prop-types"
 import firebase from "services/firebase"
-
 const DatabaseContext = createContext()
 
 const PROFESSIONALS = "admin/scheduling/professionals"
@@ -13,6 +12,18 @@ function DatabaseProvider({ children }) {
   const [procedures, setProcedures] = useState(() => [])
   const [schedules, setSchedules] = useState(() => [])
   const [professionals, setProfessionals] = useState(() => ({}))
+  const [userSchedules, setUserSchedules] = useState(() => [])
+
+  const fetchUserSchedules = useCallback((userInfo) => {
+    const schedulesRef = db.collection(SCHEDULES)
+    const query = schedulesRef.where("userEmail", "==", userInfo.user.email)
+
+    query.onSnapshot((snapshot) => {
+      let uSchedules =  snapshot.docs.map(doc => doc.data())
+      console.log("uSchedules", uSchedules);
+      setUserSchedules(uSchedules)
+    })
+  }, [])
 
   const fetchProcedures = useCallback(() => {
     db.collection(PROCEDURES)
@@ -217,6 +228,8 @@ function DatabaseProvider({ children }) {
         addProfessional,
         updateProfessional,
         deleteProfessional,
+        userSchedules,
+        fetchUserSchedules
       }}
     >
       {children}

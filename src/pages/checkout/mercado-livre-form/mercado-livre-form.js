@@ -2,13 +2,11 @@ import { Select } from "@material-ui/core"
 import React, { useEffect, useState } from "react"
 import { TextField } from "ui"
 import mpInsertionErros from "strings/mercadopago-insertion-errors"
-import axios from "axios"
 import "./style.css"
 import { useDatabase, useShoppingCart } from "hooks"
 import * as mpApi from "services/mercadopago-api"
 
 const MercadoLivreCardForm = ({ schedules, price, userInfo }) => {
-  const [doSubmit, setDoSubmit] = useState(false)
 
   const [formData, setFormData] = useState({
     cardNumber: "6062826786276634",
@@ -29,7 +27,6 @@ const MercadoLivreCardForm = ({ schedules, price, userInfo }) => {
 
     document.getElementById("description").value = getDescription(true)
 
-    console.log("USERINFO", userInfo)
   }, [])
 
   useEffect(() => {
@@ -41,7 +38,7 @@ const MercadoLivreCardForm = ({ schedules, price, userInfo }) => {
     let decription = withBrand ? "Raisse Queiroz & Hercules Queiroz - " : ""
     schedules.forEach((schedule, index) => {
       let name = schedule.procedure.name
-      let date = schedule.selectedDate.toLocaleDateString()
+      let date = new Date(schedule.selectedDate).toLocaleDateString()
       decription +=
         schedules.length != index + 1
           ? `${name} (${date}) , `
@@ -203,17 +200,18 @@ const MercadoLivreCardForm = ({ schedules, price, userInfo }) => {
 
     const res = await mpApi.payNow(paymentData)
     if (res.data.hasOwnProperty("status")) {
-      if (res.data.status === "approved") {
+      const status = res.data.status
+      if (status === "approved" || status === "pending" ) {
         const { user } = userInfo
         const response = await submitSchedule({
           userId: user.uid,
           userName: user.displayName,
           userPhoto: user.photoURL,
-          email: user.email,
+          userEmail: user.email,
           schedules: filteredSchedules,
           paymentInfo: res.data,
         })
-
+        
         console.log("SALVOU?", response)
       }
     }
@@ -225,11 +223,9 @@ const MercadoLivreCardForm = ({ schedules, price, userInfo }) => {
   function getCardToken(event) {
     event.preventDefault()
 
-    if (!doSubmit) {
       let form = document.getElementById("paymentForm")
       window.Mercadopago.createToken(form, setCardTokenAndPay)
       return false
-    }
   }
 
   function setCardTokenAndPay(status, response) {

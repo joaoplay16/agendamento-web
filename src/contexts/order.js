@@ -1,19 +1,40 @@
-import React, { createContext, useState } from "react"
 import t from "prop-types"
+import React, { createContext, useState, useEffect } from "react"
 const ShoppingCartContext = createContext()
 
 function ShoppingCartProvider({ children }) {
-  const [schedules, addSchedule] = useState(() => [])
+
+  const [schedules, addSchedule] = useState(() => {
+   let items =  localStorage.getItem("schedules") 
+   if(items !== null){
+    return JSON.parse(items)
+   }
+     localStorage.setItem("schedules", JSON.stringify([]))
+     return []
+   
+})
+
   const [paymentDetails, setPaymentDetails] = useState(() => ({}))
 
   function addScheduleToShoppingCart(schedule) {
-    addSchedule((schedules) => schedules.concat(schedule))
+    addSchedule((schedules) => {
+      let items = schedules.concat(schedule)
+      localStorage.setItem("schedules", JSON.stringify(items))
+      return items
+    })
   }
 
   function removeScheduleFromShoppingCart(scheduleToRemove) {
-    addSchedule((schedules) =>
-      schedules.filter((item) => item !== scheduleToRemove)
-    )
+    addSchedule((schedules) => {
+      let items = schedules.filter((item) => item !== scheduleToRemove)
+      localStorage.setItem("schedules", JSON.stringify(items))
+      return items
+    })
+  }
+
+  function resetShoppingCart(){
+    addSchedule([])
+    localStorage.setItem("schedules", JSON.stringify([]))
   }
 
   function setPaymentStatusDetails(paymentStatusDetails) {
@@ -28,6 +49,7 @@ function ShoppingCartProvider({ children }) {
         removeScheduleFromShoppingCart,
         paymentDetails,
         setPaymentStatusDetails,
+        resetShoppingCart
       }}
     >
       {children}
