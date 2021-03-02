@@ -64,6 +64,6 @@ app.post("/process_payment", (req, res) => {
     })
 })
 
-app.listen(3001, () => {
+app.listen(process.env.PORT || 8080, () => {
   console.log("The server is now running on Port 3001")
 })
