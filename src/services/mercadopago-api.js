@@ -1,7 +1,7 @@
 import axios from 'axios'
 
 const mpApi = axios.create({
-  baseURL: `http://0.0.0.0:${process.env.PORT}`,
+  baseURL: `${window.location.hostname}:${process.env.PORT}`,
 })
 
 export const payNow =  (data) => {
