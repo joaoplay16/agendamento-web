@@ -49,7 +49,7 @@ export default function FullScreenDialog({ children }) {
   return (
     <div>
       <Button variant="outlined" color="primary" onClick={handleClickOpen}>
-        Open full-screen dialog
+        Concluir agendamento
       </Button>
       <Dialog
         fullScreen
@@ -68,11 +68,8 @@ export default function FullScreenDialog({ children }) {
               <CloseIcon />
             </IconButton>
             <Typography variant="h6" className={classes.title}>
-              Sound
+              Fechar
             </Typography>
-            <Button autoFocus color="inherit" onClick={handleClose}>
-              save
-            </Button>
           </Toolbar>
         </AppBar>
         <Content>

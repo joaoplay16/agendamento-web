@@ -3,7 +3,7 @@ import { Route, Switch, Redirect } from 'react-router-dom'
 import PropTypes from 'prop-types'
 import { LinearProgress } from '@material-ui/core'
 import firebase from 'services/firebase'
-import { HOME, LOGIN } from 'routes'
+import { CHECKOUT, HOME, LOGIN } from 'routes'
 import { useAuth } from 'hooks'
 
 const MainPage = lazy(() => import('pages/main'))
@@ -33,10 +33,10 @@ function AppForUsers ({ location }) {
   }
 
   if (isUserLoggedIn && location.pathname === LOGIN) {
-    return <Redirect to={HOME} />
+    return <Redirect to={CHECKOUT} />
   }
 
-  if (!isUserLoggedIn && location.pathname !== LOGIN) {
+  if (!isUserLoggedIn && location.pathname == CHECKOUT) {
     return <Redirect to={LOGIN} />
   }
 

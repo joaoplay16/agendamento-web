@@ -7,7 +7,7 @@ import { Link } from 'react-router-dom'
 import pay from 'services/mercadopago'
 const Scheduling = () => {
   useEffect(()=>{
-    pay()
+    // pay()
   },[])
   return (
     <MainContent>
@@ -54,7 +54,7 @@ display: flex;
 align-content: space-around;
 padding-top: ${({theme}) => theme.spacing(15)}px;
 background: linear-gradient(rgba(254,254,254,0.3),rgba(254,254,254,0.3)),
-               url(https://instagram.fthe11-1.fna.fbcdn.net/v/t51.2885-15/e35/89358927_2375870306038400_6794170017724109574_n.jpg?_nc_ht=instagram.fthe11-1.fna.fbcdn.net&_nc_cat=108&_nc_ohc=irBfJ7yRFKAAX8lZSYL&tp=1&oh=9a609413d9c850f6e9e848e2a7217e14&oe=60254AC7);
+               url(https://cdn.pixabay.com/photo/2018/09/24/15/54/background-3700256_960_720.jpg);
   /* Background image is centered vertically and horizontally at all times */
   background-position: center center;
   /* Background image doesn't tile */

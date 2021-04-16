@@ -9,6 +9,7 @@ import {
   MenuItem,
   Typography
 } from '@material-ui/core'
+import { Button } from 'ui'
 // import { ReactComponent as MainLogo } from 'images/logo-react-zzaria.svg'
 import { useAuth } from 'hooks'
 import { Link } from 'react-router-dom'
@@ -32,8 +33,9 @@ const Header = () => {
             <Logo />
           </LinkLogo> */}
         </LogoContainer>
-
-        <Typography color='inherit'>
+        {userInfo.user && (
+          <>
+          <Typography color='inherit'>
           Olá {userInfo.user.firstName}
         </Typography>
         <IconButton color='inherit' onClick={handleOpenMenu}>
@@ -47,6 +49,13 @@ const Header = () => {
         >
           <MenuItem onClick={logout}>Sair</MenuItem>
         </Menu>
+          </>
+        )}
+
+        {!userInfo.user && (
+         <Button to="/login" color="inherit">Login</Button>
+        )}
+        
       </Toolbar>
     </AppBar>
   )

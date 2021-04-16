@@ -1,7 +1,7 @@
 import axios from 'axios'
 
 const mpApi = axios.create({
-  baseURL: `https://raissequeiroz.herokuapp.com`,
+  baseURL: `http://localhost:8080`,
 })
 
 

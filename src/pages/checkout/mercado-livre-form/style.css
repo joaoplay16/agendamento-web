@@ -4,6 +4,15 @@
   display: none;
 }
 
+button {
+  min-width: 80px;
+  border: 0px;
+  border-radius: 10px;
+  cursor: pointer;
+  color: aliceblue;
+  font-size: medium;
+}
+
 /* Shopping Cart Section - Start */
 .shopping-cart {
   padding-bottom: 10px;

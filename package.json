@@ -27,7 +27,8 @@
     "style-loader": "^2.0.0",
     "styled-components": "^5.2.1",
     "uuid": "^8.3.2",
-    "web-vitals": "^1.0.1"
+    "web-vitals": "^1.0.1",
+    "yarn": "^1.22.10"
   },
   "scripts": {
     "start": "node server.js",

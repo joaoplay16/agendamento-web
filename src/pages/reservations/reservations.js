@@ -35,10 +35,10 @@ const Reservations = () => {
           <Grid container>
             {userSchedules.map((us, index) => {
             {return us.schedules.map(schedule => (
-              <Card key={schedule.scheduleDate.toMillis()}>
+              <Card key={schedule.scheduleDate.seconds * 1000}>
                 <CardContent className="card-info">
                   <CardText variant="inherit">
-                    {new Date(schedule.scheduleDate.toMillis()).toLocaleDateString(
+                    {new Date(schedule.scheduleDate.seconds * 1000).toLocaleDateString(
                       "pt-BR",
                       {
                         weekday: "long",

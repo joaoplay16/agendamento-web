@@ -8,9 +8,9 @@ mercadopago.configurations.setAccessToken(
   "TEST-5314855399155157-011900-516f5630ab8e49e598abe93632f73084-179865264"
 )
 
+app.use(cors())
 app.use(express.urlencoded({ extended: false }))
 app.use(express.json())
-app.use(cors())
 // app.use(express.static("../../client"));
 app.use(express.static("./build"))
 
@@ -65,5 +65,5 @@ app.post("/process_payment", (req, res) => {
 })
 
 app.listen(process.env.PORT || 8080, () => {
-  console.log("The server is now running on Port 3001")
+  console.log("The server is now running on Port 8080")
 })

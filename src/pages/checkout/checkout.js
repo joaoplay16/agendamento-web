@@ -21,6 +21,7 @@ import MercadoLivreCardForm from "./mercado-livre-form"
 import mpResponseStrings from "strings/mercadopago-response"
 import { Redirect } from "react-router-dom"
 function Checkout({ location, history }) {
+
   const {
     schedules,
     removeScheduleFromShoppingCart,
@@ -28,6 +29,7 @@ function Checkout({ location, history }) {
     paymentDetails,
     setPaymentStatusDetails,
   } = useShoppingCart()
+
   const { userInfo } = useAuth()
   const getPrice = () => {
     let total = 0
@@ -53,6 +55,11 @@ function Checkout({ location, history }) {
       pathname.lastIndexOf("/") + 1,
       pathname.length
     )
+
+    if(schedules.length === 0){
+      history.push('/')
+    }
+    
   }, [])
 
   useEffect(() => {
@@ -172,10 +179,11 @@ function Checkout({ location, history }) {
               <RadioGroup>
                 <FormControlLabel
                   value="card"
+                  checked
                   control={<Radio color="secondary" />}
                   label="Cartão de crédito"
                 />
-                <FormControlLabel
+                {/* <FormControlLabel
                   value="spot"
                   control={<Radio color="secondary" />}
                   label="Pagamento no local"
@@ -184,14 +192,11 @@ function Checkout({ location, history }) {
                   value="bank-slip"
                   control={<Radio color="secondary" />}
                   label="Boleto"
-                />
+                /> */}
               </RadioGroup>
             </FormControl>
             <Spacer />
             <Grid container justify="center">
-              <Button to="/reservas" variant="contained" color="primary">
-                Concluir agendamento
-              </Button>
               <Modal>
                 <MercadoLivreCardForm
                   schedules={schedules}
