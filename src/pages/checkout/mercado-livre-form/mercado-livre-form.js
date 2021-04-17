@@ -20,7 +20,7 @@ const MercadoLivreCardForm = ({ schedules, price, userInfo }) => {
     window.Mercadopago.clearSession()
 
     window.Mercadopago.setPublishableKey(
-      "TEST-72a91e7b-462c-4ed6-be2c-5485b30eeb3b"
+      process.env.REACT_APP_MP_PUBLISHABLE_KEY
     )
 
     window.Mercadopago.getIdentificationTypes()
@@ -35,7 +35,7 @@ const MercadoLivreCardForm = ({ schedules, price, userInfo }) => {
   }, [formData.cardNumber])
 
   const getDescription = (withBrand = false) => {
-    let decription = withBrand ? "Raisse Queiroz & Hercules Queiroz - " : ""
+    let decription = withBrand ? "Agendamento Web - " : ""
     schedules.forEach((schedule, index) => {
       let name = schedule.procedure.name
       let date = new Date(schedule.selectedDate).toLocaleDateString()

@@ -1,9 +1,11 @@
 import axios from 'axios'
 
-const mpApi = axios.create({
-  baseURL: `http://localhost:8080`,
-})
+const HOST = process.env.NODE_ENV === 'production' 
+  ? `https://agendamentoweb.herokuapp.com` : `http://localhost:8080`
 
+const mpApi = axios.create({
+  baseURL: HOST
+})
 
 export const payNow =  (data) => {
 
