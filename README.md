@@ -1,70 +1,88 @@
-# Getting Started with Create React App
 
-This project was bootstrapped with [Create React App](https://github.com/facebook/create-react-app).
+[![LinkedIn][linkedin-shield]][linkedin-url]
+[![MIT License][license-shield]][license-url]
+# Agendamento Web
 
-## Available Scripts
+<!-- TABLE OF CONTENTS -->
+<details open="open">
+  <summary>Sumário</summary>
+  <ol>
+    <li>
+      <a href="#sobre-o-projeto">Sobre o projeto</a>
+    </li>
+    <li>
+      <a href="#tecnologias-utilizadas">Tecnologias utilizadas</a>
+    </li>
+    <li>
+      <a href="#começando">Começando</a>
+      <ul>
+        <li><a href="#pré-requisitos">Pré-requisitos</a></li>
+        <li><a href="#instalação">Instalação</a></li>
+      </ul>
+    </li>
+    <li><a href="#scripts-disponíveis">Scripts Disponíveis</a></li>
+    <li><a href="#licença">Licença</a></li>
+    <li><a href="#contato">Contato</a></li>
+  </ol>
+</details>
 
-In the project directory, you can run:
+## Sobre o projeto
+> Agendamento de procedimentos estéticos online
 
+Agendamento Web  é um sistema para agendamento de horários para serviços de estética. **Demo** https://agendamentoweb.herokuapp.com/
+
+#### 🚧  🚀 Em construção...  🚧
+
+## Tecnologias utilizadas
+- [NodeJS](https://nodejs.org/pt-br/)
+- [React](https://reactjs.com)
+- [Material-UI](https://material-ui.com/pt/)
+- [Firebase](http://console.firebase.com)
+- [Mercadopago](https://www.mercadopago.com.br/developers/pt/guides)
+
+## Começando
+Siga as instruções para conseguir executar o projeto localmente.
+
+### Pré-requisitos
+- yarn
+`npm install -g yarn`
+
+### Instalação
+1. Instale os pacotes
+`yarn install`
+2. Obtenha as credenciais do mercado pago em: https://www.mercadopago.com.br/developers/panel
+3. Renomeie o arquivo** .env.example**  para **.env**
+4. Insira as respectivas credenciais 
+```
+MP_ACCESS_TOKEN=<ACCESS_TOKEN>
+REACT_APP_MP_PUBLISHABLE_KEY=<PUBLIC_KEY>
+```
+
+## Scripts disponíveis
+No diretório do projeto, você pode rodar:
+
+### `yarn dev`
+Executa o projeto no servidor de desenvolvimento.
+Abra http://localhost:3000 para visualizar no navegador
 ### `yarn start`
-
-Runs the app in the development mode.\
-Open [http://localhost:3000](http://localhost:3000) to view it in the browser.
-
-The page will reload if you make edits.\
-You will also see any lint errors in the console.
-
-### `yarn test`
-
-Launches the test runner in the interactive watch mode.\
-See the section about [running tests](https://facebook.github.io/create-react-app/docs/running-tests) for more information.
+Irá executar o servidor express que contém a api de pagamento e a build de produção. 
+Abra http://localhost:8080 no navegador para visualizar a build de produção.
+A rota para a api de pagamentos é a seguinte: http://localhost:3000/process_payment
 
 ### `yarn build`
+Faz build do aplicativo para produção na pasta** /build.**
 
-Builds the app for production to the `build` folder.\
-It correctly bundles React in production mode and optimizes the build for the best performance.
+##Utilização
+Abra um terminal, no diretório do projeto execute `yarn start` para iniciar o servidor da api de pagamentos, em seguida abra outro terminal e execute `yarn dev` para executar o front-end da aplicação
 
-The build is minified and the filenames include the hashes.\
-Your app is ready to be deployed!
+## Licença
+Distribuído sob a licença do MIT. Ver `LICENÇA` para mais informações.
 
-See the section about [deployment](https://facebook.github.io/create-react-app/docs/deployment) for more information.
+## Contato
+joaoplay16@gmail.com
 
-### `yarn eject`
+[linkedin-url]: https://www.linkedin.com/in/joao-pedro-de-freitas/
+[linkedin-shield]: https://img.shields.io/badge/-LinkedIn-black.svg?style=for-the-badge&logo=linkedin&colorB=555
+[license-shield]: https://img.shields.io/github/license/othneildrew/Best-README-Template.svg?style=for-the-badge
+[license-url]: https://github.com/joaoplay16/agendamento-web/blob/main/LICENSE.txt
 
-**Note: this is a one-way operation. Once you `eject`, you can’t go back!**
-
-If you aren’t satisfied with the build tool and configuration choices, you can `eject` at any time. This command will remove the single build dependency from your project.
-
-Instead, it will copy all the configuration files and the transitive dependencies (webpack, Babel, ESLint, etc) right into your project so you have full control over them. All of the commands except `eject` will still work, but they will point to the copied scripts so you can tweak them. At this point you’re on your own.
-
-You don’t have to ever use `eject`. The curated feature set is suitable for small and middle deployments, and you shouldn’t feel obligated to use this feature. However we understand that this tool wouldn’t be useful if you couldn’t customize it when you are ready for it.
-
-## Learn More
-
-You can learn more in the [Create React App documentation](https://facebook.github.io/create-react-app/docs/getting-started).
-
-To learn React, check out the [React documentation](https://reactjs.org/).
-
-### Code Splitting
-
-This section has moved here: [https://facebook.github.io/create-react-app/docs/code-splitting](https://facebook.github.io/create-react-app/docs/code-splitting)
-
-### Analyzing the Bundle Size
-
-This section has moved here: [https://facebook.github.io/create-react-app/docs/analyzing-the-bundle-size](https://facebook.github.io/create-react-app/docs/analyzing-the-bundle-size)
-
-### Making a Progressive Web App
-
-This section has moved here: [https://facebook.github.io/create-react-app/docs/making-a-progressive-web-app](https://facebook.github.io/create-react-app/docs/making-a-progressive-web-app)
-
-### Advanced Configuration
-
-This section has moved here: [https://facebook.github.io/create-react-app/docs/advanced-configuration](https://facebook.github.io/create-react-app/docs/advanced-configuration)
-
-### Deployment
-
-This section has moved here: [https://facebook.github.io/create-react-app/docs/deployment](https://facebook.github.io/create-react-app/docs/deployment)
-
-### `yarn build` fails to minify
-
-This section has moved here: [https://facebook.github.io/create-react-app/docs/troubleshooting#npm-run-build-fails-to-minify](https://facebook.github.io/create-react-app/docs/troubleshooting#npm-run-build-fails-to-minify)

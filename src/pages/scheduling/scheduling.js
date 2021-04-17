@@ -1,7 +1,7 @@
 import React, { useEffect } from 'react'
 import styled from 'styled-components'
 import { Grid as MaterialGrid, Card as MaterialCard } from '@material-ui/core'
-import { CardLink, Content, H3, H4,H5, HeaderContent, Button } from 'ui'
+import { CardLink, Content, H3, H2, H4,H5, HeaderContent, Button } from 'ui'
 import { SCHEDULE, RESERVATIONS } from 'routes'
 import { Link } from 'react-router-dom'
 const Scheduling = () => {
@@ -70,7 +70,7 @@ background: linear-gradient(rgba(254,254,254,0.3),rgba(254,254,254,0.3)),
      while the background image is loading */
 `
 
-const MainTitle = styled(H4).attrs({
+const MainTitle = styled(H2).attrs({
   display: 'noWrap'
 })`
   color: ${({ theme }) => theme.palette.text.secondary};
