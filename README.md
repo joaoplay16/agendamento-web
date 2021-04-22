@@ -72,11 +72,11 @@ A rota para a api de pagamentos é a seguinte: http://localhost:3000/process_pay
 ### `yarn build`
 Faz build do aplicativo para produção na pasta** /build.**
 
-##Utilização
+## Utilização
 Abra um terminal, no diretório do projeto execute `yarn start` para iniciar o servidor da api de pagamentos, em seguida abra outro terminal e execute `yarn dev` para executar o front-end da aplicação
 
 ## Licença
-Distribuído sob a licença do MIT. Ver `LICENÇA` para mais informações.
+Distribuído sob a licença do MIT. Ver `LICENSE` para mais informações.
 
 ## Contato
 joaoplay16@gmail.com
