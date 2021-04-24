@@ -29,7 +29,7 @@
 ## Sobre o projeto
 > Agendamento de procedimentos estéticos online
 
-Agendamento Web  é um sistema para agendamento de horários para serviços de estética. **Demo** https://agendamentoweb.herokuapp.com/
+Agendamento Web  é um sistema de agendamento de horários para serviços de estética. **Demo** https://agendamentoweb.herokuapp.com/
 
 #### 🚧  🚀 Em construção...  🚧
 
