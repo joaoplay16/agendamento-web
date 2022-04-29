@@ -18,14 +18,15 @@ import { Delete as DeleteIcon } from "@material-ui/icons"
 import { Alert } from "@material-ui/lab"
 import { useDatabase } from "hooks"
 import React, { useEffect, useRef, useState } from "react"
-import { Redirect } from "react-router-dom"
+import { useNavigate } from "react-router-dom"
 import { ADMIN_PROCEDURES } from "routes"
 import { Content, H5, PaperContainer, Spacer, TextField } from "ui"
 import { toMoney } from "utils"
 
 function UpdateProcedure({ location, history }) {
+  const navigate = useNavigate()
   if (!location.state) {
-    return <Redirect to={ADMIN_PROCEDURES} />
+    return navigate(ADMIN_PROCEDURES)
   }
 
   const procedureToUpdate = location.state.procedure

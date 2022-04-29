@@ -1,271 +1,145 @@
-import { Select } from "@material-ui/core"
-import React, { useEffect, useState } from "react"
-import { TextField } from "ui"
-import mpInsertionErros from "strings/mercadopago-insertion-errors"
-import "./style.css"
-import { useDatabase, useShoppingCart } from "hooks"
-import * as mpApi from "services/mercadopago-api"
+import { Select } from "@material-ui/core";
+import React, { useEffect, useState } from "react";
+import { useNavigate } from "react-router-dom";
+import { TextField } from "ui";
+import "./style.css";
+import { useDatabase, useShoppingCart } from "hooks";
+import * as mpApi from "services/mercadopago-api";
+import { da } from "date-fns/locale";
 
-const MercadoLivreCardForm = ({ schedules, price, userInfo }) => {
+const MercadoLivreCardForm = ({history, schedules, price, userInfo, handleCloseModal }) => {
+  let mercadopago = new MercadoPago(process.env.REACT_APP_MP_PUBLISHABLE_KEY);
+  const navigate = useNavigate();
 
-  const [formData, setFormData] = useState({
-    cardNumber: "6062826786276634",
-  })
+  const { setPaymentStatusDetails } = useShoppingCart();
+  const { submitSchedule } = useDatabase();
 
-  const { setPaymentStatusDetails } = useShoppingCart()
-  const { submitSchedule } = useDatabase()
+  const cardForm = {
+    amount: price.toString(),
+    autoMount: true,
+    form: {
+      id: "form-checkout",
+      cardholderName: {
+        id: "form-checkout__cardholderName",
+        placeholder: "Titular do cartão",
+      },
+      cardholderEmail: {
+        id: "form-checkout__cardholderEmail",
+        placeholder: "E-mail",
+      },
+      cardNumber: {
+        id: "form-checkout__cardNumber",
+        placeholder: "Número do cartão",
+      },
+      cardExpirationDate: {
+        id: "form-checkout__cardExpirationDate",
+        placeholder: "Data de vencimento (MM/YYYY)",
+      },
+      securityCode: {
+        id: "form-checkout__securityCode",
+        placeholder: "Código de segurança",
+      },
+      installments: {
+        id: "form-checkout__installments",
+        placeholder: "Parcelas",
+      },
+      identificationType: {
+        id: "form-checkout__identificationType",
+        placeholder: "Tipo de documento",
+      },
+      identificationNumber: {
+        id: "form-checkout__identificationNumber",
+        placeholder: "Número do documento",
+      },
+      issuer: {
+        id: "form-checkout__issuer",
+        placeholder: "Banco emissor",
+      },
+    },
+    callbacks: {
+      onFormMounted: (error) => {
+        if (error) return console.warn("Form Mounted handling error: ", error);
+        console.log("Form mounted");
+      },
+      onSubmit: (event) => {
+        event.preventDefault();
+        const {
+          paymentMethodId,
+          issuerId,
+          cardholderEmail: email,
+          token,
+          installments,
+          identificationNumber,
+          identificationType,
+        } = mercadopago.cardForm(cardForm).getCardFormData();
+
+        const data = {
+          token,
+          issuerId,
+          paymentMethodId,
+          transactionAmount: Number(price),
+          installments: Number(installments),
+          description: getDescription(),
+          payer: {
+            email,
+            identification: {
+              docType: identificationType,
+              docNumber: identificationNumber,
+            },
+          },
+        }
+        mpApi.payNow(data).then( response => {
+          console.log("response", response.data)
+          if(!response.data.hasOwnProperty("error_message")) {
+            handleCloseModal()
+            navigate("/reservas")
+          }else{
+
+          }
+        })
+
+
+      },
+      onFetching: (resource) => {
+        console.log("Fetching resource: ", resource);
+
+        // Animate progress bar
+        const progressBar = document.querySelector(".progress-bar");
+        progressBar.removeAttribute("value");
+
+        return () => {
+          progressBar.setAttribute("value", "0");
+        };
+      },
+    },
+  };
 
   useEffect(() => {
-    //para poder fazer outra compra com o mesmo cartão
-    window.Mercadopago.clearSession()
+    mercadopago.cardForm(cardForm);
+    console.log("component didMount", history);
+  }, []);
 
-    window.Mercadopago.setPublishableKey(
-      process.env.REACT_APP_MP_PUBLISHABLE_KEY
-    )
-
-    window.Mercadopago.getIdentificationTypes()
-
-    document.getElementById("description").value = getDescription(true)
-
-  }, [])
-
-  useEffect(() => {
-    guessPaymentMethod(formData.cardNumber)
-    console.log("STATE", formData)
-  }, [formData.cardNumber])
 
   const getDescription = (withBrand = false) => {
-    let decription = withBrand ? "Agendamento Web - " : ""
+    let decription = withBrand ? "Agendamento Web - " : "";
     schedules.forEach((schedule, index) => {
-      let name = schedule.procedure.name
-      let date = new Date(schedule.selectedDate).toLocaleDateString()
+      let name = schedule.procedure.name;
+      let date = new Date(schedule.selectedDate).toLocaleDateString();
       decription +=
         schedules.length != index + 1
           ? `${name} (${date}) , `
-          : `${name} (${date})`
-    })
+          : `${name} (${date})`;
+    });
 
-    return decription
-  }
-
-  const handleChange = (e) => {
-    let { name, value } = e.target
-    setFormData((state) => ({
-      ...state,
-      [name]: value,
-    }))
-  }
-
-  function guessPaymentMethod(cardNumber) {
-    cleanCardInfo()
-
-    if (cardNumber.length >= 6) {
-      let bin = cardNumber.substring(0, 6)
-      window.Mercadopago.getPaymentMethod(
-        {
-          bin: bin,
-        },
-        setPaymentMethod
-      )
-    }
-  }
-
-  function setPaymentMethod(status, response) {
-    if (status == 200) {
-      let paymentMethod = response[0]
-
-      document.getElementById("paymentMethodId").value = paymentMethod.id
-      document.getElementById(
-        "cardNumber"
-      ).style.backgroundImage = `url(${paymentMethod.thumbnail})`
-
-      if (paymentMethod.additional_info_needed.includes("issuer_id")) {
-        getIssuers(paymentMethod.id)
-      } else {
-        document.getElementById("issuerInput").classList.add("hidden")
-
-        getInstallments(paymentMethod.id, price)
-      }
-    } else {
-      alert(`payment method info error: ${response.message}`)
-      console.log(`payment method info `, response)
-    }
-  }
-
-  function getIssuers(paymentMethodId) {
-    window.Mercadopago.getIssuers(paymentMethodId, setIssuers)
-  }
-
-  function setIssuers(status, response) {
-    if (status == 200) {
-      let issuerSelect = document.getElementById("issuer")
-
-      response.forEach((issuer) => {
-        let opt = document.createElement("option")
-        opt.text = issuer.name
-        opt.value = issuer.id
-        issuerSelect.appendChild(opt)
-      })
-
-      if (issuerSelect.options.length <= 1) {
-        document.getElementById("issuerInput").classList.add("hidden")
-      } else {
-        document.getElementById("issuerInput").classList.remove("hidden")
-      }
-
-      getInstallments(
-        document.getElementById("paymentMethodId").value,
-        price,
-        issuerSelect.value
-      )
-    } else {
-      alert(`issuers method info error: ${response}`)
-    }
-  }
-  // updateInstallmentsForIssuer
-  const handleIssuerChange = (e) => {
-    window.Mercadopago.getInstallments(
-      {
-        payment_method_id: document.getElementById("paymentMethodId").value,
-        amount: price,
-        issuer_id: parseInt(document.getElementById("issuer").value),
-      },
-      setInstallments
-    )
-  }
-
-  function getInstallments(paymentMethodId, amount, issuerId) {
-    window.Mercadopago.getInstallments(
-      {
-        payment_method_id: paymentMethodId,
-        amount: price,
-        issuer_id: issuerId ? parseInt(issuerId) : undefined,
-      },
-      setInstallments
-    )
-  }
-
-  function setInstallments(status, response) {
-    if (status == 200) {
-      document.getElementById("installments").options.length = 0
-      response[0].payer_costs.forEach((payerCost) => {
-        let opt = document.createElement("option")
-        opt.text = payerCost.recommended_message
-        opt.value = payerCost.installments
-        document.getElementById("installments").appendChild(opt)
-      })
-    } else {
-      alert(`installments method info error: ${response}`)
-    }
-  }
-
-  const handleSubmit = (e) => {
-    e.preventDefault()
-    getCardToken(e)
-  }
-
-  const pay = async () => {
-    const paymentMethodId = document.getElementById("paymentMethodId").value
-    const installments = document.getElementById("installments").value
-    const email = document.getElementById("email").value
-    const transactionAmount = document.getElementById("amount").value
-    const token = document.getElementById("token").value
-    const description = getDescription()
-    const paymentData = {
-      email,
-      description,
-      installments,
-      paymentMethodId,
-      transactionAmount,
-      token,
-    }
-
-    const filteredSchedules = schedules.map((schedule) => {
-      return {
-        procedure: {
-          id: schedule.procedure.id,
-          name: schedule.procedure.name,
-          time: schedule.procedure.time,
-        },
-        professional: {
-          id: schedule.professional.id,
-          name: schedule.professional.name,
-          photo: schedule.professional.photo,
-          price: parseFloat(schedule.professional.price),
-        },
-        scheduleDate: schedule.selectedDate,
-        scheduleTime: schedule.selectedTime,
-      }
-    })
-
-    const res = await mpApi.payNow(paymentData)
-    if (res.data.hasOwnProperty("status")) {
-      const status = res.data.status
-      if (status === "approved" || status === "pending" ) {
-        const { user } = userInfo
-        const response = await submitSchedule({
-          userId: user.uid,
-          userName: user.displayName,
-          userPhoto: user.photoURL,
-          userEmail: user.email,
-          schedules: filteredSchedules,
-          paymentInfo: res.data,
-        })
-        
-        console.log("SALVOU?", response)
-      }
-    }
-
-    setPaymentStatusDetails(res.data)
-    // console.log("RESULT", res.data)
-  }
-
-  function getCardToken(event) {
-    event.preventDefault()
-
-      let form = document.getElementById("paymentForm")
-      window.Mercadopago.createToken(form, setCardTokenAndPay)
-      return false
-  }
-
-  function setCardTokenAndPay(status, response) {
-    if (status == 200 || status == 201) {
-      let card = document.getElementById("token")
-      card.value = response.id
-      // let form = document.getElementById("paymentForm")
-      // let card = document.createElement("input")
-      // card.setAttribute("name", "token")
-      // card.setAttribute("type", "hidden")
-      // card.setAttribute("value", response.id)
-      // form.appendChild(card)
-      // setDoSubmit(true)
-      // form.submit()
-      pay()
-    } else {
-      alert(
-        "Verifique os dados inseridos!\n" + JSON.stringify(response, null, 4)
-      )
-      // alert("Verifique os dados inseridos!\n" + mpInsertionErros[response.cause[0].code])
-    }
-  }
-
-  /***
-   * UX functions
-   */
+    return decription;
+  };
 
   function cleanCardInfo() {
-    document.getElementById("cardNumber").style.backgroundImage = ""
-    document.getElementById("issuerInput").classList.add("hidden")
-    document.getElementById("issuer").options.length = 0
-    document.getElementById("installments").options.length = 0
+    document.getElementById("cardNumber").style.backgroundImage = "";
+    document.getElementById("issuerInput").classList.add("hidden");
+    document.getElementById("issuer").options.length = 0;
+    document.getElementById("installments").options.length = 0;
   }
-  //Handle price update
-  function updatePrice() {}
-  // document.getElementById('quantity').addEventListener('change', updatePrice);
-  // updatePrice();
-
-  //Retrieve product description
-  // document.getElementById('description').value = document.getElementById('product-description').innerHTML;
 
   return (
     <>
@@ -294,46 +168,38 @@ const MercadoLivreCardForm = ({ schedules, price, userInfo }) => {
                 </div>
               </div>
               <div class="payment-details">
-                <form onSubmit={handleSubmit} id="paymentForm">
+                <form id="form-checkout">
                   <h3 class="title">Suas informações</h3>
                   <div class="row">
                     <div class="form-group col">
-                      <label for="email">E-Mail</label>
+                      <label for="email">E-Mail </label>
                       <TextField
                         required
-                        defaultValue="seijiyokai@gmail.com"
-                        id="email"
-                        name="email"
+                        id="form-checkout__cardholderEmail"
+                        name="cardholderEmail"
+                        defaultValue={userInfo.user.email}
                         type="text"
                       />
                     </div>
                   </div>
                   <div class="row">
                     <div class="form-group col-sm-5">
-                      {/* <label for="docType">Tipo de documento</label> */}
+                      <label for="docType">Tipo de documento</label>
                       <Select
                         native
-                        hidden
-                        inputProps={{
-                          "data-checkout": "docType",
-                        }}
-                        id="docType"
-                        name="docType"
+                        required
+                        id="form-checkout__identificationType"
+                        name="identificationType"
                         type="text"
                         variant="outlined"
-                        value="CPF"
                       />
                     </div>
                     <div class="form-group col-sm-7">
                       <label for="docNumber">CPF</label>
                       <TextField
-                        required
+                        id="form-checkout__identificationNumber"
+                        name="identificationNumber"
                         defaultValue="76185675900"
-                        id="docNumber"
-                        name="docNumber"
-                        inputProps={{
-                          "data-checkout": "docNumber",
-                        }}
                         type="text"
                       />
                     </div>
@@ -347,12 +213,9 @@ const MercadoLivreCardForm = ({ schedules, price, userInfo }) => {
                       </label>
                       <TextField
                         required
-                        defaultValue="Otimista"
-                        id="cardholderName"
+                        id="form-checkout__cardholderName"
                         name="cardholderName"
-                        inputProps={{
-                          "data-checkout": "cardholderName",
-                        }}
+                        defaultValue="James Bernes Lee"
                         type="text"
                       />
                     </div>
@@ -361,81 +224,32 @@ const MercadoLivreCardForm = ({ schedules, price, userInfo }) => {
                       <div class="input-group expiration-date">
                         <TextField
                           required
-                          defaultValue="12"
                           type="text"
-                          placeholder="MM"
-                          id="cardExpirationMonth"
-                          name="cardExpirationMonth"
-                          inputProps={{
-                            "data-checkout": "cardExpirationMonth",
-                          }}
-                          onselectStart={() => false}
-                          onPaste={() => false}
-                          onCopy={() => false}
-                          onCut={() => false}
-                          onDrag={() => false}
-                          onDrop={() => false}
-                          autoComplete="off"
-                        />
-                        <span class="date-separator">/</span>
-                        <TextField
-                          required
-                          defaultValue="22"
-                          type="text"
-                          placeholder="YY"
-                          id="cardExpirationYear"
-                          name="cardExpirationYear"
-                          inputProps={{
-                            "data-checkout": "cardExpirationYear",
-                          }}
-                          onselectStart={() => false}
-                          onPaste={() => false}
-                          onCopy={() => false}
-                          onCut={() => false}
-                          onDrag={() => false}
-                          onDrop={() => false}
+                          defaultValue="12/2022"
+                          id="form-checkout__cardExpirationDate"
+                          name="cardExpirationDate"
                           autoComplete="off"
                         />
                       </div>
                     </div>
                     <div class="form-group col-sm-8">
-                      <label for="cardNumber">Numero do cartão</label>
+                      <label for="cardNumber">Número do cartão</label>
                       <TextField
                         required
                         type="text"
-                        id="cardNumber"
+                        id="form-checkout__cardNumber"
                         name="cardNumber"
-                        onChange={handleChange}
-                        value={formData.cardNumber}
-                        inputProps={{
-                          "data-checkout": "cardNumber",
-                          class: "input-background",
-                        }}
-                        onselectStart={() => false}
-                        onCopy={() => false}
-                        onCut={() => false}
-                        onDrag={() => false}
-                        onDrop={() => false}
+                        defaultValue="6062826786276634"
                         autoComplete="off"
                       />
                     </div>
                     <div class="form-group col-sm-4">
                       <label for="securityCode">CVV</label>
                       <TextField
+                        id="form-checkout__securityCode"
                         required
                         defaultValue="123"
-                        id="securityCode"
                         name="securityCode"
-                        inputProps={{
-                          "data-checkout": "securityCode",
-                        }}
-                        type="text"
-                        onselectStart={() => false}
-                        onPaste={() => false}
-                        onCopy={() => false}
-                        onCut={() => false}
-                        onDrag={() => false}
-                        onDrop={() => false}
                         autoComplete="off"
                       />
                     </div>
@@ -443,11 +257,7 @@ const MercadoLivreCardForm = ({ schedules, price, userInfo }) => {
                       <label for="issuer">Issuer</label>
                       <Select
                         native
-                        inputProps={{
-                          "data-checkout": "issuer",
-                        }}
-                        onChange={handleIssuerChange}
-                        id="issuer"
+                        id="form-checkout__issuer"
                         name="issuer"
                         class="form-control"
                       />
@@ -457,17 +267,11 @@ const MercadoLivreCardForm = ({ schedules, price, userInfo }) => {
                       <Select
                         native
                         type="text"
-                        id="installments"
+                        id="form-checkout__installments"
                         variant="outlined"
                       />
                     </div>
                     <div class="form-group col-sm-12">
-                      <input
-                        type="hidden"
-                        name="transactionAmount"
-                        id="amount"
-                        value={price}
-                      />
                       <input
                         type="hidden"
                         name="paymentMethodId"
@@ -478,9 +282,15 @@ const MercadoLivreCardForm = ({ schedules, price, userInfo }) => {
                         name="description"
                         id="description"
                       />
-                      <input type="hidden" name="token" id="token" />
+                      <progress value="0" class="progress-bar">
+                        Carregando...
+                      </progress>
                       <br />
-                      <button type="submit" class="btn btn-primary btn-block">
+                      <button
+                        type="submit"
+                        id="form-checkout__submit"
+                        class="btn btn-primary btn-block"
+                      >
                         Pagar
                       </button>
                       <br />
@@ -493,7 +303,7 @@ const MercadoLivreCardForm = ({ schedules, price, userInfo }) => {
         </section>
       </main>
     </>
-  )
-}
+  );
+};
 
-export default MercadoLivreCardForm
+export default MercadoLivreCardForm;

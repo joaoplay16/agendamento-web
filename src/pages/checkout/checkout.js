@@ -19,7 +19,6 @@ import { Button, Content, Modal, Spacer } from "ui"
 import { toMoney } from "utils"
 import MercadoLivreCardForm from "./mercado-livre-form"
 import mpResponseStrings from "strings/mercadopago-response"
-import { Redirect } from "react-router-dom"
 function Checkout({ location, history }) {
 
   const {
@@ -82,6 +81,14 @@ function Checkout({ location, history }) {
   const removeSchedule = (schedule) => () => {
     removeScheduleFromShoppingCart(schedule)
   }
+
+
+  const [open, setOpen] = React.useState(false)
+  const handleOpenCloseModal = () => {
+    setOpen(!open)
+  }
+
+
 
   return (
     <Content>
@@ -197,11 +204,16 @@ function Checkout({ location, history }) {
             </FormControl>
             <Spacer />
             <Grid container justify="center">
-              <Modal>
+              <Modal
+               isOpen={open}
+               handleOpenClose={handleOpenCloseModal}
+              >
                 <MercadoLivreCardForm
                   schedules={schedules}
                   price={price.payment}
                   userInfo={userInfo}
+                  history={history}
+                  handleCloseModal={handleOpenCloseModal}
                 />
               </Modal>
               <Spacer />

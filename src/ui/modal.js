@@ -26,35 +26,21 @@ const Transition = React.forwardRef(function Transition(props, ref) {
   return <Slide direction="up" ref={ref} {...props} />
 })
 
-export default function FullScreenDialog({ children }) {
+export default function FullScreenDialog({ children,isOpen, handleOpenClose }) {
   const classes = useStyles()
   const { paymentDetails } = useShoppingCart()
-  const [open, setOpen] = React.useState(false)
+  
 
-  useEffect(()=> {
-    // console.log("MODAL STATUS", paymentDetails);
-    if(paymentDetails.status == 'approved'){
-      setOpen(false)
-    }
-  }, [paymentDetails])
-
-  const handleClickOpen = () => {
-    setOpen(true)
-  }
-
-  const handleClose = () => {
-    setOpen(false)
-  }
 
   return (
     <div>
-      <Button variant="outlined" color="primary" onClick={handleClickOpen}>
+      <Button variant="outlined" color="primary" onClick={handleOpenClose}>
         Concluir agendamento
       </Button>
       <Dialog
         fullScreen
-        open={open}
-        onClose={handleClose}
+        open={isOpen}
+        onClose={handleOpenClose}
         TransitionComponent={Transition}
       >
         <AppBar className={classes.appBar}>
@@ -62,7 +48,7 @@ export default function FullScreenDialog({ children }) {
             <IconButton
               edge="start"
               color="inherit"
-              onClick={handleClose}
+              onClick={handleOpenClose}
               aria-label="close"
             >
               <CloseIcon />

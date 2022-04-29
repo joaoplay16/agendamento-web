@@ -23,7 +23,7 @@ import {
   Divider
 } from 'ui'
 import { useDatabase } from 'hooks'
-import { Redirect } from 'react-router-dom'
+import { useNavigate } from 'react-router-dom'
 import { ADMIN_PROFESSIONALS } from 'routes'
 
 function SlideTransition (props) {
@@ -32,7 +32,7 @@ function SlideTransition (props) {
 
 function UpdateProfessional ({ location }) {
   if (!location.state) {
-    return <Redirect to={ADMIN_PROFESSIONALS} />
+   navigate(ADMIN_PROFESSIONALS)
   }
   const { updateProfessional } = useDatabase()
   const [professional, setProfessional] = useState(() => ({

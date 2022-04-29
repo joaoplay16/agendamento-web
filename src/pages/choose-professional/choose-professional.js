@@ -27,6 +27,7 @@ const ChooseProfessional = ({ location }) => {
   }, [])
 
   useEffect(() => {
+    //procedure.price is an object with an id of the professional and a amount e.g. { Kajhfsaa4gfd : 200 }
     const professionalsKeys = Object.keys(procedure.price)
     if(fetchedProfessionals !== undefined){
       const result = professionalsKeys.map((professionalID) => ({
