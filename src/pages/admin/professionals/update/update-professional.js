@@ -23,16 +23,16 @@ import {
   Divider
 } from 'ui'
 import { useDatabase } from 'hooks'
-import { useNavigate } from 'react-router-dom'
+import { Redirect } from 'react-router-dom'
 import { ADMIN_PROFESSIONALS } from 'routes'
 
 function SlideTransition (props) {
-  return <Slide {...props} direction="up" />;
+  return <Slide {...props} direction='up' />
 }
 
 function UpdateProfessional ({ location }) {
   if (!location.state) {
-   navigate(ADMIN_PROFESSIONALS)
+    return <Redirect to={ADMIN_PROFESSIONALS} />
   }
   const { updateProfessional } = useDatabase()
   const [professional, setProfessional] = useState(() => ({
@@ -65,7 +65,7 @@ function UpdateProfessional ({ location }) {
   const removeHour = (hour) => (e) => {
     setTimeTable((timeTable) => ({
       ...timeTable,
-      week: {[selectedWeek]: timeTableOfSelectedWeek.filter(h => h !== hour)}
+      week: { [selectedWeek]: timeTableOfSelectedWeek.filter(h => h !== hour) }
     }))
   }
 
@@ -77,10 +77,10 @@ function UpdateProfessional ({ location }) {
     }))
   }
   const orderHours = (a, b) => {
-    let [hourA, minA] = a.split(':')
-    let [hourB, minB] = b.split(':')
-    let dateA = new Date()
-    let dateB = new Date()
+    const [hourA, minA] = a.split(':')
+    const [hourB, minB] = b.split(':')
+    const dateA = new Date()
+    const dateB = new Date()
     dateA.setHours(hourA, minA)
     dateB.setHours(hourB, minB)
     return dateA - dateB
@@ -92,18 +92,18 @@ function UpdateProfessional ({ location }) {
       ...professional,
       timeTable
     }
-    let result = await updateProfessional(pro)
+    const result = await updateProfessional(pro)
     setSnackBar({
       open: true,
       success: result.success,
-      message: result.message,
+      message: result.message
     })
     // resetFields()
   }
   const handleCloseSnackbar = () => {
     setSnackBar({
       open: false,
-      message: '',
+      message: ''
     })
   }
   return (
@@ -130,24 +130,27 @@ function UpdateProfessional ({ location }) {
                 value={professional.photo}
                 label='Foto'
                 required
-                xs={12} onChange={handleChange} />
+                xs={12} onChange={handleChange}
+              />
             </Grid>
             <Divider />
             <Grid item xs={12}><H5>Horário</H5></Grid>
             <Grid container item xs={12} justify='center'>
-              <FormControl component="fieldset">
+              <FormControl component='fieldset'>
                 <RadioGroup
                   row
-                  aria-label="position"
-                  name="position"
+                  aria-label='position'
+                  name='position'
                   defaultValue='0'
-                  onChange={handleWeekChange}>
+                  onChange={handleWeekChange}
+                >
                   {weekDays.map(day => (
-                    <FormControlLabel key={day.value}
+                    <FormControlLabel
+                      key={day.value}
                       value={day.value}
-                      control={<Radio color="secondary" />}
+                      control={<Radio color='secondary' />}
                       label={day.label}
-                      labelPlacement="top"
+                      labelPlacement='top'
                     />
                   ))}
                 </RadioGroup>
@@ -159,16 +162,16 @@ function UpdateProfessional ({ location }) {
                 {timeTable.week[selectedWeek].length == 0 &&
                   <Typography>
                     Nenhum horário definido
-              </Typography>
-                }
+                  </Typography>}
                 {timeTable.week[selectedWeek].map((hour) => (
                   <Grid item>
                     <Chip
                       key={hour}
                       label={hour}
-                      color="secondary"
-                      size="small"
-                      onDelete={removeHour(hour)} />
+                      color='secondary'
+                      size='small'
+                      onDelete={removeHour(hour)}
+                    />
                   </Grid>
                 ))}
               </Grid>
@@ -183,7 +186,8 @@ function UpdateProfessional ({ location }) {
                     onClick={addHour(hour)}
                     disabled={
                       timeTableOfSelectedWeek.includes(hour)
-                    }>
+                    }
+                  >
                     {hour}
                   </Button>
                 </Grid>
@@ -194,9 +198,10 @@ function UpdateProfessional ({ location }) {
               <Button
                 variant='contained'
                 color='secondary'
-                type='submit'>
+                type='submit'
+              >
                 Atualizar
-                  </Button>
+              </Button>
               <Spacer />
             </Grid>
 
@@ -208,7 +213,8 @@ function UpdateProfessional ({ location }) {
         onClose={handleCloseSnackbar}
         TransitionComponent={SlideTransition}
         autoHideDuration={3000}
-        key={snackBar.message}>
+        key={snackBar.message}
+      >
         <Alert variant='filled' severity={snackBar.success ? 'success' : 'error'}>
           {snackBar.message}
         </Alert>

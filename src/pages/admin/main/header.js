@@ -34,7 +34,7 @@ const Header = () => {
         </LogoContainer>
 
         <Typography color='inherit'>
-         Usuario {/* Olá {userInfo.user.firstName} */}
+          Usuario {/* Olá {userInfo.user.firstName} */}
         </Typography>
         <IconButton color='inherit' onClick={handleOpenMenu}>
           <AccountCircle />

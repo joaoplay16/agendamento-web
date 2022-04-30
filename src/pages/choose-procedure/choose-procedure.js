@@ -22,13 +22,13 @@ const ChooseProcedure = () => {
   const { procedures: fetchedProcedures, fetchProcedures } = useDatabase()
   const [procedures, setProcedures] = useState(() => [])
 
-  useEffect(()=>{
+  useEffect(() => {
     fetchProcedures()
-  },[])
+  }, [])
 
   useEffect(() => {
     setProcedures(fetchedProcedures)
-    console.log("procedimentos", fetchedProcedures)
+    console.log('procedimentos', fetchedProcedures)
   }, [fetchedProcedures])
 
   const handleSearch = (e) => {
@@ -44,10 +44,10 @@ const ChooseProcedure = () => {
 
   return (
     <ProcedureContainer>
-      <Grid container justify='center' style={{padding: 10}}>
+      <Grid container justify='center' style={{ padding: 10 }}>
         <InputLabel>Escolha um serviço</InputLabel>
         <TextField
-          label="Buscar"
+          label='Buscar'
           variant='outlined'
           onChange={handleSearch}
         />
@@ -57,11 +57,13 @@ const ChooseProcedure = () => {
           {procedures.map((procedure) => (
             <>
               <ListItem
-                alignItems="center"
-                key={procedure.id}>
+                alignItems='center'
+                key={procedure.id}
+              >
                 <ListItemText
                   primary={procedure.name}
-                  secondary={`${procedure.time}`} />
+                  secondary={`${procedure.time}`}
+                />
                 <ListItemSecondaryAction>
                   <Button
                     to={{
@@ -70,7 +72,8 @@ const ChooseProcedure = () => {
                     }}
                     variant='outlined'
                     color='primary'
-                    size='small'>
+                    size='small'
+                  >
                     Reservar
                   </Button>
                 </ListItemSecondaryAction>
@@ -114,6 +117,5 @@ const TextField = styled(MaterialTextField)`
   margin-bottom: ${({ theme }) => theme.spacing(3)}px;
   margin-top: ${({ theme }) => theme.spacing(1)}px;
 `
-
 
 export default ChooseProcedure

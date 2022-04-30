@@ -1,1 +1,1 @@
-export  { default } from './update-professional'
+export { default } from './update-professional'

@@ -1,43 +1,41 @@
-import t from "prop-types"
-import React, { createContext, useState, useEffect } from "react"
+import t from 'prop-types'
+import React, { createContext, useState, useEffect } from 'react'
 const ShoppingCartContext = createContext()
 
-function ShoppingCartProvider({ children }) {
-
+function ShoppingCartProvider ({ children }) {
   const [schedules, addSchedule] = useState(() => {
-   let items =  localStorage.getItem("schedules") 
-   if(items !== null){
-    return JSON.parse(items)
-   }
-     localStorage.setItem("schedules", JSON.stringify([]))
-     return []
-   
-})
+    const items = localStorage.getItem('schedules')
+    if (items !== null) {
+      return JSON.parse(items)
+    }
+    localStorage.setItem('schedules', JSON.stringify([]))
+    return []
+  })
 
   const [paymentDetails, setPaymentDetails] = useState(() => ({}))
 
-  function addScheduleToShoppingCart(schedule) {
+  function addScheduleToShoppingCart (schedule) {
     addSchedule((schedules) => {
-      let items = schedules.concat(schedule)
-      localStorage.setItem("schedules", JSON.stringify(items))
+      const items = schedules.concat(schedule)
+      localStorage.setItem('schedules', JSON.stringify(items))
       return items
     })
   }
 
-  function removeScheduleFromShoppingCart(scheduleToRemove) {
+  function removeScheduleFromShoppingCart (scheduleToRemove) {
     addSchedule((schedules) => {
-      let items = schedules.filter((item) => item !== scheduleToRemove)
-      localStorage.setItem("schedules", JSON.stringify(items))
+      const items = schedules.filter((item) => item !== scheduleToRemove)
+      localStorage.setItem('schedules', JSON.stringify(items))
       return items
     })
   }
 
-  function resetShoppingCart(){
+  function resetShoppingCart () {
     addSchedule([])
-    localStorage.setItem("schedules", JSON.stringify([]))
+    localStorage.setItem('schedules', JSON.stringify([]))
   }
 
-  function setPaymentStatusDetails(paymentStatusDetails) {
+  function setPaymentStatusDetails (paymentStatusDetails) {
     setPaymentDetails(paymentStatusDetails)
   }
 
@@ -58,7 +56,7 @@ function ShoppingCartProvider({ children }) {
 }
 
 ShoppingCartProvider.propTypes = {
-  children: t.node.isRequired,
+  children: t.node.isRequired
 }
 
 export { ShoppingCartProvider, ShoppingCartContext }

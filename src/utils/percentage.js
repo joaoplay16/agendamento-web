@@ -1,4 +1,4 @@
- function getPercentage (value, percentual = 30){
+function getPercentage (value, percentual = 30) {
   return percentual / 100 * value
 }
 

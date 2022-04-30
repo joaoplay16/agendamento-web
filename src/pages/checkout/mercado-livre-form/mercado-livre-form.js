@@ -1,18 +1,26 @@
-import { Select } from "@material-ui/core";
-import React, { useEffect, useState } from "react";
-import { useNavigate } from "react-router-dom";
-import { TextField } from "ui";
-import "./style.css";
-import { useDatabase, useShoppingCart } from "hooks";
-import * as mpApi from "services/mercadopago-api";
-import { da } from "date-fns/locale";
+import { Select, Button } from "@material-ui/core"
+import React, { useEffect, useState } from "react"
+import { Dialog, TextField } from "ui"
+import "./style.css"
+import { useDatabase, useShoppingCart } from "hooks"
+import * as mpApi from "services/mercadopago-api"
+import { RESERVATIONS } from "routes"
+import strings from "strings/mercadopago-response"
+const MercadoLivreCardForm = ({ history, schedules, price, userInfo }) => {
+  let mercadopago = new MercadoPago(process.env.REACT_APP_MP_PUBLISHABLE_KEY)
 
-const MercadoLivreCardForm = ({history, schedules, price, userInfo, handleCloseModal }) => {
-  let mercadopago = new MercadoPago(process.env.REACT_APP_MP_PUBLISHABLE_KEY);
-  const navigate = useNavigate();
+  const { setPaymentStatusDetails } = useShoppingCart()
+  const { submitSchedule } = useDatabase()
 
-  const { setPaymentStatusDetails } = useShoppingCart();
-  const { submitSchedule } = useDatabase();
+  const [isDialogOpen, setOpenDialog] = useState(false)
+  const [paymentResult, setPaymentResult] = useState(null)
+  const [dialogData, setDialogData] = useState({
+    message: ""
+  })
+
+  const handleCloseDialog = () => {
+    window.location.replace(RESERVATIONS)
+  }
 
   const cardForm = {
     amount: price.toString(),
@@ -58,11 +66,11 @@ const MercadoLivreCardForm = ({history, schedules, price, userInfo, handleCloseM
     },
     callbacks: {
       onFormMounted: (error) => {
-        if (error) return console.warn("Form Mounted handling error: ", error);
-        console.log("Form mounted");
+        if (error) return console.warn("Form Mounted handling error: ", error)
+        console.log("Form mounted")
       },
       onSubmit: (event) => {
-        event.preventDefault();
+        event.preventDefault()
         const {
           paymentMethodId,
           issuerId,
@@ -71,7 +79,7 @@ const MercadoLivreCardForm = ({history, schedules, price, userInfo, handleCloseM
           installments,
           identificationNumber,
           identificationType,
-        } = mercadopago.cardForm(cardForm).getCardFormData();
+        } = mercadopago.cardForm(cardForm).getCardFormData()
 
         const data = {
           token,
@@ -88,57 +96,71 @@ const MercadoLivreCardForm = ({history, schedules, price, userInfo, handleCloseM
             },
           },
         }
-        mpApi.payNow(data).then( response => {
-          console.log("response", response.data)
-          if(!response.data.hasOwnProperty("error_message")) {
-            handleCloseModal()
-            navigate("/reservas")
-          }else{
+        mpApi.payNow(data).then((response) => {
+          const { data } = response
+          console.log("response", data)
+            setPaymentResult(data)
 
+          if (!data.hasOwnProperty("error_message")) {
+            // setDialogData({
+            //   message: strings[data.status][data.status_detail]
+            // })
+            setOpenDialog(true)
+            
+          } else {
+            // setDialogData({
+            //   message: strings[data.status][data.status_detail]
+            // })
           }
         })
-
-
       },
       onFetching: (resource) => {
-        console.log("Fetching resource: ", resource);
+        console.log("Fetching resource: ", resource)
 
         // Animate progress bar
-        const progressBar = document.querySelector(".progress-bar");
-        progressBar.removeAttribute("value");
+        const progressBar = document.querySelector(".progress-bar")
+        progressBar.removeAttribute("value")
 
         return () => {
-          progressBar.setAttribute("value", "0");
-        };
+          progressBar.setAttribute("value", "0")
+        }
       },
     },
-  };
+  }
 
   useEffect(() => {
-    mercadopago.cardForm(cardForm);
-    console.log("component didMount", history);
-  }, []);
+    mercadopago.cardForm(cardForm)
+  }, [])
 
+  useEffect(() => {
+    if (paymentResult != undefined && paymentResult != null) {
+      console.log(
+        `component didMount ${
+          paymentResult.status 
+        } ${paymentResult.status_detail}`
+      )
+    }
+  }, [paymentResult])
 
   const getDescription = (withBrand = false) => {
-    let decription = withBrand ? "Agendamento Web - " : "";
+    let decription = withBrand ? "Agendamento Web - " : ""
     schedules.forEach((schedule, index) => {
-      let name = schedule.procedure.name;
-      let date = new Date(schedule.selectedDate).toLocaleDateString();
+      let name = schedule.procedure.name
+      let date = new Date(schedule.selectedDate).toLocaleDateString()
       decription +=
         schedules.length != index + 1
           ? `${name} (${date}) , `
-          : `${name} (${date})`;
-    });
+          : `${name} (${date})`
+    })
 
-    return decription;
-  };
+    return decription
+  }
 
   function cleanCardInfo() {
-    document.getElementById("cardNumber").style.backgroundImage = "";
-    document.getElementById("issuerInput").classList.add("hidden");
-    document.getElementById("issuer").options.length = 0;
-    document.getElementById("installments").options.length = 0;
+    document.getElementById("cardNumber").style.backgroundImage = ""
+    document.getElementById("issuerInput").classList.add("hidden")
+    document.getElementById("issuer").options.length = 0
+    document.getElementById("installments").options.length = 0
   }
 
   return (
@@ -300,10 +322,22 @@ const MercadoLivreCardForm = ({history, schedules, price, userInfo, handleCloseM
               </div>
             </div>
           </div>
+          <Dialog
+            open={isDialogOpen}
+            handelCloseDialog={handleCloseDialog}
+            description={ 
+                "dialogData.message "
+            }
+            dialogActions={
+              <Button onClick={handleCloseDialog} color="primary">
+                Fechar
+              </Button>
+            }
+          />
         </section>
       </main>
     </>
-  );
-};
+  )
+}
 
-export default MercadoLivreCardForm;
+export default MercadoLivreCardForm

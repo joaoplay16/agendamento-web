@@ -1,13 +1,13 @@
-import React, { createContext, useCallback, useState } from "react"
-import PropTypes from "prop-types"
-import firebase from "services/firebase"
+import React, { createContext, useCallback, useState } from 'react'
+import PropTypes from 'prop-types'
+import firebase from 'services/firebase'
 const DatabaseContext = createContext()
 
-const PROFESSIONALS = "admin/scheduling/professionals"
-const PROCEDURES = "admin/scheduling/procedures"
-const SCHEDULES = "schedules"
+const PROFESSIONALS = 'admin/scheduling/professionals'
+const PROCEDURES = 'admin/scheduling/procedures'
+const SCHEDULES = 'schedules'
 
-function DatabaseProvider({ children }) {
+function DatabaseProvider ({ children }) {
   const db = firebase.firestore()
   const [procedures, setProcedures] = useState(() => [])
   const [schedules, setSchedules] = useState(() => [])
@@ -16,11 +16,11 @@ function DatabaseProvider({ children }) {
 
   const fetchUserSchedules = useCallback((userInfo) => {
     const schedulesRef = db.collection(SCHEDULES)
-    const query = schedulesRef.where("userEmail", "==", userInfo.user.email)
+    const query = schedulesRef.where('userEmail', '==', userInfo.user.email)
 
     query.onSnapshot((snapshot) => {
-      let uSchedules =  snapshot.docs.map(doc => doc.data())
-      console.log("uSchedules", uSchedules);
+      const uSchedules = snapshot.docs.map(doc => doc.data())
+      console.log('uSchedules', uSchedules)
       setUserSchedules(uSchedules)
     })
   }, [])
@@ -29,9 +29,9 @@ function DatabaseProvider({ children }) {
     db.collection(PROCEDURES)
       .get()
       .then((querySnapshot) => {
-        let procedures = querySnapshot.docs.map((doc) => ({
+        const procedures = querySnapshot.docs.map((doc) => ({
           id: doc.id,
-          ...doc.data(),
+          ...doc.data()
         }))
         setProcedures(procedures)
       })
@@ -44,13 +44,13 @@ function DatabaseProvider({ children }) {
       .then((docRef) => {
         return {
           success: true,
-          message: "Procedimento adicionado!",
+          message: 'Procedimento adicionado!'
         }
       })
       .catch(function (error) {
         return {
           success: false,
-          message: "Houve um erro.",
+          message: 'Houve um erro.'
         }
       })
     return res
@@ -58,9 +58,9 @@ function DatabaseProvider({ children }) {
 
   const fetchSchedules = useCallback(() => {
     db.collection(SCHEDULES).onSnapshot((snapshot) => {
-      let schedules = snapshot.docs.map((doc) => ({
+      const schedules = snapshot.docs.map((doc) => ({
         id: doc.id,
-        ...doc.data(),
+        ...doc.data()
       }))
       setSchedules(schedules)
     })
@@ -73,37 +73,37 @@ function DatabaseProvider({ children }) {
       .then((docRef) => {
         return {
           success: true,
-          message: "Pagamento salvo!",
+          message: 'Pagamento salvo!'
         }
       })
       .catch(function (error) {
         return {
           success: false,
-          message: "Houve um erro.",
+          message: 'Houve um erro.'
         }
       })
     return res
   }, [])
 
   const updateProcedure = useCallback((procedure) => {
-    let { id, ...procedureWithoutID } = procedure
+    const { id, ...procedureWithoutID } = procedure
 
     const procedureRef = db.collection(PROCEDURES).doc(id)
     const res = procedureRef
       .update({
-        ...procedureWithoutID,
+        ...procedureWithoutID
       })
       .then(() => {
         return {
           success: true,
-          message: "Procedimento atualizado!",
+          message: 'Procedimento atualizado!'
         }
       })
       .catch(function (error) {
-        console.log("updateProcedure error", error)
+        console.log('updateProcedure error', error)
         return {
           success: false,
-          message: "Houve um erro ao atualizar.",
+          message: 'Houve um erro ao atualizar.'
         }
       })
 
@@ -115,10 +115,10 @@ function DatabaseProvider({ children }) {
       .collection(PROFESSIONALS)
       .get()
       .then((querySnapshot) => {
-        let objects = {}
+        const objects = {}
         querySnapshot.forEach((doc) => {
           Object.assign(objects, {
-            [doc.id]: doc.data(),
+            [doc.id]: doc.data()
           })
         })
         setProfessionals(objects)
@@ -132,7 +132,7 @@ function DatabaseProvider({ children }) {
       .then(() => {
         return {
           success: true,
-          message: `${procedure.name} excluido(a)!`,
+          message: `${procedure.name} excluido(a)!`
         }
       })
       .then((data) => {
@@ -141,7 +141,7 @@ function DatabaseProvider({ children }) {
       .catch(() => {
         return {
           success: true,
-          message: "Houve um erro ao excluir.",
+          message: 'Houve um erro ao excluir.'
         }
       })
     return res
@@ -154,36 +154,36 @@ function DatabaseProvider({ children }) {
       .then((docRef) => {
         return {
           success: true,
-          message: "Profissional adicionado!",
+          message: 'Profissional adicionado!'
         }
       })
       .catch(function (error) {
         return {
           success: false,
-          message: "Houve um erro.",
+          message: 'Houve um erro.'
         }
       })
     return res
   }, [])
 
   const updateProfessional = useCallback((professional) => {
-    let { id, ...professionalWithoutID } = professional
+    const { id, ...professionalWithoutID } = professional
     const professionalRef = db.collection(PROFESSIONALS).doc(id)
     const res = professionalRef
       .update({
-        ...professionalWithoutID,
+        ...professionalWithoutID
       })
       .then(() => {
         return {
           success: true,
-          message: "Profissional atualizado!",
+          message: 'Profissional atualizado!'
         }
       })
       .catch(function (error) {
-        console.log("updateProfessional error", error)
+        console.log('updateProfessional error', error)
         return {
           success: false,
-          message: "Houve um erro ao atualizar.",
+          message: 'Houve um erro ao atualizar.'
         }
       })
 
@@ -197,7 +197,7 @@ function DatabaseProvider({ children }) {
       .then(() => {
         return {
           success: true,
-          message: `${professional.name} excluido(a)!`,
+          message: `${professional.name} excluido(a)!`
         }
       })
       .then((data) => {
@@ -206,7 +206,7 @@ function DatabaseProvider({ children }) {
       .catch(() => {
         return {
           success: true,
-          message: "Houve um erro ao excluir.",
+          message: 'Houve um erro ao excluir.'
         }
       })
     return res
@@ -238,7 +238,7 @@ function DatabaseProvider({ children }) {
 }
 
 DatabaseProvider.propTypes = {
-  children: PropTypes.node.isRequired,
+  children: PropTypes.node.isRequired
 }
 
 export { DatabaseProvider, DatabaseContext }

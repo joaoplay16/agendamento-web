@@ -1,5 +1,5 @@
 import React, { Suspense, lazy, useEffect, useState } from 'react'
-import { Route, Switch, useNavigate } from 'react-router-dom'
+import { Route, Switch, Redirect } from 'react-router-dom'
 import PropTypes from 'prop-types'
 import { LinearProgress } from '@material-ui/core'
 import firebase from 'services/firebase'
@@ -10,7 +10,6 @@ const MainPage = lazy(() => import('pages/main'))
 const Login = lazy(() => import('pages/login'))
 
 function AppForUsers ({ location }) {
-  const navigate = useNavigate()
   const { userInfo, setUserInfo } = useAuth()
   const [didCheckUserIn, setDidCheckUserIn] = useState(false)
   const { isUserLoggedIn } = userInfo
@@ -34,11 +33,11 @@ function AppForUsers ({ location }) {
   }
 
   if (isUserLoggedIn && location.pathname === LOGIN) {
-    navigate(CHECKOUT)
+    return <Redirect to={CHECKOUT} />
   }
 
   if (!isUserLoggedIn && location.pathname == CHECKOUT) {
-    navigate(LOGIN)
+    return <Redirect to={LOGIN} />
   }
 
   return (

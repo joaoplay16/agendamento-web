@@ -1,6 +1,6 @@
-export default  {
+export default {
   approved: {
-    accredited: "Pronto, seu pagamento foi aprovado! "
+    accredited: 'Pronto, seu pagamento foi aprovado! '
   },
   in_process: {
     pending_contingency: 'Não se preocupe, em menos de 2 dias úteis informaremos por e-mail se foi creditado.',
@@ -22,5 +22,5 @@ export default  {
     cc_rejected_max_attempts: 'Você atingiu o limite de tentativas permitido. Escolha outro cartão ou outra forma de pagamento.',
     cc_rejected_other_reason: 'Não pudemos processar seu pagamento.'
   },
-  4049: "O valor da transação deve ser positivo!"
+  4049: 'O valor da transação deve ser positivo!'
 }

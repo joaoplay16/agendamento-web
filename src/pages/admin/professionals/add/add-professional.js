@@ -7,7 +7,7 @@ import {
   FormControlLabel,
   Radio,
   RadioGroup,
-  Typography,
+  Typography
 } from '@material-ui/core'
 import { Alert } from '@material-ui/lab'
 import weekDays from 'static-data/week-days'
@@ -51,9 +51,8 @@ function AddProfessional () {
     setSelectedWeek(selected)
   }
 
-  useEffect(()=> {
-    console.log('select', timeTable);
-
+  useEffect(() => {
+    console.log('select', timeTable)
   })
 
   const addHour = (hour) => (e) => {
@@ -69,7 +68,7 @@ function AddProfessional () {
   const removeHour = (hour) => (e) => {
     setTimeTable((timeTable) => ({
       ...timeTable,
-      week: {[selectedWeek]: timeTableOfSelectedWeek.filter(h => h !== hour)}
+      week: { [selectedWeek]: timeTableOfSelectedWeek.filter(h => h !== hour) }
     }))
   }
 
@@ -82,10 +81,10 @@ function AddProfessional () {
   }
 
   const orderHours = (a, b) => {
-    let [hourA, minA] = a.split(':')
-    let [hourB, minB] = b.split(':')
-    let dateA = new Date()
-    let dateB = new Date()
+    const [hourA, minA] = a.split(':')
+    const [hourB, minB] = b.split(':')
+    const dateA = new Date()
+    const dateB = new Date()
     dateA.setHours(hourA, minA)
     dateB.setHours(hourB, minB)
     return dateA - dateB
@@ -105,11 +104,11 @@ function AddProfessional () {
       ...professional,
       timeTable
     }
-    let result = await addProfessional(pro)
+    const result = await addProfessional(pro)
     setSnackBar({
       open: true,
       success: result.success,
-      message: result.message,
+      message: result.message
     })
     resetFields()
   }
@@ -117,9 +116,9 @@ function AddProfessional () {
   const handleCloseSnackbar = () => {
     setSnackBar({
       open: false,
-      message: '',
+      message: ''
     })
-  };
+  }
 
   return (
     <Content>
@@ -145,24 +144,27 @@ function AddProfessional () {
                 value={professional.photo}
                 label='Foto'
                 required
-                xs={12} onChange={handleChange} />
+                xs={12} onChange={handleChange}
+              />
             </Grid>
             <Divider />
             <Grid item xs={12}><H5>Horário</H5></Grid>
             <Grid container item xs={12} justify='center'>
-              <FormControl component="fieldset">
+              <FormControl component='fieldset'>
                 <RadioGroup
                   row
-                  aria-label="position"
-                  name="position"
+                  aria-label='position'
+                  name='position'
                   defaultValue='0'
-                  onChange={handleWeekChange}>
+                  onChange={handleWeekChange}
+                >
                   {weekDays.map(day => (
-                    <FormControlLabel key={day.value}
+                    <FormControlLabel
+                      key={day.value}
                       value={day.value}
-                      control={<Radio color="secondary" />}
+                      control={<Radio color='secondary' />}
                       label={day.label}
-                      labelPlacement="top"
+                      labelPlacement='top'
                     />
                   ))}
                 </RadioGroup>
@@ -174,16 +176,16 @@ function AddProfessional () {
                 {timeTable.week[selectedWeek].length == 0 &&
                   <Typography>
                     Nenhum horário definido
-              </Typography>
-                }
+                  </Typography>}
                 {timeTable.week[selectedWeek].map((hour) => (
                   <Grid item>
                     <Chip
                       key={hour}
                       label={hour}
-                      color="secondary"
-                      size="small"
-                      onDelete={removeHour(hour)} />
+                      color='secondary'
+                      size='small'
+                      onDelete={removeHour(hour)}
+                    />
                   </Grid>
                 ))}
               </Grid>
@@ -198,7 +200,8 @@ function AddProfessional () {
                     onClick={addHour(hour)}
                     disabled={
                       timeTableOfSelectedWeek.includes(hour)
-                    }>
+                    }
+                  >
                     {hour}
                   </Button>
                 </Grid>
@@ -209,9 +212,10 @@ function AddProfessional () {
               <Button
                 variant='contained'
                 color='secondary'
-                type='submit'>
+                type='submit'
+              >
                 Salvar
-                  </Button>
+              </Button>
               <Spacer />
             </Grid>
 
@@ -222,7 +226,8 @@ function AddProfessional () {
         open={snackBar.open}
         onClose={handleCloseSnackbar}
         autoHideDuration={3000}
-        key={snackBar.message}>
+        key={snackBar.message}
+      >
         <Alert variant='filled' severity={snackBar.success ? 'success' : 'error'}>
           {snackBar.message}
         </Alert>

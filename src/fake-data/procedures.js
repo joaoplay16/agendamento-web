@@ -1,6 +1,6 @@
 export default [
   {
-    id:0,
+    id: 0,
     name: 'Micropigmentação Shadow',
     time: 60,
     price: {
@@ -9,8 +9,8 @@ export default [
     }
   },
   {
-    id:1,
-    name: "Micropigmentação Fio a Fio",
+    id: 1,
+    name: 'Micropigmentação Fio a Fio',
     time: 60,
     price: {
       0: 145.50,
@@ -19,8 +19,8 @@ export default [
     }
   },
   {
-    id:2,
-    name: "Micropigmentação Shadowline",
+    id: 2,
+    name: 'Micropigmentação Shadowline',
     time: 60,
     price: {
       0: 100,
@@ -29,8 +29,8 @@ export default [
     }
   },
   {
-    id:3,
-    name: "Cílios Fio a Fio",
+    id: 3,
+    name: 'Cílios Fio a Fio',
     time: 40,
     price: {
       0: 100,
@@ -39,8 +39,8 @@ export default [
     }
   },
   {
-    id:4,
-    name: "Cílios Volume Russo",
+    id: 4,
+    name: 'Cílios Volume Russo',
     time: 40,
     price: {
       0: 100,
@@ -49,8 +49,8 @@ export default [
     }
   },
   {
-    id:5,
-    name: "Oxxybioplacent",
+    id: 5,
+    name: 'Oxxybioplacent',
     time: 60,
     price: {
       0: 100,
@@ -59,8 +59,8 @@ export default [
     }
   },
   {
-    id:6,
-    name: "Rose de Mer Facial",
+    id: 6,
+    name: 'Rose de Mer Facial',
     time: 60,
     price: {
       0: 100,
@@ -69,8 +69,8 @@ export default [
     }
   },
   {
-    id:7,
-    name: "Enzimas Gordura Localizada",
+    id: 7,
+    name: 'Enzimas Gordura Localizada',
     time: 30,
     price: {
       0: 100,
@@ -79,8 +79,8 @@ export default [
     }
   },
   {
-    id:8,
-    name: "CCglow",
+    id: 8,
+    name: 'CCglow',
     time: 40,
     price: {
       0: 100,
@@ -89,13 +89,13 @@ export default [
     }
   },
   {
-    id:9,
-    name: "Capilary",
+    id: 9,
+    name: 'Capilary',
     time: 40,
     price: {
       0: 100,
       1: 200,
       2: 300
     }
-  },
+  }
 ]

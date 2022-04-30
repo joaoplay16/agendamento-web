@@ -1,1 +1,1 @@
-export  { default } from './update-procedure'
+export { default } from './update-procedure'

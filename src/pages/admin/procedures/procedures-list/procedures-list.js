@@ -33,17 +33,16 @@ function ProceduresList () {
     message: ''
   }))
 
-  const [dialogOpen, setDialogOpen] = useState(false);
+  const [dialogOpen, setDialogOpen] = useState(false)
 
   const handleDialogOpen = (procedure) => (e) => {
-    setDialogOpen(true);
+    setDialogOpen(true)
     setSelectedProcedure(procedure)
-  };
+  }
 
   const handleDialogClose = () => {
-    setDialogOpen(false);
-  };
-
+    setDialogOpen(false)
+  }
 
   useEffect(() => {
     if (fetchedProcedures) {
@@ -55,7 +54,6 @@ function ProceduresList () {
           }))
       ])
     }
-
   }, [fetchedProcedures])
 
   useEffect(() => {
@@ -64,7 +62,6 @@ function ProceduresList () {
   })
 
   const handleDelete = async (e) => {
-
     const result = await deleteProcedure(selectedProcedure)
     if (result.success) {
       setProcedures(() =>
@@ -75,7 +72,7 @@ function ProceduresList () {
         success: result.success,
         message: result.message
       })
-    } 
+    }
 
     setDialogOpen(false)
   }
@@ -83,7 +80,7 @@ function ProceduresList () {
   const handleCloseSnackbar = () => {
     setSnackBar({
       open: false,
-      message: '',
+      message: ''
     })
   }
 
@@ -96,12 +93,14 @@ function ProceduresList () {
         <Grid item xs={11}>
           <Grid
             container
-            justify='flex-end'  
-            direction='row'>
+            justify='flex-end'
+            direction='row'
+          >
             <Button
               to={ADMIN_PROCEDURES_ADD}
               variant='contained'
-              color='primary'>
+              color='primary'
+            >
               Novo
             </Button>
           </Grid>
@@ -112,14 +111,16 @@ function ProceduresList () {
           <List>
             {procedures.map((procedure) => (
               <ListItem key={procedure.id}>
-      
+
                 <ListItemText
                   primary={procedure.name}
                   secondary={null}
                 />
                 <ListItemSecondaryAction>
-                  <IconButton onClick={handleDialogOpen(procedure)}
-                    color='secondary'>
+                  <IconButton
+                    onClick={handleDialogOpen(procedure)}
+                    color='secondary'
+                  >
                     <DeleteIcon />
                   </IconButton>
                   <IconButton
@@ -130,7 +131,8 @@ function ProceduresList () {
                       }
                     }}
                     component={Link}
-                    color='secondary'>
+                    color='secondary'
+                  >
                     <EditIcon />
                   </IconButton>
                 </ListItemSecondaryAction>
@@ -143,7 +145,8 @@ function ProceduresList () {
           open={snackBar.open}
           onClose={handleCloseSnackbar}
           autoHideDuration={3000}
-          key={snackBar.message}>
+          key={snackBar.message}
+        >
           <Alert variant='filled' severity={snackBar.success ? 'success' : 'error'}>
             {snackBar.message}
           </Alert>
@@ -152,19 +155,20 @@ function ProceduresList () {
         <Dialog
           open={dialogOpen}
           onClose={handleDialogClose}
-          aria-labelledby="alert-dialog-title"
-          aria-describedby="alert-dialog-description">
-          <DialogTitle id="alert-dialog-title">
+          aria-labelledby='alert-dialog-title'
+          aria-describedby='alert-dialog-description'
+        >
+          <DialogTitle id='alert-dialog-title'>
             Remover "{!!selectedProcedure && selectedProcedure.name}"?
           </DialogTitle>
 
           <DialogActions>
-            <Button to="#" onClick={handleDialogClose} color="secondary">
+            <Button to='#' onClick={handleDialogClose} color='secondary'>
               Cancelar
-          </Button>
-            <Button to="#" onClick={handleDelete} color="secondary" autoFocus>
+            </Button>
+            <Button to='#' onClick={handleDelete} color='secondary' autoFocus>
               OK
-          </Button>
+            </Button>
           </DialogActions>
         </Dialog>
       </Grid>
@@ -172,6 +176,5 @@ function ProceduresList () {
 
   )
 }
-
 
 export default ProceduresList

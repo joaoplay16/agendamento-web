@@ -1,13 +1,13 @@
-import React, { useState } from "react"
-import styled from "styled-components"
-import { Button, Grid, TextField } from "@material-ui/core"
-import { useAdminAuth } from "hooks"
-function Login() {
+import React, { useState } from 'react'
+import styled from 'styled-components'
+import { Button, Grid, TextField } from '@material-ui/core'
+import { useAdminAuth } from 'hooks'
+function Login () {
   const { login, createUser } = useAdminAuth()
 
   const [adminUser, setAdminUser] = useState({
-    name: "",
-    pass: "",
+    name: '',
+    pass: ''
   })
 
   const handleSubmit = (e) => {
@@ -21,14 +21,14 @@ function Login() {
   return (
     <Container>
       <form onSubmit={handleSubmit}>
-        <Grid container justify="center" spacing={5}>
+        <Grid container justify='center' spacing={5}>
           <Grid item xs={12} container>
-            <TextField label="Usuário" variant="outlined" id="email" type='email' />
+            <TextField label='Usuário' variant='outlined' id='email' type='email' />
             <TextField
-              label="Senha"
-              variant="outlined"
-              id="pass"
-              type="password"
+              label='Senha'
+              variant='outlined'
+              id='pass'
+              type='password'
             />
             <LoginButton type='submit'>Entrar</LoginButton>
           </Grid>
@@ -45,8 +45,8 @@ const Container = styled.div`
 //   width: 100%;
 // `
 const LoginButton = styled(Button).attrs({
-  variant: "contained",
-  fullWidth: true,
+  variant: 'contained',
+  fullWidth: true
 })`
   && {
     font-size: ${({ theme }) => theme.typography.h5.fontSize};

@@ -35,27 +35,27 @@ const Header = () => {
         </LogoContainer>
         {userInfo.user && (
           <>
-          <Typography color='inherit'>
-          Olá {userInfo.user.firstName}
-        </Typography>
-        <IconButton color='inherit' onClick={handleOpenMenu}>
-          <AccountCircle />
-        </IconButton>
+            <Typography color='inherit'>
+              Olá {userInfo.user.firstName}
+            </Typography>
+            <IconButton color='inherit' onClick={handleOpenMenu}>
+              <AccountCircle />
+            </IconButton>
 
-        <Menu
-          open={Boolean(anchorElement)}
-          onClose={handleClose}
-          anchorEl={anchorElement}
-        >
-          <MenuItem onClick={logout}>Sair</MenuItem>
-        </Menu>
+            <Menu
+              open={Boolean(anchorElement)}
+              onClose={handleClose}
+              anchorEl={anchorElement}
+            >
+              <MenuItem onClick={logout}>Sair</MenuItem>
+            </Menu>
           </>
         )}
 
         {!userInfo.user && (
-         <Button to="/login" color="inherit">Login</Button>
+          <Button to='/login' color='inherit'>Login</Button>
         )}
-        
+
       </Toolbar>
     </AppBar>
   )

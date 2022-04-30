@@ -1,5 +1,5 @@
 import React from 'react'
-import { Grid, TextField as MaterialTextField} from '@material-ui/core';
+import { Grid, TextField as MaterialTextField } from '@material-ui/core'
 
 function TextField ({ xs, sm, md, lg, autoFocus, ...props }) {
   return (
@@ -10,7 +10,8 @@ function TextField ({ xs, sm, md, lg, autoFocus, ...props }) {
         inputProps={{
           autoFocus
         }}
-        {...props} />
+        {...props}
+      />
     </Grid>
   )
 }

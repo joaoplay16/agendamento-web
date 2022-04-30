@@ -22,7 +22,7 @@ import {
 import { CHECKOUT } from 'routes'
 import scheduleConfigs from 'fake-data/schedule-configs'
 import { useShoppingCart } from 'hooks'
-import {v4} from 'uuid'
+import { v4 } from 'uuid'
 const ChooseDate = ({ location }) => {
   const currentDate = new Date()
 
@@ -32,26 +32,26 @@ const ChooseDate = ({ location }) => {
   const [selectedDate, setSelectedDate] = useState(currentDate)
   const { timeTable, disabledDays } = scheduleConfigs
   const handleDateChange = (date) => {
-    setSelectedDate(date);
+    setSelectedDate(date)
   }
 
   useEffect(() => {
     window.horas = DateFnsUtils
     window.datefns = dateFns
-    console.log("time", professional);
+    console.log('time', professional)
   }, [])
 
   function disableDay (date) {
     const day = date.getDay()
-    const dateString = lightFormat(date, "dd/MM/yyyy")
-    return disabledDays.week.includes(day)
-      || disabledDays.specificDate.includes(dateString)
+    const dateString = lightFormat(date, 'dd/MM/yyyy')
+    return disabledDays.week.includes(day) ||
+      disabledDays.specificDate.includes(dateString)
   }
-  
+
   function isPastTime (timeString) {
     if (isToday(selectedDate)) {
-      let [hour, minute] = timeString.split(':')
-      let date = new Date()
+      const [hour, minute] = timeString.split(':')
+      const date = new Date()
       date.setHours(hour, minute, 0, 0)
       return currentDate > date
     }
@@ -61,7 +61,7 @@ const ChooseDate = ({ location }) => {
   function getTimeTable () {
     const currentWeekDay = selectedDate.getDay()
     const dateString = selectedDate.toLocaleDateString()
-    const time_table = professional.timeTable 
+    const time_table = professional.timeTable
     if (time_table.specificDate.hasOwnProperty(dateString)) {
       return time_table.specificDate[dateString]
     }
@@ -80,7 +80,7 @@ const ChooseDate = ({ location }) => {
   return (
     <Content>
       <Grid container justify='center'>
-        <Grid item xs={12} sm={10} md={8} >
+        <Grid item xs={12} sm={10} md={8}>
           <H4>Escolher data</H4>
 
           <PaperContainer>
@@ -88,17 +88,19 @@ const ChooseDate = ({ location }) => {
               <Grid item xs={6}>
                 <MuiPickersUtilsProvider
                   utils={DateFnsUtils}
-                  locale={brLocale}>
+                  locale={brLocale}
+                >
                   <DatePicker
-                    id="date-picker-dialog"
+                    id='date-picker-dialog'
                     inputVariant='outlined'
-                    format="dd/MM/yyyy"
+                    format='dd/MM/yyyy'
                     disablePast
                     value={selectedDate}
                     shouldDisableDate={disableDay}
                     onChange={handleDateChange}
                     cancelLabel='Cancelar'
-                    color='secondary'/>
+                    color='secondary'
+                  />
                 </MuiPickersUtilsProvider>
               </Grid>
               <Divider />
@@ -107,14 +109,15 @@ const ChooseDate = ({ location }) => {
                 <TimeTable>
                   {getTimeTable().map((time) => (
                     <Box p={2} key={time}>
-                      <Button 
-                      onClick={addSchedule(time)}
-                      to={{
-                        pathname: CHECKOUT,
-                      }}
-                      disabled={isPastTime(time)} 
-                      variant='outlined' 
-                      color='secondary'>
+                      <Button
+                        onClick={addSchedule(time)}
+                        to={{
+                          pathname: CHECKOUT
+                        }}
+                        disabled={isPastTime(time)}
+                        variant='outlined'
+                        color='secondary'
+                      >
                         {time}
                       </Button>
                     </Box>

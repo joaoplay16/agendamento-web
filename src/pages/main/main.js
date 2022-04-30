@@ -27,7 +27,7 @@ const Main = () => {
           <Route path={HOME} exact component={Scheduling} />
           <Route path={SCHEDULE} component={Schedule} />
           <Route path={RESERVATIONS} component={Reservations} />
-          <Route path={MORE} component={Scheduling} /> 
+          <Route path={MORE} component={Scheduling} />
         </Switch>
       </Suspense>
       <Footer />

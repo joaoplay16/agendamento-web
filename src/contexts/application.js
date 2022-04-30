@@ -9,40 +9,40 @@ import {
 import { HOME, RESERVATIONS, SCHEDULE, MORE } from 'routes'
 const ApplicationContext = createContext()
 
-function ApplicationProvider ({ children}) {
-  
+function ApplicationProvider ({ children }) {
   useEffect(() => {
-   // console.log("ApplicationContext", location)
+    // console.log("ApplicationContext", location)
   })
-  
+
   const items = [
     {
       label: 'Home',
       icon: <HomeIcon />,
-      to: { pathname: HOME },
+      to: { pathname: HOME }
     },
     {
       label: 'Reservas',
       icon: <EventIcon />,
-      to: { pathname: RESERVATIONS },
+      to: { pathname: RESERVATIONS }
     },
     {
       label: 'Agendar',
       icon: <AddBoxIcon />,
-      to: { pathname: SCHEDULE },
+      to: { pathname: SCHEDULE }
     },
     {
       label: 'Mais',
       icon: <MoreHorizIcon />,
-      to: { pathname: MORE },
+      to: { pathname: MORE }
     }
   ]
-    const [toolbarItems] = useState(items)
+  const [toolbarItems] = useState(items)
 
   return (
     <ApplicationContext.Provider value={{
-      appState: {toolbarItems},
-    }}>
+      appState: { toolbarItems }
+    }}
+    >
       {children}
     </ApplicationContext.Provider>
   )
