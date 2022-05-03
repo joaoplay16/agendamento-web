@@ -1,4 +1,5 @@
 export default {
+  
   approved: {
     accredited: 'Pronto, seu pagamento foi aprovado! '
   },
@@ -22,5 +23,8 @@ export default {
     cc_rejected_max_attempts: 'Você atingiu o limite de tentativas permitido. Escolha outro cartão ou outra forma de pagamento.',
     cc_rejected_other_reason: 'Não pudemos processar seu pagamento.'
   },
-  4049: 'O valor da transação deve ser positivo!'
+  4049: 'O valor da transação deve ser positivo!',
+  4050: 'E-mail inválido',
+  2067: 'Número do documento de identificação inválido',
+  3033: ''
 }

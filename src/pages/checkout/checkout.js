@@ -208,6 +208,7 @@ function Checkout ({ location, history }) {
                   price={price.payment}
                   userInfo={userInfo}
                   history={history}
+                  handleCloseModal={handleOpenCloseModal}
                 />
               </Modal>
               <Spacer />

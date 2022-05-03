@@ -1,11 +1,19 @@
-import { Select, Button } from "@material-ui/core"
+import {
+  Select,
+  Button,
+  Grid,
+  FormLabel,
+  FormGroup,
+  Chip,
+  Typography,
+} from "@material-ui/core"
 import React, { useEffect, useState } from "react"
-import { Dialog, TextField } from "ui"
-import "./style.css"
+import { Dialog, PaperContainer, TextField, H5, Divider } from "ui"
 import { useDatabase, useShoppingCart } from "hooks"
 import * as mpApi from "services/mercadopago-api"
-import { RESERVATIONS } from "routes"
+import { RESERVATIONS, CHECKOUT } from "routes"
 import strings from "strings/mercadopago-response"
+import { toMoney, getPaymentStatusMessage } from "utils"
 const MercadoLivreCardForm = ({ history, schedules, price, userInfo }) => {
   let mercadopago = new MercadoPago(process.env.REACT_APP_MP_PUBLISHABLE_KEY)
 
@@ -15,12 +23,10 @@ const MercadoLivreCardForm = ({ history, schedules, price, userInfo }) => {
   const [isDialogOpen, setOpenDialog] = useState(false)
   const [paymentResult, setPaymentResult] = useState(null)
   const [dialogData, setDialogData] = useState({
-    message: ""
+    success: false,
+    title: null,
+    message: null,
   })
-
-  const handleCloseDialog = () => {
-    window.location.replace(RESERVATIONS)
-  }
 
   const cardForm = {
     amount: price.toString(),
@@ -71,6 +77,13 @@ const MercadoLivreCardForm = ({ history, schedules, price, userInfo }) => {
       },
       onSubmit: (event) => {
         event.preventDefault()
+
+        setDialogData((prevState)=>({
+          ...prevState,
+          message: "aguarde..." 
+        }))
+        setOpenDialog(true)
+
         const {
           paymentMethodId,
           issuerId,
@@ -96,34 +109,67 @@ const MercadoLivreCardForm = ({ history, schedules, price, userInfo }) => {
             },
           },
         }
-        mpApi.payNow(data).then((response) => {
-          const { data } = response
-          console.log("response", data)
+
+        mpApi
+          .payNow(data)
+          .then((response) => {
+            const { status: responseStatus, data } = response
             setPaymentResult(data)
 
-          if (!data.hasOwnProperty("error_message")) {
-            // setDialogData({
-            //   message: strings[data.status][data.status_detail]
-            // })
-            setOpenDialog(true)
-            
-          } else {
-            // setDialogData({
-            //   message: strings[data.status][data.status_detail]
-            // })
-          }
-        })
+            console.log("response", response.data)
+
+            //if true has a json data of payment result
+            if (responseStatus != 400) {
+              const dataStatus = data.status
+              //if true has a json data of payment processing
+              if (data.status != 400 && !data.hasOwnProperty("cause")) {
+                const success = ["approved", "in_process", "rejected"].includes(
+                  dataStatus
+                )
+
+                const paymentStatus = getPaymentStatusMessage(dataStatus)
+
+                console.log(`dataStatus ${dataStatus}`)
+                setDialogData({
+                  title: paymentStatus,
+                  success: success,
+                  message: success
+                    ? strings[data.status][data.status_detail]
+                    : data.message,
+                })
+              } else {
+                //json error data
+                setDialogData({
+                  title: "Erro ao processar pagamento " + data.cause[0].code,
+                  success: false,
+                  message: strings[data.cause[0].code],
+                })
+              }
+            } else {
+              setDialogData({
+                title: "Erro ao processar pagamento",
+                success: false,
+                message: "Erro interno no servidor",
+              })
+            }
+          })
+
+          .catch((error) => {
+            setDialogData({
+              title: `${error}`,
+              success: false,
+              message: "Erro ao conectar api de pagamentos",
+            })
+          })
       },
       onFetching: (resource) => {
-        console.log("Fetching resource: ", resource)
-
-        // Animate progress bar
-        const progressBar = document.querySelector(".progress-bar")
-        progressBar.removeAttribute("value")
-
-        return () => {
-          progressBar.setAttribute("value", "0")
-        }
+        // console.log("Fetching resource: ", resource)
+        // // Animate progress bar
+        // const progressBar = document.querySelector(".progress-bar")
+        // progressBar.removeAttribute("value")
+        // return () => {
+        //   progressBar.setAttribute("value", "0")
+        // }
       },
     },
   }
@@ -131,16 +177,6 @@ const MercadoLivreCardForm = ({ history, schedules, price, userInfo }) => {
   useEffect(() => {
     mercadopago.cardForm(cardForm)
   }, [])
-
-  useEffect(() => {
-    if (paymentResult != undefined && paymentResult != null) {
-      console.log(
-        `component didMount ${
-          paymentResult.status 
-        } ${paymentResult.status_detail}`
-      )
-    }
-  }, [paymentResult])
 
   const getDescription = (withBrand = false) => {
     let decription = withBrand ? "Agendamento Web - " : ""
@@ -156,186 +192,187 @@ const MercadoLivreCardForm = ({ history, schedules, price, userInfo }) => {
     return decription
   }
 
-  function cleanCardInfo() {
-    document.getElementById("cardNumber").style.backgroundImage = ""
-    document.getElementById("issuerInput").classList.add("hidden")
-    document.getElementById("issuer").options.length = 0
-    document.getElementById("installments").options.length = 0
+  const handleCloseDialog = () => {
+    if(dialogData.title !== null) {
+      setOpenDialog(false)
+      if (!dialogData.success) {
+        window.location.replace(CHECKOUT)
+      } else {
+        window.location.replace(RESERVATIONS)
+      }
+      setDialogData({
+        success: false,
+        title: "",
+        message: "",
+      })
+    }
   }
 
   return (
     <>
-      <main>
-        <section class="payment-form dark">
-          <div class="">
-            <div class="block-heading">
-              <h2>Pagamento no cartão</h2>
-            </div>
-            <div class="form-payment">
-              <div class="products">
-                <h2 class="title">Itens</h2>
-                <div class="item">
-                  <span class="price" id="summary-price"></span>
+      <PaperContainer>
+        <form id="form-checkout">
+          <H5>Pagamento no cartão</H5>
 
-                  <p class="item-name">
-                    <em>{getDescription()}</em>{" "}
-                    <span id="summary-quantity"></span>
-                  </p>
-                </div>
-                <div class="total">
-                  Valor do pagamento
-                  <span class="price" id="summary-total">
-                    {price}
-                  </span>
-                </div>
-              </div>
-              <div class="payment-details">
-                <form id="form-checkout">
-                  <h3 class="title">Suas informações</h3>
-                  <div class="row">
-                    <div class="form-group col">
-                      <label for="email">E-Mail </label>
-                      <TextField
-                        required
-                        id="form-checkout__cardholderEmail"
-                        name="cardholderEmail"
-                        defaultValue={userInfo.user.email}
-                        type="text"
-                      />
-                    </div>
-                  </div>
-                  <div class="row">
-                    <div class="form-group col-sm-5">
-                      <label for="docType">Tipo de documento</label>
-                      <Select
-                        native
-                        required
-                        id="form-checkout__identificationType"
-                        name="identificationType"
-                        type="text"
-                        variant="outlined"
-                      />
-                    </div>
-                    <div class="form-group col-sm-7">
-                      <label for="docNumber">CPF</label>
-                      <TextField
-                        id="form-checkout__identificationNumber"
-                        name="identificationNumber"
-                        defaultValue="76185675900"
-                        type="text"
-                      />
-                    </div>
-                  </div>
-                  <br />
-                  <h3 class="title">Detalhes do cartão de crédito</h3>
-                  <div class="row">
-                    <div class="form-group col-sm-8">
-                      <label for="cardholderName">
-                        Nome do proprietário do cartão
-                      </label>
-                      <TextField
-                        required
-                        id="form-checkout__cardholderName"
-                        name="cardholderName"
-                        defaultValue="James Bernes Lee"
-                        type="text"
-                      />
-                    </div>
-                    <div class="form-group col-sm-4">
-                      <label for="">Válido até</label>
-                      <div class="input-group expiration-date">
-                        <TextField
-                          required
-                          type="text"
-                          defaultValue="12/2022"
-                          id="form-checkout__cardExpirationDate"
-                          name="cardExpirationDate"
-                          autoComplete="off"
-                        />
-                      </div>
-                    </div>
-                    <div class="form-group col-sm-8">
-                      <label for="cardNumber">Número do cartão</label>
-                      <TextField
-                        required
-                        type="text"
-                        id="form-checkout__cardNumber"
-                        name="cardNumber"
-                        defaultValue="6062826786276634"
-                        autoComplete="off"
-                      />
-                    </div>
-                    <div class="form-group col-sm-4">
-                      <label for="securityCode">CVV</label>
-                      <TextField
-                        id="form-checkout__securityCode"
-                        required
-                        defaultValue="123"
-                        name="securityCode"
-                        autoComplete="off"
-                      />
-                    </div>
-                    <div id="issuerInput" class="form-group col-sm-12 hidden">
-                      <label for="issuer">Issuer</label>
-                      <Select
-                        native
-                        id="form-checkout__issuer"
-                        name="issuer"
-                        class="form-control"
-                      />
-                    </div>
-                    <div class="form-group col-sm-12">
-                      <label for="installments">Parcelas</label>
-                      <Select
-                        native
-                        type="text"
-                        id="form-checkout__installments"
-                        variant="outlined"
-                      />
-                    </div>
-                    <div class="form-group col-sm-12">
-                      <input
-                        type="hidden"
-                        name="paymentMethodId"
-                        id="paymentMethodId"
-                      />
-                      <input
-                        type="hidden"
-                        name="description"
-                        id="description"
-                      />
-                      <progress value="0" class="progress-bar">
-                        Carregando...
-                      </progress>
-                      <br />
-                      <button
-                        type="submit"
-                        id="form-checkout__submit"
-                        class="btn btn-primary btn-block"
-                      >
-                        Pagar
-                      </button>
-                      <br />
-                    </div>
-                  </div>
-                </form>
-              </div>
+          <Grid container alignItems="center" direction="column" spacing={1}>
+            {schedules.map((schedule, index) => {
+              let name = schedule.procedure.name
+              let date = new Date(schedule.selectedDate).toLocaleDateString()
+              let description =
+                schedules.length != index + 1
+                  ? `${name} (${date}) , `
+                  : `${name} (${date})`
+
+              return (
+                <Grid item>
+                  <Chip color="primary" label={description} size="small" />
+                </Grid>
+              )
+            })}
+
+            <Grid item style={{ marginTop: 5 }}>
+              <Typography>Total: {toMoney(price)}</Typography>
+            </Grid>
+            <Divider />
+          </Grid>
+
+          <Grid
+            container
+            direction="row"
+            justify="center"
+            alignItems="center"
+            spacing={1}
+          >
+            <Grid item md={3} sm={3} xs={12}>
+              <FormLabel for="docType">E-mail</FormLabel>
+              <TextField
+                required
+                id="form-checkout__cardholderEmail"
+                name="cardholderEmail"
+                defaultValue={userInfo.user.email}
+                type="text"
+              />
+            </Grid>
+            <Grid item md={6} sm={7} xs={12}>
+              <FormLabel>Documento</FormLabel>
+              <FormGroup row>
+                <Select
+                  native
+                  id="form-checkout__identificationType"
+                  name="identificationType"
+                  variant="outlined"
+                  defaultValue={"CPF"}
+                />
+
+                <TextField
+                  id="form-checkout__identificationNumber"
+                  name="identificationNumber"
+                  defaultValue="76185675900"
+                  type="text"
+                  sm
+                  xs
+                />
+              </FormGroup>
+            </Grid>
+            <Grid item md={6} sm={6} xs>
+              <FormLabel>Nome do proprietário do cartão</FormLabel>
+              <TextField
+                required
+                id="form-checkout__cardholderName"
+                name="cardholderName"
+                defaultValue="James Bernes Lee"
+                type="text"
+              />
+            </Grid>
+            <Grid item md={3} sm={4} xs={12}>
+              <FormLabel>Válido até</FormLabel>
+              <TextField
+                required
+                type="text"
+                defaultValue="12/2022"
+                id="form-checkout__cardExpirationDate"
+                name="cardExpirationDate"
+                autoComplete="off"
+              />
+            </Grid>
+            <Grid item md={4} sm={6} xs={12}>
+              <FormLabel>Número do cartão</FormLabel>
+              <TextField
+                required
+                type="text"
+                id="form-checkout__cardNumber"
+                name="cardNumber"
+                defaultValue="6062826786276634"
+                autoComplete="off"
+              />
+            </Grid>
+            <Grid item md={1} sm={4} xs={12}>
+              <FormLabel>CVV</FormLabel>
+              <TextField
+                id="form-checkout__securityCode"
+                required
+                defaultValue="123"
+                name="securityCode"
+                autoComplete="off"
+              />
+            </Grid>
+            <div id="issuerInput" class="form-group col-sm-12 hidden">
+              <Select
+                native
+                id="form-checkout__issuer"
+                name="issuer"
+                hidden
+                class="form-control"
+              />
             </div>
-          </div>
+            <Grid item md={4} sm={5} xs={12}>
+              <FormLabel>Parcelas</FormLabel>
+              <FormGroup row>
+                <Select
+                  native
+                  type="text"
+                  id="form-checkout__installments"
+                  variant="outlined"
+                  fullWidth
+                />
+              </FormGroup>
+            </Grid>
+            <Grid
+              item
+              container
+              direction="column"
+              justify="center"
+              alignItems="center"
+            >
+              <Button
+                color="secondary"
+                variant="contained"
+                type="submit"
+                id="form-checkout__submit"
+              >
+                Pagar
+              </Button>
+            </Grid>
+            <input type="hidden" name="paymentMethodId" id="paymentMethodId" />
+            <input type="hidden" name="description" id="description" />
+            {/* <progress value="0" class="progress-bar">
+              Carregando...
+            </progress> */}
+          </Grid>
+
           <Dialog
             open={isDialogOpen}
             handelCloseDialog={handleCloseDialog}
-            description={ 
-                "dialogData.message "
-            }
+            title={dialogData.title}
+            description={dialogData.message}
             dialogActions={
               <Button onClick={handleCloseDialog} color="primary">
                 Fechar
               </Button>
             }
           />
-        </section>
-      </main>
+        </form>
+      </PaperContainer>
     </>
   )
 }
