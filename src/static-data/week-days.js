@@ -1,30 +1,30 @@
 export default [
   {
     value: '0',
-    label: 'dom',
+    label: 'dom'
   },
   {
     value: '1',
-    label: 'seg',
+    label: 'seg'
   },
   {
     value: '2',
-    label: 'ter',
+    label: 'ter'
   },
   {
     value: '3',
-    label: 'qua',
+    label: 'qua'
   },
   {
     value: '4',
-    label: 'qui',
+    label: 'qui'
   },
   {
     value: '5',
-    label: 'sex',
+    label: 'sex'
   },
   {
     value: '6',
-    label: 'sáb',
-  },
+    label: 'sáb'
+  }
 ]

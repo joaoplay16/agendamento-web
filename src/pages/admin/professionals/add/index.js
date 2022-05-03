@@ -1,1 +1,1 @@
-export  { default } from './add-professional'
+export { default } from './add-professional'

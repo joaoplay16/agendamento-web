@@ -11,9 +11,7 @@ const AdminLogin = React.lazy(
   () => import('pages/admin/login')
 )
 
-
 function AppForAdmin ({ location }) {
-
   const { adminInfo, setAdminInfo } = useAdminAuth()
   const [didCheckUserIn, setDidCheckUserIn] = useState(false)
   const { isAdminUserLoggedIn } = adminInfo
@@ -40,7 +38,6 @@ function AppForAdmin ({ location }) {
   if (!isAdminUserLoggedIn && location.pathname !== ADMIN_LOGIN) {
     return <Redirect to={ADMIN_LOGIN} />
   }
-
 
   return (
     <Suspense fallback={<LinearProgress />}>

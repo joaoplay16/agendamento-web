@@ -7,13 +7,13 @@ import {
   ListItemText,
   ListItemAvatar,
   ListItemSecondaryAction,
-  Grid as MaterialGrid,
+  Grid as MaterialGrid
 } from '@material-ui/core'
 import { toMoney } from 'utils/index'
 import {
-  Button, 
-  H4, H6,
- } from 'ui'
+  Button,
+  H4, H6
+} from 'ui'
 import { CHOOSE_DATE } from 'routes'
 import { useDatabase } from 'hooks'
 const ChooseProfessional = ({ location }) => {
@@ -27,8 +27,9 @@ const ChooseProfessional = ({ location }) => {
   }, [])
 
   useEffect(() => {
+    // procedure.price is an object with an id of the professional and a amount e.g. { Kajhfsaa4gfd : 200 }
     const professionalsKeys = Object.keys(procedure.price)
-    if(fetchedProfessionals !== undefined){
+    if (fetchedProfessionals !== undefined) {
       const result = professionalsKeys.map((professionalID) => ({
         id: professionalID,
         ...fetchedProfessionals[professionalID],
@@ -36,21 +37,22 @@ const ChooseProfessional = ({ location }) => {
       }))
       setProfessionals(result)
     }
-    console.log("proffisionais", fetchedProfessionals);
+    console.log('proffisionais', fetchedProfessionals)
   }, [fetchedProfessionals])
 
   return (
     <ProfessionalsContainer>
       <Grid>
-        <H4 >{procedure.name}</H4>
-        <H6 > Escolha um profissional</H6>
+        <H4>{procedure.name}</H4>
+        <H6> Escolha um profissional</H6>
         <List component='nav'>
           {professionals.map((professional) => (
-            <ListItem key={professional.id}
-              alignItems="flex-start"
+            <ListItem
+              key={professional.id}
+              alignItems='flex-start'
             >
               <ListItemAvatar>
-                <Avatar alt="Remy Sharp" src={professional.photo} />
+                <Avatar alt='Remy Sharp' src={professional.photo} />
               </ListItemAvatar>
               <ListItemText
                 primary={professional.name}
@@ -67,9 +69,10 @@ const ChooseProfessional = ({ location }) => {
                     }
                   }}
                   variant='outlined'
-                  color='primary'>
+                  color='primary'
+                >
                   Escolher
-                  </Button>
+                </Button>
               </ListItemSecondaryAction>
             </ListItem>
           ))}

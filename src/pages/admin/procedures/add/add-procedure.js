@@ -22,7 +22,7 @@ import { toMoney } from 'utils'
 
 function AddProcedure () {
   const [professionalsArray, setProfessionalsArray] = useState(() => [])
-  
+
   useEffect(() => {
     fetchProfessionals()
     // setProfessionalsArray(professionalsArray)
@@ -36,7 +36,7 @@ function AddProcedure () {
   }))
   const [professionalsPrices, setProfessionalsPrices] = useState(() => ({}))
   const { professionals: professionalsObject, fetchProfessionals } = useDatabase()
-  const [selectedProfessional, setSelectedProfessional] = useState(() => "")
+  const [selectedProfessional, setSelectedProfessional] = useState(() => '')
   const inputPriceRef = useRef()
 
   const [snackBar, setSnackbar] = useState(() => ({
@@ -45,14 +45,12 @@ function AddProcedure () {
     message: ''
   }))
 
-
- 
   const hasError = () => {
     let errors = 0
     if (professionalsPrices === undefined || Object.keys(professionalsPrices).length < 1) {
       errors++
     }
-    if (procedure.name === "" || procedure.time === "") {
+    if (procedure.name === '' || procedure.time === '') {
       errors++
     }
 
@@ -65,7 +63,6 @@ function AddProcedure () {
       time: ''
     })
     setProfessionalsPrices([])
-
   }
 
   const handleClick = () => {
@@ -77,7 +74,6 @@ function AddProcedure () {
       }))
       inputPriceRef.current.value = null
     }
-
   }
 
   const handleDelete = (professionalID) => (e) => {
@@ -88,10 +84,9 @@ function AddProcedure () {
   const handleCloseSnackbar = () => {
     setSnackbar({
       open: false,
-      message: '',
+      message: ''
     })
-  };
-
+  }
 
   const handleProfessionalChanges = (e) => {
     setSelectedProfessional(e.target.value)
@@ -117,9 +112,8 @@ function AddProcedure () {
     }
   }, [professionalsObject])
 
-
   const handleSave = async () => {
-    console.log("erro? ", hasError());
+    console.log('erro? ', hasError())
     if (!hasError()) {
       const proc = {
         ...procedure,
@@ -140,7 +134,7 @@ function AddProcedure () {
       <Grid container spacing={4}>
         <Grid item xs={12}>
           <PaperContainer>
-            {hasError() && <Alert variant='filled' severity='error' >Preencha todos os campos e adicione valores</Alert>}
+            {hasError() && <Alert variant='filled' severity='error'>Preencha todos os campos e adicione valores</Alert>}
             <H5>Adicionar procedimento</H5>
             <Grid container spacing={1}>
               <TextField value={procedure.name} name='name' onChange={handleProceduresChanges} variant='outlined' label='Procedimento' sm={9} xs={12} />
@@ -165,31 +159,35 @@ function AddProcedure () {
                           </ListItemAvatar>
                           <ListItemText
                             primary={currentProfessional.name}
-                            secondary={toMoney(price)} />
+                            secondary={toMoney(price)}
+                          />
                           <ListItemSecondaryAction>
                             <IconButton
-                              onClick={handleDelete(key)}>
+                              onClick={handleDelete(key)}
+                            >
                               <DeleteIcon />
                             </IconButton>
                           </ListItemSecondaryAction>
-                        </ListItem>)
+                        </ListItem>
+                      )
                     })}
                   </List>
                 </Grid>
               </Grid>
             </Grid>
             {!!professionalsArray && (
-              <Grid item >
-                <Grid container spacing={2} direction="row" justify='center' alignItems='center'>
+              <Grid item>
+                <Grid container spacing={2} direction='row' justify='center' alignItems='center'>
                   <Grid item sm={4} xs={10}>
                     <FormControl variant='outlined' style={{ width: '100%' }}>
                       <Select
-                        labelId="simple-select-label"
+                        labelId='simple-select-label'
                         value={selectedProfessional}
                         displayEmpty
                         fullWidth
-                        onChange={handleProfessionalChanges}>
-                        <MenuItem value="" disabled>
+                        onChange={handleProfessionalChanges}
+                      >
+                        <MenuItem value='' disabled>
                           <em>Selecione um profissional</em>
                         </MenuItem>
                         {professionalsArray.map((professional) => (
@@ -209,9 +207,11 @@ function AddProcedure () {
                   <Grid item xs={2}>
                     <Button
                       onClick={handleClick}
-                      to="#"
+                      to='#'
                       variant='contained'
-                      color='secondary'>Definir</Button>
+                      color='secondary'
+                    >Definir
+                    </Button>
                   </Grid>
                 </Grid>
               </Grid>
@@ -222,16 +222,19 @@ function AddProcedure () {
             <Grid container item justify='center'>
               <Button
                 onClick={handleSave}
-                to="#"
+                to='#'
                 variant='contained'
-                color='primary'>Salvar</Button>
+                color='primary'
+              >Salvar
+              </Button>
             </Grid>
           </PaperContainer>
           <Snackbar
             open={snackBar.open}
             onClose={handleCloseSnackbar}
             autoHideDuration={3000}
-            key={snackBar.message}>
+            key={snackBar.message}
+          >
             <Alert variant='filled' severity={snackBar.success ? 'success' : 'error'}>
               {snackBar.message}
             </Alert>

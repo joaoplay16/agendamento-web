@@ -1,5 +1,5 @@
 import React from 'react'
-import { Route, Switch } from 'react-router-dom'
+import { Route, Routes } from 'react-router-dom'
 import {
   ADMIN_PROFESSIONALS,
   ADMIN_PROFESSIONALS_ADD,
@@ -25,6 +25,5 @@ function Professionals () {
     </Switch>
   )
 }
-
 
 export default Professionals

@@ -6,9 +6,9 @@ import { Content } from 'ui'
 function Settings () {
   // const { login } = useAuth()
   return (
-   <Content>
+    <Content>
       <h1>Configurações</h1>
-   </Content>
+    </Content>
   )
 }
 

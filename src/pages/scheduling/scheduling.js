@@ -1,14 +1,13 @@
 import React, { useEffect } from 'react'
 import styled from 'styled-components'
 import { Grid as MaterialGrid, Card as MaterialCard } from '@material-ui/core'
-import { CardLink, Content, H3, H2, H4,H5, HeaderContent, Button } from 'ui'
+import { CardLink, Content, H3, H2, H4, H5, HeaderContent, Button } from 'ui'
 import { SCHEDULE, RESERVATIONS } from 'routes'
 import { Link } from 'react-router-dom'
 const Scheduling = () => {
-  
-  useEffect(()=>{
+  useEffect(() => {
 
-  },[])
+  }, [])
 
   return (
     <MainContent>
@@ -23,7 +22,8 @@ const Scheduling = () => {
           <ButtonsContainer
             direction='row'
             container
-            justify='center'>
+            justify='center'
+          >
             <BigButton to={SCHEDULE}>Agendar</BigButton>
             <BigButton backgroundColor='#34425a' to={RESERVATIONS}>Reservar</BigButton>
           </ButtonsContainer>
@@ -35,8 +35,8 @@ const Scheduling = () => {
 
 const BigButton = styled(Link)`
   align-items: center;
-  background-color: ${({theme, backgroundColor}) => 
-    backgroundColor ? backgroundColor : theme.palette.primary.main};
+  background-color: ${({ theme, backgroundColor }) =>
+    backgroundColor || theme.palette.primary.main};
   border-radius: 8px;
   color: white;
   display: flex;
@@ -53,7 +53,7 @@ const BigButton = styled(Link)`
 const MainContent = styled(Content)`
 display: flex;
 align-content: space-around;
-padding-top: ${({theme}) => theme.spacing(15)}px;
+padding-top: ${({ theme }) => theme.spacing(15)}px;
 background: linear-gradient(rgba(254,254,254,0.3),rgba(254,254,254,0.3)),
                url(https://cdn.pixabay.com/photo/2018/09/24/15/54/background-3700256_960_720.jpg);
   /* Background image is centered vertically and horizontally at all times */
@@ -85,7 +85,7 @@ const Grid = styled(MaterialGrid)`
   flex-wrap: nowrap;
 `
 
-const ButtonsContainer =styled(MaterialGrid)`
+const ButtonsContainer = styled(MaterialGrid)`
   display: flex;
   justify-content: center;
   align-items: flex-end;
@@ -93,13 +93,12 @@ const ButtonsContainer =styled(MaterialGrid)`
 `
 
 const Card = styled(MaterialCard).attrs({
-  variant: 'outlined',
+  variant: 'outlined'
 })`
   box-shadow: 2px 2px 2px 2px rgba(0, 0, 0, 0.2);
   background-color: ${({ backgroundColor }) => backgroundColor}; 
   margin-right: ${({ theme }) => theme.spacing(1)}px;
   min-width: 180px;
 `
-
 
 export default Scheduling

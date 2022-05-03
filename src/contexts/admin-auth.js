@@ -1,13 +1,13 @@
-import React, { createContext, useCallback, useState } from "react"
-import PropTypes from "prop-types"
-import firebase from "services/firebase"
+import React, { createContext, useCallback, useState } from 'react'
+import PropTypes from 'prop-types'
+import firebase from 'services/firebase'
 
 const AdminAuthContext = createContext()
 
-function AdminAuthProvider({ children }) {
+function AdminAuthProvider ({ children }) {
   const [adminInfo, setAdminInfo] = useState({
     isUserLoggedIn: false,
-    user: null,
+    user: null
   })
 
   const login = useCallback((email, pass) => {
@@ -17,35 +17,32 @@ function AdminAuthProvider({ children }) {
       .then((user) => {
         setAdminInfo({
           isUserLoggedIn: !!user,
-          user,
+          user
         })
-        console.log("USUARIO ", user)
+        console.log('USUARIO ', user)
       })
       .catch((error) => {
-        var errorCode = error.code
-        var errorMessage = error.message
+        const errorCode = error.code
+        const errorMessage = error.message
 
-        console.log("ERRO ADMIN LOGIN ", errorCode, errorMessage)
+        console.log('ERRO ADMIN LOGIN ', errorCode, errorMessage)
       })
   }, [])
 
   const createUser = useCallback((email, pass) => {
-
-
     firebase.auth()
       .createUserWithEmailAndPassword(email, pass)
       .then((user) => {
         setAdminInfo({
           isUserLoggedIn: !!user,
-          user,
+          user
         })
       })
       .catch((error) => {
-        var errorCode = error.code
-        var errorMessage = error.message
-   
-        console.log("ERRRO CRIAR USER ", errorCode, errorMessage)
+        const errorCode = error.code
+        const errorMessage = error.message
 
+        console.log('ERRRO CRIAR USER ', errorCode, errorMessage)
       })
   }, [])
 
@@ -53,10 +50,10 @@ function AdminAuthProvider({ children }) {
     firebase.auth()
       .signOut()
       .then(() => {
-        console.log("o cara deslogou")
+        console.log('o cara deslogou')
         setAdminInfo({
           isUserLoggedIn: false,
-          user: null,
+          user: null
         })
       })
   }, [])
@@ -68,7 +65,7 @@ function AdminAuthProvider({ children }) {
         logout,
         createUser,
         adminInfo,
-        setAdminInfo,
+        setAdminInfo
       }}
     >
       {children}
@@ -77,7 +74,7 @@ function AdminAuthProvider({ children }) {
 }
 
 AdminAuthProvider.propTypes = {
-  children: PropTypes.node.isRequired,
+  children: PropTypes.node.isRequired
 }
 
 export { AdminAuthProvider, AdminAuthContext }

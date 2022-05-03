@@ -1,19 +1,17 @@
-import React from "react"
-import styled from "styled-components"
+import React, { useEffect } from 'react'
+import styled from 'styled-components'
 import {
   Card as MaterialCard,
   CardContent as MaterialCardContent,
   CardActions,
   Grid,
   Paper,
-  Typography,
-} from "@material-ui/core"
+  Typography
+} from '@material-ui/core'
 
-import { Content } from "ui"
-import { useDatabase } from "hooks"
-import { toMoney, getPercentage } from "utils"
-import { useEffect } from "react"
-import { useAuth } from "hooks"
+import { Content } from 'ui'
+import { useDatabase, useAuth } from 'hooks'
+import { toMoney, getPercentage } from 'utils'
 
 const Reservations = () => {
   const { userSchedules, fetchUserSchedules } = useDatabase()
@@ -22,7 +20,7 @@ const Reservations = () => {
 
   useEffect(() => {
     fetchUserSchedules(userInfo)
-    console.log(getPercentage(30, 100));
+    console.log(getPercentage(30, 100))
   }, [])
 
   useEffect(() => {
@@ -30,48 +28,48 @@ const Reservations = () => {
 
   return (
     <Content>
-      <Grid container justify="center">
+      <Grid container justify='center'>
         <Grid item sm={10} lg={8} md={6} xs={12}>
           <Grid container>
             {userSchedules.map((us, index) => {
-            {return us.schedules.map(schedule => (
-              <Card key={schedule.scheduleDate.seconds * 1000}>
-                <CardContent className="card-info">
-                  <CardText variant="inherit">
-                    {new Date(schedule.scheduleDate.seconds * 1000).toLocaleDateString(
-                      "pt-BR",
-                      {
-                        weekday: "long",
-                        day: "numeric",
-                        month: "long",
-                        year: "numeric",
-                      }
-                    )}{" "}
-                    - {schedule.scheduleTime}
-                  </CardText>
-                  <CardText variant="subtitle1">
-                    {schedule.procedure.name}
-                  </CardText>
-                  <CardText variant="subtitle1" noWrap>
-                    {schedule.professional.name}
-                  </CardText>
-                  <CardText variant="subtitle1">
-                    {toMoney(schedule.professional.price)}
-                  </CardText>
-                </CardContent>
-                <CardContent className="card-action">
-                    <CardText variant="body1" noWrap>
-                      {us.paymentInfo.status} 
+              { return us.schedules.map(schedule => (
+                <Card key={schedule.scheduleDate.seconds * 1000}>
+                  <CardContent className='card-info'>
+                    <CardText variant='inherit'>
+                      {new Date(schedule.scheduleDate.seconds * 1000).toLocaleDateString(
+                        'pt-BR',
+                        {
+                          weekday: 'long',
+                          day: 'numeric',
+                          month: 'long',
+                          year: 'numeric'
+                        }
+                      )}{' '}
+                      - {schedule.scheduleTime}
                     </CardText>
-                    <CardText variant="body2" noWrap>
+                    <CardText variant='subtitle1'>
+                      {schedule.procedure.name}
+                    </CardText>
+                    <CardText variant='subtitle1' noWrap>
+                      {schedule.professional.name}
+                    </CardText>
+                    <CardText variant='subtitle1'>
+                      {toMoney(schedule.professional.price)}
+                    </CardText>
+                  </CardContent>
+                  <CardContent className='card-action'>
+                    <CardText variant='body1' noWrap>
+                      {us.paymentInfo.status}
+                    </CardText>
+                    <CardText variant='body2' noWrap>
                       sinal {toMoney(getPercentage(schedule.professional.price))}
                     </CardText>
-                    <CardText variant="body2" noWrap>
+                    <CardText variant='body2' noWrap>
                       restante {toMoney(schedule.professional.price - getPercentage(schedule.professional.price))}
                     </CardText>
-                </CardContent>
-              </Card>
-              ))}
+                  </CardContent>
+                </Card>
+              )) }
             })}
           </Grid>
         </Grid>

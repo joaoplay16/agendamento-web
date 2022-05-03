@@ -1,8 +1,8 @@
 import React, { useEffect } from 'react'
-import { withRouter, NavLink } from 'react-router-dom'
+import { NavLink, withRouter } from 'react-router-dom'
 import {
   Container,
-  IconButton as MaterialIconButton,
+  IconButton as MaterialIconButton
 } from '@material-ui/core'
 
 import styled from 'styled-components'
@@ -11,7 +11,6 @@ import { HOME } from 'routes'
 import pathStartWith from 'utils/path-comparator'
 
 function Footer ({ location }) {
-
   const { appState } = useApplication()
   const currentPathName = location.pathname
 
@@ -23,7 +22,7 @@ function Footer ({ location }) {
     if (itemPathname === HOME) {
       return itemPathname === currentPathName
     }
-    
+
     return pathStartWith(itemPathname, currentPathName)
   }
 
@@ -86,8 +85,8 @@ const IconButton = styled(MaterialIconButton)`
   span {
       svg{
         path {
-          fill: ${({ active, theme }) => active ?
-    theme.palette.primary.main : ''};
+          fill: ${({ active, theme }) => active
+    ? theme.palette.primary.main : ''};
         }
       }
     };

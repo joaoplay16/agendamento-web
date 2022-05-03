@@ -1,38 +1,182 @@
-import { Select } from "@material-ui/core"
+import {
+  Select,
+  Button,
+  Grid,
+  FormLabel,
+  FormGroup,
+  Chip,
+  Typography,
+} from "@material-ui/core"
 import React, { useEffect, useState } from "react"
-import { TextField } from "ui"
-import mpInsertionErros from "strings/mercadopago-insertion-errors"
-import "./style.css"
+import { Dialog, PaperContainer, TextField, H5, Divider } from "ui"
 import { useDatabase, useShoppingCart } from "hooks"
 import * as mpApi from "services/mercadopago-api"
-
-const MercadoLivreCardForm = ({ schedules, price, userInfo }) => {
-
-  const [formData, setFormData] = useState({
-    cardNumber: "6062826786276634",
-  })
+import { RESERVATIONS, CHECKOUT } from "routes"
+import strings from "strings/mercadopago-response"
+import { toMoney, getPaymentStatusMessage } from "utils"
+const MercadoLivreCardForm = ({ history, schedules, price, userInfo }) => {
+  let mercadopago = new MercadoPago(process.env.REACT_APP_MP_PUBLISHABLE_KEY)
 
   const { setPaymentStatusDetails } = useShoppingCart()
   const { submitSchedule } = useDatabase()
 
+  const [isDialogOpen, setOpenDialog] = useState(false)
+  const [paymentResult, setPaymentResult] = useState(null)
+  const [dialogData, setDialogData] = useState({
+    success: false,
+    title: null,
+    message: null,
+  })
+
+  const cardForm = {
+    amount: price.toString(),
+    autoMount: true,
+    form: {
+      id: "form-checkout",
+      cardholderName: {
+        id: "form-checkout__cardholderName",
+        placeholder: "Titular do cartão",
+      },
+      cardholderEmail: {
+        id: "form-checkout__cardholderEmail",
+        placeholder: "E-mail",
+      },
+      cardNumber: {
+        id: "form-checkout__cardNumber",
+        placeholder: "Número do cartão",
+      },
+      cardExpirationDate: {
+        id: "form-checkout__cardExpirationDate",
+        placeholder: "Data de vencimento (MM/YYYY)",
+      },
+      securityCode: {
+        id: "form-checkout__securityCode",
+        placeholder: "Código de segurança",
+      },
+      installments: {
+        id: "form-checkout__installments",
+        placeholder: "Parcelas",
+      },
+      identificationType: {
+        id: "form-checkout__identificationType",
+        placeholder: "Tipo de documento",
+      },
+      identificationNumber: {
+        id: "form-checkout__identificationNumber",
+        placeholder: "Número do documento",
+      },
+      issuer: {
+        id: "form-checkout__issuer",
+        placeholder: "Banco emissor",
+      },
+    },
+    callbacks: {
+      onFormMounted: (error) => {
+        if (error) return console.warn("Form Mounted handling error: ", error)
+        console.log("Form mounted")
+      },
+      onSubmit: (event) => {
+        event.preventDefault()
+
+        setDialogData((prevState)=>({
+          ...prevState,
+          message: "aguarde..." 
+        }))
+        setOpenDialog(true)
+
+        const {
+          paymentMethodId,
+          issuerId,
+          cardholderEmail: email,
+          token,
+          installments,
+          identificationNumber,
+          identificationType,
+        } = mercadopago.cardForm(cardForm).getCardFormData()
+
+        const data = {
+          token,
+          issuerId,
+          paymentMethodId,
+          transactionAmount: Number(price),
+          installments: Number(installments),
+          description: getDescription(),
+          payer: {
+            email,
+            identification: {
+              docType: identificationType,
+              docNumber: identificationNumber,
+            },
+          },
+        }
+
+        mpApi
+          .payNow(data)
+          .then((response) => {
+            const { status: responseStatus, data } = response
+            setPaymentResult(data)
+
+            console.log("response", response.data)
+
+            //if true has a json data of payment result
+            if (responseStatus != 400) {
+              const dataStatus = data.status
+              //if true has a json data of payment processing
+              if (data.status != 400 && !data.hasOwnProperty("cause")) {
+                const success = ["approved", "in_process", "rejected"].includes(
+                  dataStatus
+                )
+
+                const paymentStatus = getPaymentStatusMessage(dataStatus)
+
+                console.log(`dataStatus ${dataStatus}`)
+                setDialogData({
+                  title: paymentStatus,
+                  success: success,
+                  message: success
+                    ? strings[data.status][data.status_detail]
+                    : data.message,
+                })
+              } else {
+                //json error data
+                setDialogData({
+                  title: "Erro ao processar pagamento " + data.cause[0].code,
+                  success: false,
+                  message: strings[data.cause[0].code],
+                })
+              }
+            } else {
+              setDialogData({
+                title: "Erro ao processar pagamento",
+                success: false,
+                message: "Erro interno no servidor",
+              })
+            }
+          })
+
+          .catch((error) => {
+            setDialogData({
+              title: `${error}`,
+              success: false,
+              message: "Erro ao conectar api de pagamentos",
+            })
+          })
+      },
+      onFetching: (resource) => {
+        // console.log("Fetching resource: ", resource)
+        // // Animate progress bar
+        // const progressBar = document.querySelector(".progress-bar")
+        // progressBar.removeAttribute("value")
+        // return () => {
+        //   progressBar.setAttribute("value", "0")
+        // }
+      },
+    },
+  }
+
   useEffect(() => {
-    //para poder fazer outra compra com o mesmo cartão
-    window.Mercadopago.clearSession()
-
-    window.Mercadopago.setPublishableKey(
-      process.env.REACT_APP_MP_PUBLISHABLE_KEY
-    )
-
-    window.Mercadopago.getIdentificationTypes()
-
-    document.getElementById("description").value = getDescription(true)
-
+    mercadopago.cardForm(cardForm)
   }, [])
-
-  useEffect(() => {
-    guessPaymentMethod(formData.cardNumber)
-    console.log("STATE", formData)
-  }, [formData.cardNumber])
 
   const getDescription = (withBrand = false) => {
     let decription = withBrand ? "Agendamento Web - " : ""
@@ -48,450 +192,187 @@ const MercadoLivreCardForm = ({ schedules, price, userInfo }) => {
     return decription
   }
 
-  const handleChange = (e) => {
-    let { name, value } = e.target
-    setFormData((state) => ({
-      ...state,
-      [name]: value,
-    }))
-  }
-
-  function guessPaymentMethod(cardNumber) {
-    cleanCardInfo()
-
-    if (cardNumber.length >= 6) {
-      let bin = cardNumber.substring(0, 6)
-      window.Mercadopago.getPaymentMethod(
-        {
-          bin: bin,
-        },
-        setPaymentMethod
-      )
-    }
-  }
-
-  function setPaymentMethod(status, response) {
-    if (status == 200) {
-      let paymentMethod = response[0]
-
-      document.getElementById("paymentMethodId").value = paymentMethod.id
-      document.getElementById(
-        "cardNumber"
-      ).style.backgroundImage = `url(${paymentMethod.thumbnail})`
-
-      if (paymentMethod.additional_info_needed.includes("issuer_id")) {
-        getIssuers(paymentMethod.id)
+  const handleCloseDialog = () => {
+    if(dialogData.title !== null) {
+      setOpenDialog(false)
+      if (!dialogData.success) {
+        window.location.replace(CHECKOUT)
       } else {
-        document.getElementById("issuerInput").classList.add("hidden")
-
-        getInstallments(paymentMethod.id, price)
+        window.location.replace(RESERVATIONS)
       }
-    } else {
-      alert(`payment method info error: ${response.message}`)
-      console.log(`payment method info `, response)
-    }
-  }
-
-  function getIssuers(paymentMethodId) {
-    window.Mercadopago.getIssuers(paymentMethodId, setIssuers)
-  }
-
-  function setIssuers(status, response) {
-    if (status == 200) {
-      let issuerSelect = document.getElementById("issuer")
-
-      response.forEach((issuer) => {
-        let opt = document.createElement("option")
-        opt.text = issuer.name
-        opt.value = issuer.id
-        issuerSelect.appendChild(opt)
+      setDialogData({
+        success: false,
+        title: "",
+        message: "",
       })
-
-      if (issuerSelect.options.length <= 1) {
-        document.getElementById("issuerInput").classList.add("hidden")
-      } else {
-        document.getElementById("issuerInput").classList.remove("hidden")
-      }
-
-      getInstallments(
-        document.getElementById("paymentMethodId").value,
-        price,
-        issuerSelect.value
-      )
-    } else {
-      alert(`issuers method info error: ${response}`)
     }
   }
-  // updateInstallmentsForIssuer
-  const handleIssuerChange = (e) => {
-    window.Mercadopago.getInstallments(
-      {
-        payment_method_id: document.getElementById("paymentMethodId").value,
-        amount: price,
-        issuer_id: parseInt(document.getElementById("issuer").value),
-      },
-      setInstallments
-    )
-  }
-
-  function getInstallments(paymentMethodId, amount, issuerId) {
-    window.Mercadopago.getInstallments(
-      {
-        payment_method_id: paymentMethodId,
-        amount: price,
-        issuer_id: issuerId ? parseInt(issuerId) : undefined,
-      },
-      setInstallments
-    )
-  }
-
-  function setInstallments(status, response) {
-    if (status == 200) {
-      document.getElementById("installments").options.length = 0
-      response[0].payer_costs.forEach((payerCost) => {
-        let opt = document.createElement("option")
-        opt.text = payerCost.recommended_message
-        opt.value = payerCost.installments
-        document.getElementById("installments").appendChild(opt)
-      })
-    } else {
-      alert(`installments method info error: ${response}`)
-    }
-  }
-
-  const handleSubmit = (e) => {
-    e.preventDefault()
-    getCardToken(e)
-  }
-
-  const pay = async () => {
-    const paymentMethodId = document.getElementById("paymentMethodId").value
-    const installments = document.getElementById("installments").value
-    const email = document.getElementById("email").value
-    const transactionAmount = document.getElementById("amount").value
-    const token = document.getElementById("token").value
-    const description = getDescription()
-    const paymentData = {
-      email,
-      description,
-      installments,
-      paymentMethodId,
-      transactionAmount,
-      token,
-    }
-
-    const filteredSchedules = schedules.map((schedule) => {
-      return {
-        procedure: {
-          id: schedule.procedure.id,
-          name: schedule.procedure.name,
-          time: schedule.procedure.time,
-        },
-        professional: {
-          id: schedule.professional.id,
-          name: schedule.professional.name,
-          photo: schedule.professional.photo,
-          price: parseFloat(schedule.professional.price),
-        },
-        scheduleDate: schedule.selectedDate,
-        scheduleTime: schedule.selectedTime,
-      }
-    })
-
-    const res = await mpApi.payNow(paymentData)
-    if (res.data.hasOwnProperty("status")) {
-      const status = res.data.status
-      if (status === "approved" || status === "pending" ) {
-        const { user } = userInfo
-        const response = await submitSchedule({
-          userId: user.uid,
-          userName: user.displayName,
-          userPhoto: user.photoURL,
-          userEmail: user.email,
-          schedules: filteredSchedules,
-          paymentInfo: res.data,
-        })
-        
-        console.log("SALVOU?", response)
-      }
-    }
-
-    setPaymentStatusDetails(res.data)
-    // console.log("RESULT", res.data)
-  }
-
-  function getCardToken(event) {
-    event.preventDefault()
-
-      let form = document.getElementById("paymentForm")
-      window.Mercadopago.createToken(form, setCardTokenAndPay)
-      return false
-  }
-
-  function setCardTokenAndPay(status, response) {
-    if (status == 200 || status == 201) {
-      let card = document.getElementById("token")
-      card.value = response.id
-      // let form = document.getElementById("paymentForm")
-      // let card = document.createElement("input")
-      // card.setAttribute("name", "token")
-      // card.setAttribute("type", "hidden")
-      // card.setAttribute("value", response.id)
-      // form.appendChild(card)
-      // setDoSubmit(true)
-      // form.submit()
-      pay()
-    } else {
-      alert(
-        "Verifique os dados inseridos!\n" + JSON.stringify(response, null, 4)
-      )
-      // alert("Verifique os dados inseridos!\n" + mpInsertionErros[response.cause[0].code])
-    }
-  }
-
-  /***
-   * UX functions
-   */
-
-  function cleanCardInfo() {
-    document.getElementById("cardNumber").style.backgroundImage = ""
-    document.getElementById("issuerInput").classList.add("hidden")
-    document.getElementById("issuer").options.length = 0
-    document.getElementById("installments").options.length = 0
-  }
-  //Handle price update
-  function updatePrice() {}
-  // document.getElementById('quantity').addEventListener('change', updatePrice);
-  // updatePrice();
-
-  //Retrieve product description
-  // document.getElementById('description').value = document.getElementById('product-description').innerHTML;
 
   return (
     <>
-      <main>
-        <section class="payment-form dark">
-          <div class="">
-            <div class="block-heading">
-              <h2>Pagamento no cartão</h2>
-            </div>
-            <div class="form-payment">
-              <div class="products">
-                <h2 class="title">Itens</h2>
-                <div class="item">
-                  <span class="price" id="summary-price"></span>
+      <PaperContainer>
+        <form id="form-checkout">
+          <H5>Pagamento no cartão</H5>
 
-                  <p class="item-name">
-                    <em>{getDescription()}</em>{" "}
-                    <span id="summary-quantity"></span>
-                  </p>
-                </div>
-                <div class="total">
-                  Valor do pagamento
-                  <span class="price" id="summary-total">
-                    {price}
-                  </span>
-                </div>
-              </div>
-              <div class="payment-details">
-                <form onSubmit={handleSubmit} id="paymentForm">
-                  <h3 class="title">Suas informações</h3>
-                  <div class="row">
-                    <div class="form-group col">
-                      <label for="email">E-Mail</label>
-                      <TextField
-                        required
-                        defaultValue="seijiyokai@gmail.com"
-                        id="email"
-                        name="email"
-                        type="text"
-                      />
-                    </div>
-                  </div>
-                  <div class="row">
-                    <div class="form-group col-sm-5">
-                      {/* <label for="docType">Tipo de documento</label> */}
-                      <Select
-                        native
-                        hidden
-                        inputProps={{
-                          "data-checkout": "docType",
-                        }}
-                        id="docType"
-                        name="docType"
-                        type="text"
-                        variant="outlined"
-                        value="CPF"
-                      />
-                    </div>
-                    <div class="form-group col-sm-7">
-                      <label for="docNumber">CPF</label>
-                      <TextField
-                        required
-                        defaultValue="76185675900"
-                        id="docNumber"
-                        name="docNumber"
-                        inputProps={{
-                          "data-checkout": "docNumber",
-                        }}
-                        type="text"
-                      />
-                    </div>
-                  </div>
-                  <br />
-                  <h3 class="title">Detalhes do cartão de crédito</h3>
-                  <div class="row">
-                    <div class="form-group col-sm-8">
-                      <label for="cardholderName">
-                        Nome do proprietário do cartão
-                      </label>
-                      <TextField
-                        required
-                        defaultValue="Otimista"
-                        id="cardholderName"
-                        name="cardholderName"
-                        inputProps={{
-                          "data-checkout": "cardholderName",
-                        }}
-                        type="text"
-                      />
-                    </div>
-                    <div class="form-group col-sm-4">
-                      <label for="">Válido até</label>
-                      <div class="input-group expiration-date">
-                        <TextField
-                          required
-                          defaultValue="12"
-                          type="text"
-                          placeholder="MM"
-                          id="cardExpirationMonth"
-                          name="cardExpirationMonth"
-                          inputProps={{
-                            "data-checkout": "cardExpirationMonth",
-                          }}
-                          onselectStart={() => false}
-                          onPaste={() => false}
-                          onCopy={() => false}
-                          onCut={() => false}
-                          onDrag={() => false}
-                          onDrop={() => false}
-                          autoComplete="off"
-                        />
-                        <span class="date-separator">/</span>
-                        <TextField
-                          required
-                          defaultValue="22"
-                          type="text"
-                          placeholder="YY"
-                          id="cardExpirationYear"
-                          name="cardExpirationYear"
-                          inputProps={{
-                            "data-checkout": "cardExpirationYear",
-                          }}
-                          onselectStart={() => false}
-                          onPaste={() => false}
-                          onCopy={() => false}
-                          onCut={() => false}
-                          onDrag={() => false}
-                          onDrop={() => false}
-                          autoComplete="off"
-                        />
-                      </div>
-                    </div>
-                    <div class="form-group col-sm-8">
-                      <label for="cardNumber">Numero do cartão</label>
-                      <TextField
-                        required
-                        type="text"
-                        id="cardNumber"
-                        name="cardNumber"
-                        onChange={handleChange}
-                        value={formData.cardNumber}
-                        inputProps={{
-                          "data-checkout": "cardNumber",
-                          class: "input-background",
-                        }}
-                        onselectStart={() => false}
-                        onCopy={() => false}
-                        onCut={() => false}
-                        onDrag={() => false}
-                        onDrop={() => false}
-                        autoComplete="off"
-                      />
-                    </div>
-                    <div class="form-group col-sm-4">
-                      <label for="securityCode">CVV</label>
-                      <TextField
-                        required
-                        defaultValue="123"
-                        id="securityCode"
-                        name="securityCode"
-                        inputProps={{
-                          "data-checkout": "securityCode",
-                        }}
-                        type="text"
-                        onselectStart={() => false}
-                        onPaste={() => false}
-                        onCopy={() => false}
-                        onCut={() => false}
-                        onDrag={() => false}
-                        onDrop={() => false}
-                        autoComplete="off"
-                      />
-                    </div>
-                    <div id="issuerInput" class="form-group col-sm-12 hidden">
-                      <label for="issuer">Issuer</label>
-                      <Select
-                        native
-                        inputProps={{
-                          "data-checkout": "issuer",
-                        }}
-                        onChange={handleIssuerChange}
-                        id="issuer"
-                        name="issuer"
-                        class="form-control"
-                      />
-                    </div>
-                    <div class="form-group col-sm-12">
-                      <label for="installments">Parcelas</label>
-                      <Select
-                        native
-                        type="text"
-                        id="installments"
-                        variant="outlined"
-                      />
-                    </div>
-                    <div class="form-group col-sm-12">
-                      <input
-                        type="hidden"
-                        name="transactionAmount"
-                        id="amount"
-                        value={price}
-                      />
-                      <input
-                        type="hidden"
-                        name="paymentMethodId"
-                        id="paymentMethodId"
-                      />
-                      <input
-                        type="hidden"
-                        name="description"
-                        id="description"
-                      />
-                      <input type="hidden" name="token" id="token" />
-                      <br />
-                      <button type="submit" class="btn btn-primary btn-block">
-                        Pagar
-                      </button>
-                      <br />
-                    </div>
-                  </div>
-                </form>
-              </div>
+          <Grid container alignItems="center" direction="column" spacing={1}>
+            {schedules.map((schedule, index) => {
+              let name = schedule.procedure.name
+              let date = new Date(schedule.selectedDate).toLocaleDateString()
+              let description =
+                schedules.length != index + 1
+                  ? `${name} (${date}) , `
+                  : `${name} (${date})`
+
+              return (
+                <Grid item>
+                  <Chip color="primary" label={description} size="small" />
+                </Grid>
+              )
+            })}
+
+            <Grid item style={{ marginTop: 5 }}>
+              <Typography>Total: {toMoney(price)}</Typography>
+            </Grid>
+            <Divider />
+          </Grid>
+
+          <Grid
+            container
+            direction="row"
+            justify="center"
+            alignItems="center"
+            spacing={1}
+          >
+            <Grid item md={3} sm={3} xs={12}>
+              <FormLabel for="docType">E-mail</FormLabel>
+              <TextField
+                required
+                id="form-checkout__cardholderEmail"
+                name="cardholderEmail"
+                defaultValue={userInfo.user.email}
+                type="text"
+              />
+            </Grid>
+            <Grid item md={6} sm={7} xs={12}>
+              <FormLabel>Documento</FormLabel>
+              <FormGroup row>
+                <Select
+                  native
+                  id="form-checkout__identificationType"
+                  name="identificationType"
+                  variant="outlined"
+                  defaultValue={"CPF"}
+                />
+
+                <TextField
+                  id="form-checkout__identificationNumber"
+                  name="identificationNumber"
+                  defaultValue="76185675900"
+                  type="text"
+                  sm
+                  xs
+                />
+              </FormGroup>
+            </Grid>
+            <Grid item md={6} sm={6} xs>
+              <FormLabel>Nome do proprietário do cartão</FormLabel>
+              <TextField
+                required
+                id="form-checkout__cardholderName"
+                name="cardholderName"
+                defaultValue="James Bernes Lee"
+                type="text"
+              />
+            </Grid>
+            <Grid item md={3} sm={4} xs={12}>
+              <FormLabel>Válido até</FormLabel>
+              <TextField
+                required
+                type="text"
+                defaultValue="12/2022"
+                id="form-checkout__cardExpirationDate"
+                name="cardExpirationDate"
+                autoComplete="off"
+              />
+            </Grid>
+            <Grid item md={4} sm={6} xs={12}>
+              <FormLabel>Número do cartão</FormLabel>
+              <TextField
+                required
+                type="text"
+                id="form-checkout__cardNumber"
+                name="cardNumber"
+                defaultValue="6062826786276634"
+                autoComplete="off"
+              />
+            </Grid>
+            <Grid item md={1} sm={4} xs={12}>
+              <FormLabel>CVV</FormLabel>
+              <TextField
+                id="form-checkout__securityCode"
+                required
+                defaultValue="123"
+                name="securityCode"
+                autoComplete="off"
+              />
+            </Grid>
+            <div id="issuerInput" class="form-group col-sm-12 hidden">
+              <Select
+                native
+                id="form-checkout__issuer"
+                name="issuer"
+                hidden
+                class="form-control"
+              />
             </div>
-          </div>
-        </section>
-      </main>
+            <Grid item md={4} sm={5} xs={12}>
+              <FormLabel>Parcelas</FormLabel>
+              <FormGroup row>
+                <Select
+                  native
+                  type="text"
+                  id="form-checkout__installments"
+                  variant="outlined"
+                  fullWidth
+                />
+              </FormGroup>
+            </Grid>
+            <Grid
+              item
+              container
+              direction="column"
+              justify="center"
+              alignItems="center"
+            >
+              <Button
+                color="secondary"
+                variant="contained"
+                type="submit"
+                id="form-checkout__submit"
+              >
+                Pagar
+              </Button>
+            </Grid>
+            <input type="hidden" name="paymentMethodId" id="paymentMethodId" />
+            <input type="hidden" name="description" id="description" />
+            {/* <progress value="0" class="progress-bar">
+              Carregando...
+            </progress> */}
+          </Grid>
+
+          <Dialog
+            open={isDialogOpen}
+            handelCloseDialog={handleCloseDialog}
+            title={dialogData.title}
+            description={dialogData.message}
+            dialogActions={
+              <Button onClick={handleCloseDialog} color="primary">
+                Fechar
+              </Button>
+            }
+          />
+        </form>
+      </PaperContainer>
     </>
   )
 }

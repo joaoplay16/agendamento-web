@@ -12,7 +12,7 @@ import {
   ListItem,
   ListItemText,
   ListItemAvatar,
-  ListItemSecondaryAction,
+  ListItemSecondaryAction
 } from '@material-ui/core'
 import { Alert } from '@material-ui/lab'
 import {
@@ -30,7 +30,7 @@ function ProfessionalsList () {
 
   useEffect(() => {
     fetchProfessionals()
-    console.log("fetchProfessionals");
+    console.log('fetchProfessionals')
   }, [])
 
   const [snackBar, setSnackBar] = useState(() => ({
@@ -39,17 +39,16 @@ function ProfessionalsList () {
     message: ''
   }))
 
-  const [dialogOpen, setDialogOpen] = useState(false);
+  const [dialogOpen, setDialogOpen] = useState(false)
 
   const handleDialogOpen = (professional) => (e) => {
-    setDialogOpen(true);
+    setDialogOpen(true)
     setSelectedProfessional(professional)
-  };
+  }
 
   const handleDialogClose = () => {
-    setDialogOpen(false);
-  };
-
+    setDialogOpen(false)
+  }
 
   useEffect(() => {
     if (fetchedProfessionals) {
@@ -62,7 +61,6 @@ function ProfessionalsList () {
       ])
       // console.log("profisionais", professionals);
     }
-
   }, [fetchedProfessionals])
 
   useEffect(() => {
@@ -95,7 +93,7 @@ function ProfessionalsList () {
   const handleCloseSnackbar = () => {
     setSnackBar({
       open: false,
-      message: '',
+      message: ''
     })
   }
 
@@ -109,11 +107,13 @@ function ProfessionalsList () {
           <Grid
             container
             justify='flex-end'
-            direction='row'>
+            direction='row'
+          >
             <Button
               to={ADMIN_PROFESSIONALS_ADD}
               variant='contained'
-              color='primary'>
+              color='primary'
+            >
               Novo
             </Button>
           </Grid>
@@ -132,8 +132,10 @@ function ProfessionalsList () {
                   secondary={null}
                 />
                 <ListItemSecondaryAction>
-                  <IconButton onClick={handleDialogOpen(professional)}
-                    color='secondary'>
+                  <IconButton
+                    onClick={handleDialogOpen(professional)}
+                    color='secondary'
+                  >
                     <DeleteIcon />
                   </IconButton>
                   <IconButton
@@ -144,7 +146,8 @@ function ProfessionalsList () {
                       }
                     }}
                     component={Link}
-                    color='secondary'>
+                    color='secondary'
+                  >
                     <EditIcon />
                   </IconButton>
                 </ListItemSecondaryAction>
@@ -157,7 +160,8 @@ function ProfessionalsList () {
           open={snackBar.open}
           onClose={handleCloseSnackbar}
           autoHideDuration={3000}
-          key={snackBar.message}>
+          key={snackBar.message}
+        >
           <Alert variant='filled' severity={snackBar.success ? 'success' : 'error'}>
             {snackBar.message}
           </Alert>
@@ -166,19 +170,20 @@ function ProfessionalsList () {
         <Dialog
           open={dialogOpen}
           onClose={handleDialogClose}
-          aria-labelledby="alert-dialog-title"
-          aria-describedby="alert-dialog-description">
-          <DialogTitle id="alert-dialog-title">
+          aria-labelledby='alert-dialog-title'
+          aria-describedby='alert-dialog-description'
+        >
+          <DialogTitle id='alert-dialog-title'>
             Remover "{!!selectedProfessional && selectedProfessional.name}"?
           </DialogTitle>
 
           <DialogActions>
-            <Button onClick={handleDialogClose} color="secondary">
+            <Button onClick={handleDialogClose} color='secondary'>
               Cancelar
-          </Button>
-            <Button onClick={handleDelete} color="secondary" autoFocus>
+            </Button>
+            <Button onClick={handleDelete} color='secondary' autoFocus>
               OK
-          </Button>
+            </Button>
           </DialogActions>
         </Dialog>
       </Grid>
@@ -186,6 +191,5 @@ function ProfessionalsList () {
 
   )
 }
-
 
 export default ProfessionalsList

@@ -1,1 +1,1 @@
-export  { default } from './procedures-list'
+export { default } from './procedures-list'

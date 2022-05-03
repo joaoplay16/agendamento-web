@@ -17,43 +17,53 @@ app.get("*", function (req, res) {
 })
 
 app.post("/process_payment", (req, res) => {
-  var payment_data = {
-    transaction_amount: Number(req.body.transactionAmount),
-    token: req.body.token,
-    description: req.body.description,
-    installments: Number(req.body.installments),
-    payment_method_id: req.body.paymentMethodId,
-    issuer_id: req.body.issuer,
+  const { body } = req
+  const { payer } = body
+  const payment_data = {
+    transaction_amount: Number(body.transactionAmount),
+    token: body.token,
+    description: body.description,
+    installments: Number(body.installments),
+    payment_method_id: body.paymentMethodId,
+    issuer_id: body.issuerId,
     payer: {
-      email: req.body.email,
+      email: payer.email,
       identification: {
-        type: req.body.docType,
-        number: req.body.docNumber,
+        type: payer.identification.docType,
+        number: payer.identification.docNumber,
       },
     },
   }
 
-  // console.log(payment_data)
-
   mercadopago.payment
     .save(payment_data)
     .then(function (response) {
+      const { body } = response
       // res.status(response.status).json({
       //   status: response.body.status,
       //   status_detail: response.body.status_detail,
       //   id: response.body.id
       // });
-      res.json({
-        id: response.body.id,
-        status: response.body.status,
-        payment_type_id: response.body.payment_type_id,
-        status_detail: response.body.status_detail,
-        date_approved: response.body.date_approved,
-        description: response.body.description,
-        installments: response.body.installments,
-        transaction_amount: response.body.transaction_amount
+      res.status(201).json({
+        id: body.id,
+        date_created: body.date_created,
+        date_approved: body.date_approved,
+        status: body.status,
+        status_detail: body.status_detail,
+        payment_type_id: body.payment_type_id,
+        payment_method_id: body.payment_method_id,
+        description: body.description,
+        installments: body.installments,
+        transaction_amount: body.transaction_amount,
+        // payer: {
+        //   email: payer.email,
+        //   identification: {
+        //     doc_type: payer.identification.docType,
+        //     doc_number: payer.identification.docNumber
+        //   }
+        // }
       })
-      // console.log("body", response.body)
+      console.log("body", response.body)
     })
     .catch(function (error) {
       console.log(error)
@@ -62,6 +72,6 @@ app.post("/process_payment", (req, res) => {
     })
 })
 
-app.listen(process.env.PORT || 8080, () => {
-  console.log("The server is now running on Port 8080")
+app.listen(process.env.PORT || 8088, () => {
+  console.log("The server is now running on Port 8088")
 })

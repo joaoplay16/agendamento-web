@@ -7,7 +7,6 @@ import ResponsiveDrawer from 'pages/admin/main/drawer'
 import { Switch, Route } from 'react-router-dom'
 import { ADMIN, ADMIN_PROFESSIONALS, ADMIN_PROCEDURES, ADMIN_SETTINGS } from 'routes'
 
-
 const Dashboard = React.lazy(
   () => import('pages/admin/dashboard')
 )
@@ -25,7 +24,7 @@ const Main = () => {
   return (
     <>
       <ResponsiveDrawer>
-        <Suspense fallback={<CircularProgress/>}>
+        <Suspense fallback={<CircularProgress />}>
           <Switch>
             <Route exact path={ADMIN} component={Dashboard} />
             <Route path={ADMIN_PROCEDURES} component={Procedures} />
