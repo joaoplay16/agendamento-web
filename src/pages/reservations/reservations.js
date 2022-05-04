@@ -36,7 +36,7 @@ const Reservations = () => {
                 <Card key={schedule.scheduleDate.seconds * 1000}>
                   <CardContent className='card-info'>
                     <CardText variant='inherit'>
-                      {new Date(schedule.scheduleDate.seconds * 1000).toLocaleDateString(
+                      {new Date(schedule.scheduleDate).toLocaleDateString(
                         'pt-BR',
                         {
                           weekday: 'long',
@@ -59,7 +59,8 @@ const Reservations = () => {
                   </CardContent>
                   <CardContent className='card-action'>
                     <CardText variant='body1' noWrap>
-                      {us.paymentInfo.status}
+                      {us.paymentInfo.status === "approved" && ("Pagamento aprovado")}
+                      {us.paymentInfo.status === "in_process" && ("Pagamento pendente")}
                     </CardText>
                     <CardText variant='body2' noWrap>
                       sinal {toMoney(getPercentage(schedule.professional.price))}

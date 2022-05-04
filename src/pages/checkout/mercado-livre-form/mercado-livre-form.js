@@ -14,6 +14,7 @@ import * as mpApi from "services/mercadopago-api"
 import { RESERVATIONS, CHECKOUT } from "routes"
 import strings from "strings/mercadopago-response"
 import { toMoney, getPaymentStatusMessage } from "utils"
+import firebase from "firebase/app"
 const MercadoLivreCardForm = ({ history, schedules, price, userInfo }) => {
   let mercadopago = new MercadoPago(process.env.REACT_APP_MP_PUBLISHABLE_KEY)
 
@@ -78,9 +79,9 @@ const MercadoLivreCardForm = ({ history, schedules, price, userInfo }) => {
       onSubmit: (event) => {
         event.preventDefault()
 
-        setDialogData((prevState)=>({
+        setDialogData((prevState) => ({
           ...prevState,
-          message: "aguarde..." 
+          message: "aguarde...",
         }))
         setOpenDialog(true)
 
@@ -113,47 +114,49 @@ const MercadoLivreCardForm = ({ history, schedules, price, userInfo }) => {
         mpApi
           .payNow(data)
           .then((response) => {
-            const { status: responseStatus, data } = response
+            const { data } = response
             setPaymentResult(data)
 
-            console.log("response", response.data)
+            const errorCodes = strings.errorCodes
 
             //if true has a json data of payment result
-            if (responseStatus != 400) {
-              const dataStatus = data.status
-              //if true has a json data of payment processing
-              if (data.status != 400 && !data.hasOwnProperty("cause")) {
-                const success = ["approved", "in_process", "rejected"].includes(
-                  dataStatus
-                )
+            const dataStatus = data.status
+            //if true has a json data of payment processing
+            if (data.status != 400 && !data.hasOwnProperty("cause")) {
+              const success = ["approved", "in_process"].includes(dataStatus)
 
-                const paymentStatus = getPaymentStatusMessage(dataStatus)
+              const paymentStatus = getPaymentStatusMessage(dataStatus)
 
-                console.log(`dataStatus ${dataStatus}`)
-                setDialogData({
-                  title: paymentStatus,
-                  success: success,
-                  message: success
-                    ? strings[data.status][data.status_detail]
-                    : data.message,
-                })
-              } else {
-                //json error data
-                setDialogData({
-                  title: "Erro ao processar pagamento " + data.cause[0].code,
-                  success: false,
-                  message: strings[data.cause[0].code],
-                })
-              }
-            } else {
               setDialogData({
-                title: "Erro ao processar pagamento",
+                title: paymentStatus,
+                success: success,
+                message: strings[data.status][data.status_detail],
+              })
+
+              const { uid, displayName, photoURL, email } = userInfo.user
+
+              submitSchedule({
+                userId: uid,
+                userName: displayName,
+                userPhoto: photoURL,
+                userEmail: email,
+                schedules: getFilteredSchedules(),
+                paymentInfo: data,
+              }).then(res => {
+                console.log("SALVOU", res);
+              })
+            } else {
+              //json error data
+              const responseErrorCode =
+                data.cause[0].code !== undefined ? data.cause[0].code : 0
+
+              setDialogData({
+                title: `Erro ${responseErrorCode}`,
                 success: false,
-                message: "Erro interno no servidor",
+                message: errorCodes[responseErrorCode],
               })
             }
           })
-
           .catch((error) => {
             setDialogData({
               title: `${error}`,
@@ -192,8 +195,26 @@ const MercadoLivreCardForm = ({ history, schedules, price, userInfo }) => {
     return decription
   }
 
+  const getFilteredSchedules = () =>
+    schedules.map((schedule) => ({
+      procedure: {
+        id: schedule.procedure.id,
+        name: schedule.procedure.name,
+        time: schedule.procedure.time,
+      },
+      professional: {
+        id: schedule.professional.id,
+        name: schedule.professional.name,
+        photo: schedule.professional.photo,
+        price: parseFloat(schedule.professional.price),
+      },
+      scheduleDate: schedule.selectedDate,
+      scheduleTime: schedule.selectedTime,
+      
+    }))
+
   const handleCloseDialog = () => {
-    if(dialogData.title !== null) {
+    if (dialogData.title !== null) {
       setOpenDialog(false)
       if (!dialogData.success) {
         window.location.replace(CHECKOUT)
@@ -241,8 +262,7 @@ const MercadoLivreCardForm = ({ history, schedules, price, userInfo }) => {
             direction="row"
             justify="center"
             alignItems="center"
-            spacing={1}
-          >
+            spacing={1}>
             <Grid item md={3} sm={3} xs={12}>
               <FormLabel for="docType">E-mail</FormLabel>
               <TextField
@@ -342,14 +362,12 @@ const MercadoLivreCardForm = ({ history, schedules, price, userInfo }) => {
               container
               direction="column"
               justify="center"
-              alignItems="center"
-            >
+              alignItems="center">
               <Button
                 color="secondary"
                 variant="contained"
                 type="submit"
-                id="form-checkout__submit"
-              >
+                id="form-checkout__submit">
                 Pagar
               </Button>
             </Grid>

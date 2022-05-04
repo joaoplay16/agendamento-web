@@ -22,7 +22,7 @@ import {
 import { CHECKOUT } from 'routes'
 import scheduleConfigs from 'fake-data/schedule-configs'
 import { useShoppingCart } from 'hooks'
-import { v4 } from 'uuid'
+
 const ChooseDate = ({ location }) => {
   const currentDate = new Date()
 

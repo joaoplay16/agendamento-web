@@ -1,12 +1,17 @@
 import t from 'prop-types'
-import React, { createContext, useState, useEffect } from 'react'
+import React, { createContext, useState } from 'react'
 const ShoppingCartContext = createContext()
 
 function ShoppingCartProvider ({ children }) {
   const [schedules, addSchedule] = useState(() => {
-    const items = localStorage.getItem('schedules')
+    let items = localStorage.getItem('schedules')
+    
     if (items !== null) {
-      return JSON.parse(items)
+      const schedulesObj = JSON.parse(items).map( item => ({
+        ...item,
+        selectedDate: new Date(item.selectedDate)
+      }))
+      return schedulesObj
     }
     localStorage.setItem('schedules', JSON.stringify([]))
     return []
@@ -16,7 +21,10 @@ function ShoppingCartProvider ({ children }) {
 
   function addScheduleToShoppingCart (schedule) {
     addSchedule((schedules) => {
-      const items = schedules.concat(schedule)
+      const items = schedules.concat({
+        ...schedule,
+        selectedDate: new Date(schedule.selectedDate).toISOString()
+      })
       localStorage.setItem('schedules', JSON.stringify(items))
       return items
     })
