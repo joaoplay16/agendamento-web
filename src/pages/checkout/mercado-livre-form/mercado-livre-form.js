@@ -14,11 +14,10 @@ import * as mpApi from "services/mercadopago-api"
 import { RESERVATIONS, CHECKOUT } from "routes"
 import strings from "strings/mercadopago-response"
 import { toMoney, getPaymentStatusMessage } from "utils"
-import firebase from "firebase/app"
 const MercadoLivreCardForm = ({ history, schedules, price, userInfo }) => {
   let mercadopago = new MercadoPago(process.env.REACT_APP_MP_PUBLISHABLE_KEY)
 
-  const { setPaymentStatusDetails } = useShoppingCart()
+  const { setPaymentStatusDetails, resetShoppingCart } = useShoppingCart()
   const { submitSchedule } = useDatabase()
 
   const [isDialogOpen, setOpenDialog] = useState(false)
@@ -217,9 +216,10 @@ const MercadoLivreCardForm = ({ history, schedules, price, userInfo }) => {
     if (dialogData.title !== null) {
       setOpenDialog(false)
       if (!dialogData.success) {
-        window.location.replace(CHECKOUT)
+        // window.location.replace(CHECKOUT)
       } else {
         window.location.replace(RESERVATIONS)
+        // resetShoppingCart()
       }
       setDialogData({
         success: false,

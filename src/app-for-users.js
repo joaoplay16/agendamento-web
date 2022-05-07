@@ -3,7 +3,7 @@ import { Route, Switch, Redirect } from 'react-router-dom'
 import PropTypes from 'prop-types'
 import { LinearProgress } from '@material-ui/core'
 import firebase from 'services/firebase'
-import { CHECKOUT, HOME, LOGIN, RESERVATIONS } from 'routes'
+import { CHECKOUT, LOGIN, RESERVATIONS } from 'routes'
 import { useAuth } from 'hooks'
 
 const MainPage = lazy(() => import('pages/main'))
@@ -16,6 +16,7 @@ function AppForUsers ({ location }) {
 
   useEffect(() => {
     firebase.auth().onAuthStateChanged((user) => {
+
       setUserInfo({
         isUserLoggedIn: !!user,
         // isUserLoggedIn: true,
@@ -26,7 +27,12 @@ function AppForUsers ({ location }) {
       })
       setDidCheckUserIn(true)
     })
-  }, [setUserInfo])
+    
+  }, [])
+
+  useEffect(()=>{
+    localStorage.setItem("currentUserId",isUserLoggedIn ? userInfo.user?.uid : "guest")
+  },[isUserLoggedIn])
 
   if (!didCheckUserIn) {
     return <LinearProgress />

@@ -12,28 +12,40 @@ import {
 } from "@material-ui/core"
 import { DeleteSharp } from "@material-ui/icons"
 import { useAuth, useShoppingCart } from "hooks"
-import React, { useEffect } from "react"
-import { SCHEDULE, RESERVATIONS } from "routes"
+import React, { useEffect, useState } from "react"
+import { SCHEDULE } from "routes"
 import styled from "styled-components"
-import { Button, Content, Modal, Spacer } from "ui"
+import { Button, Content, H6, Modal, Spacer } from "ui"
 import { toMoney } from "utils"
 import MercadoLivreCardForm from "./mercado-livre-form"
-import mpResponseStrings from "strings/mercadopago-response"
 function Checkout({ location, history }) {
   const {
     schedules,
+    fetchLocalSchedules,
     removeScheduleFromShoppingCart,
-    resetShoppingCart,
-    paymentDetails,
-    setPaymentStatusDetails,
   } = useShoppingCart()
 
   const { userInfo } = useAuth()
+
+  useEffect(() => {
+   fetchLocalSchedules()
+  }, [])
+
+  useEffect(() => {
+    const pathname = location.pathname
+    document.title = pathname.substring(
+      pathname.lastIndexOf("/") + 1,
+      pathname.length
+    )
+
+    console.log(`SCHEDULES`, schedules)
+  }, [schedules])
+
   const getPrice = () => {
     let total = 0
     let payment = 0
     const percentage = 30
-    schedules.forEach((schedule) => {
+    schedules?.forEach((schedule) => {
       const currentPrice = parseFloat(schedule.professional.price)
       total += currentPrice
       console.log(currentPrice)
@@ -46,53 +58,22 @@ function Checkout({ location, history }) {
       percentage,
     }
   }
-  const price = getPrice()
-  useEffect(() => {
-    const pathname = location.pathname
-    document.title = pathname.substring(
-      pathname.lastIndexOf("/") + 1,
-      pathname.length
-    )
-
-    if (schedules.length === 0) {
-      history.push("/")
-    }
-
-    console.log(`SCHEDULES`, schedules);
-  }, [])
-
-  useEffect(() => {
-    console.log("CHECKOUT", paymentDetails)
-    if (paymentDetails && paymentDetails.hasOwnProperty("status")) {
-      resetShoppingCart()
-      alert(
-        mpResponseStrings[paymentDetails.status][paymentDetails.status_detail]
-      )
-      setPaymentStatusDetails({})
-      history.push(RESERVATIONS)
-    }
-
-    if (paymentDetails && paymentDetails.hasOwnProperty("cause")) {
-      alert(mpResponseStrings[paymentDetails.cause[0].code])
-      setPaymentStatusDetails({})
-    }
-  }, [paymentDetails])
 
   const removeSchedule = (schedule) => () => {
     removeScheduleFromShoppingCart(schedule)
   }
 
-  const [open, setOpen] = React.useState(false)
+  const [open, setModalOpen] = useState(false)
   const handleOpenCloseModal = () => {
-    setOpen(!open)
+    setModalOpen(!open)
   }
 
   return (
     <Content>
       <Grid container justify="center">
-        <Grid item sm={8} lg={6} md={6} xs={12}>
+        { schedules.length > 0 &&  <Grid item sm={8} lg={6} md={6} xs={12}>
           <Grid container>
-            {schedules.map((schedule, index) => (
+            {schedules?.map((schedule, index) => (
               <Card key={index}>
                 <CardContent className="first-card-content">
                   <CardText variant="subtitle1">
@@ -155,7 +136,7 @@ function Checkout({ location, history }) {
                 </Grid>
                 <Grid item xs={6}>
                   <Typography align="right" variant="body2" noWrap>
-                    {toMoney(price.total)}
+                    {toMoney(getPrice().total)}
                   </Typography>
                 </Grid>
               </Grid>
@@ -169,7 +150,7 @@ function Checkout({ location, history }) {
                 </Grid>
                 <Grid item xs={6}>
                   <Typography align="right" variant="body1" noWrap>
-                    {toMoney(price.payment)}
+                    {toMoney(getPrice().payment)}
                   </Typography>
                 </Grid>
               </Grid>
@@ -205,7 +186,7 @@ function Checkout({ location, history }) {
               <Modal isOpen={open} handleOpenClose={handleOpenCloseModal}>
                 <MercadoLivreCardForm
                   schedules={schedules}
-                  price={price.payment}
+                  price={getPrice().payment}
                   userInfo={userInfo}
                   history={history}
                   handleCloseModal={handleOpenCloseModal}
@@ -215,7 +196,15 @@ function Checkout({ location, history }) {
               <Spacer />
             </Grid>
           </Grid>
+        </Grid>}
+        {schedules.length === 0 && (
+          <Grid  item justify="center" >
+          <H6>O carrinho está vazio.</H6>  
+          <Button to={SCHEDULE} variant="outlined" color="primary">
+            Adicionar um serviço
+          </Button>
         </Grid>
+        )}
       </Grid>
     </Content>
   )
