@@ -45,7 +45,7 @@ function UpdateProfessional ({ location }) {
     message: ''
   }))
   const [selectedWeek, setSelectedWeek] = useState(() => 0)
-  const timeTableOfSelectedWeek = timeTable.week[selectedWeek]
+  const timeTableOfSelectedWeek = timeTable.week[selectedWeek] || []
 
   const handleWeekChange = (e) => {
     const selected = e.target.value
@@ -159,11 +159,11 @@ function UpdateProfessional ({ location }) {
             <Divider />
             <Grid item xs={12}>
               <Grid container justify='center' spacing={1}>
-                {timeTable.week[selectedWeek].length == 0 &&
+                {timeTable.week[selectedWeek]?.length == 0 &&
                   <Typography>
                     Nenhum horário definido
                   </Typography>}
-                {timeTable.week[selectedWeek].map((hour) => (
+                {timeTable.week[selectedWeek]?.map((hour) => (
                   <Grid item>
                     <Chip
                       key={hour}

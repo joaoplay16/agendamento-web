@@ -12,18 +12,18 @@ import {
   ListItemText,
   MenuItem,
   Select,
-  Snackbar
-} from '@material-ui/core'
-import { Delete as DeleteIcon } from '@material-ui/icons'
-import { Alert } from '@material-ui/lab'
-import { useDatabase } from 'hooks'
-import React, { useEffect, useRef, useState } from 'react'
-import { Redirect } from 'react-router-dom'
-import { ADMIN_PROCEDURES } from 'routes'
-import { Content, H5, PaperContainer, Spacer, TextField } from 'ui'
-import { toMoney } from 'utils'
+  Snackbar,
+} from "@material-ui/core"
+import { Delete as DeleteIcon } from "@material-ui/icons"
+import { Alert } from "@material-ui/lab"
+import { useDatabase } from "hooks"
+import React, { useEffect, useRef, useState } from "react"
+import { Redirect } from "react-router-dom"
+import { ADMIN_PROCEDURES } from "routes"
+import { Content, H5, PaperContainer, Spacer, TextField } from "ui"
+import { toMoney } from "utils"
 
-function UpdateProcedure ({ location, history }) {
+function UpdateProcedure({ location, history }) {
   if (!location.state) {
     return <Redirect to={ADMIN_PROCEDURES} />
   }
@@ -33,18 +33,16 @@ function UpdateProcedure ({ location, history }) {
   const { updateProcedure } = useDatabase()
 
   const [procedure, setProcedure] = useState(() => ({
-    name: '',
-    time: ''
+    name: "",
+    time: "",
   }))
   const [professionalsPrices, setProfessionalsPrices] = useState(
     () => procedureToUpdate.price
   )
-  const {
-    professionals: professionalsObject,
-    fetchProfessionals
-  } = useDatabase()
+  const { professionals: professionalsObject, fetchProfessionals } =
+    useDatabase()
   const [professionalsArray, setProfessionalsArray] = useState(() => [])
-  const [selectedProfessional, setSelectedProfessional] = useState(() => '')
+  const [selectedProfessional, setSelectedProfessional] = useState(() => "")
   const inputPriceRef = useRef()
 
   useEffect(() => {
@@ -52,7 +50,7 @@ function UpdateProcedure ({ location, history }) {
     setProcedure({
       id: procedureToUpdate.id,
       name: procedureToUpdate.name,
-      time: procedureToUpdate.time
+      time: procedureToUpdate.time,
     })
   }, [])
 
@@ -60,15 +58,15 @@ function UpdateProcedure ({ location, history }) {
     setProfessionalsArray([
       ...Object.keys(professionalsObject).map((key) => ({
         id: key,
-        ...professionalsObject[key]
-      }))
+        ...professionalsObject[key],
+      })),
     ])
   }, [professionalsObject, location])
 
   const [snackBar, setSnackbar] = useState(() => ({
     open: false,
     success: false,
-    message: ''
+    message: "",
   }))
 
   const hasError = () => {
@@ -76,7 +74,7 @@ function UpdateProcedure ({ location, history }) {
     if (Object.keys(professionalsPrices).length < 1) {
       errors++
     }
-    if (procedure.name === '' || procedure.time === '') {
+    if (procedure.name === "" || procedure.time === "") {
       errors++
     }
 
@@ -85,20 +83,20 @@ function UpdateProcedure ({ location, history }) {
 
   const clearFields = () => {
     setProcedure({
-      name: '',
-      time: ''
+      name: "",
+      time: "",
     })
     setProfessionalsPrices([])
   }
 
-  const handleClick = (e) => {
+  const handleAddProfessionalPrice = (e) => {
     e.preventDefault()
 
     const inputValue = inputPriceRef.current.value
     if (selectedProfessional) {
       setProfessionalsPrices((prices) => ({
         ...prices,
-        [selectedProfessional]: inputValue
+        [selectedProfessional]: inputValue,
       }))
       inputPriceRef.current.value = null
     }
@@ -112,7 +110,7 @@ function UpdateProcedure ({ location, history }) {
   const handleCloseSnackbar = () => {
     setSnackbar({
       open: false,
-      message: ''
+      message: "",
     })
   }
 
@@ -124,23 +122,23 @@ function UpdateProcedure ({ location, history }) {
     const { name, value } = e.target
     setProcedure((state) => ({
       ...state,
-      [name]: value
+      [name]: value,
     }))
     console.log(procedure)
   }
 
   const handleUpdate = async () => {
-    console.log('erro? ', hasError())
+    console.log("erro? ", hasError())
     if (!hasError()) {
       const proc = {
         ...procedure,
-        price: professionalsPrices
+        price: professionalsPrices,
       }
       const res = await updateProcedure(proc)
       setSnackbar({
         open: true,
         success: res.success,
-        message: res.message
+        message: res.message,
       })
 
       setTimeout(() => {
@@ -152,152 +150,130 @@ function UpdateProcedure ({ location, history }) {
 
   return (
     <Content>
-      <Grid container spacing={4}>
-        <Grid item xs={12}>
-          <PaperContainer>
+      <PaperContainer>
+        <Grid container spacing={1} justify="center" alignItems="center" lg={10}>
+          <Grid item>
+            <H5>Atualizar procedimento</H5>
+          </Grid>
+          <Grid item xs={12}>
             {hasError() && (
-              <Alert variant='filled' severity='error'>
+              <Alert variant="filled" severity="error">
                 Preencha todos os campos e adicione valores
               </Alert>
             )}
-            <H5>Atualizar procedimento</H5>
-            <Grid container spacing={1}>
-              <TextField
-                value={procedure.name}
-                name='name'
-                onChange={handleProceduresChanges}
-                variant='outlined'
-                label='Procedimento'
-                sm={9}
-                xs={12}
-              />
-              <TextField
-                value={procedure.time}
-                name='time'
-                onChange={handleProceduresChanges}
-                variant='outlined'
-                label='Tempo'
-                sm={3}
-                xs={4}
-              />
-            </Grid>
-            <Spacer />
+          </Grid>
+          <Grid item sm={8} xs={12}>
+            <TextField
+              value={procedure.name}
+              name="name"
+              onChange={handleProceduresChanges}
+              variant="outlined"
+              label="Procedimento"
+            />
+          </Grid>
+
+          <Grid item sm={4} xs={12}>
+            <TextField
+              value={procedure.time}
+              name="time"
+              onChange={handleProceduresChanges}
+              variant="outlined"
+              label="Tempo"
+            />
+          </Grid>
+          <Grid item xs={12}>
             <H5>Valores</H5>
-            <Divider />
-            <Spacer />
-            <Grid item xs={12}>
-              <Grid container justify='center'>
-                <Grid item lg={4} md={4} sm={10} xs={12}>
-                  <List>
-                    {Object.keys(professionalsObject) != 0 &&
-                      Object.keys(professionalsPrices).map((key) => {
-                        const currentProfessional = professionalsObject[key]
-                        const price = professionalsPrices[key]
-                        return (
-                          <ListItem key={key}>
-                            <ListItemAvatar>
-                              <Avatar
-                                alt={currentProfessional.name.toUpperCase()}
-                                src={currentProfessional.photo}
-                              />
-                            </ListItemAvatar>
-                            <ListItemText
-                              primary={currentProfessional.name}
-                              secondary={toMoney(price)}
-                            />
-                            <ListItemSecondaryAction>
-                              <IconButton onClick={handleDelete(key)}>
-                                <DeleteIcon />
-                              </IconButton>
-                            </ListItemSecondaryAction>
-                          </ListItem>
-                        )
-                      })}
-                  </List>
-                </Grid>
+          </Grid>
+
+          <Grid item lg={4} md={4} sm={10} xs={12}>
+            <List>
+              {Object.keys(professionalsObject) !== 0 &&
+                Object.keys(professionalsPrices).map((key) => {
+                  const currentProfessional = professionalsObject[key]
+                  const price = professionalsPrices[key]
+                  return (
+                    <ListItem key={key}>
+                      <ListItemAvatar>
+                        <Avatar
+                          alt={currentProfessional?.name.toUpperCase()}
+                          src={currentProfessional?.photo}
+                        />
+                      </ListItemAvatar>
+                      <ListItemText
+                        primary={currentProfessional?.name}
+                        secondary={toMoney(price)}
+                      />
+                      <ListItemSecondaryAction>
+                        <IconButton onClick={handleDelete(key)}>
+                          <DeleteIcon />
+                        </IconButton>
+                      </ListItemSecondaryAction>
+                    </ListItem>
+                  )
+                })}
+            </List>
+          </Grid>
+          {professionalsArray.length > 0 && (
+            <Grid item container spacing={1}>
+              <Grid item sm xs={12}>
+                <Select
+                  labelId="simple-select-label"
+                  value={selectedProfessional}
+                  displayEmpty
+                  label="asds"
+                  fullWidth
+                  variant="outlined"
+                  onChange={handleProfessionalChanges}>
+                  <MenuItem value="" disabled>
+                    <em>Selecione um profissional</em>
+                  </MenuItem>
+                  {professionalsArray.map((professional) => (
+                    <MenuItem key={professional.id} value={professional.id}>
+                      {professional.name}
+                    </MenuItem>
+                  ))}
+                </Select>
+              </Grid>
+              <Grid item sm={4} xs={12}>
+                <TextField
+                  required
+                  inputRef={inputPriceRef}
+                  inputProps={{ type: "number", min: 0 }}
+                  label="valor"
+                />
+              </Grid>
+              <Grid item sm={2} xs={12}>
+                <Button
+                  onClick={handleAddProfessionalPrice}
+                  to="#"
+                  variant="contained"
+                  color="secondary">
+                  Definir
+                </Button>
               </Grid>
             </Grid>
-            {professionalsArray.length > 0 && (
-              <Grid item>
-                <Grid
-                  container
-                  spacing={2}
-                  direction='row'
-                  justify='center'
-                  alignItems='center'
-                >
-                  <Grid item sm={4} xs={10}>
-                    <FormControl variant='outlined' style={{ width: '100%' }}>
-                      <Select
-                        labelId='simple-select-label'
-                        value={selectedProfessional}
-                        displayEmpty
-                        fullWidth
-                        onChange={handleProfessionalChanges}
-                      >
-                        <MenuItem value='' disabled>
-                          <em>Selecione um profissional</em>
-                        </MenuItem>
-                        {professionalsArray.map((professional) => (
-                          <MenuItem
-                            key={professional.id}
-                            value={professional.id}
-                          >
-                            {professional.name}
-                          </MenuItem>
-                        ))}
-                      </Select>
-                    </FormControl>
-                  </Grid>
-                  <Grid item sm={3} xs={7}>
-                    <TextField
-                      required
-                      inputRef={inputPriceRef}
-                      inputProps={{ type: 'number', min: 0 }}
-                      label='valor'
-                    />
-                  </Grid>
-                  <Grid item xs={2}>
-                    <Button
-                      onClick={handleClick}
-                      to='#'
-                      variant='contained'
-                      color='secondary'
-                    >
-                      Definir
-                    </Button>
-                  </Grid>
-                </Grid>
-              </Grid>
-            )}
-            <Spacer />
-            <Divider />
-            <Spacer />
-            <Grid container item justify='center'>
-              <Button
-                onClick={handleUpdate}
-                variant='contained'
-                color='primary'
-              >
-                Atualizar
-              </Button>
-            </Grid>
-          </PaperContainer>
-          <Snackbar
-            open={snackBar.open}
-            onClose={handleCloseSnackbar}
-            autoHideDuration={3000}
-            key={snackBar.message}
-          >
-            <Alert
-              variant='filled'
-              severity={snackBar.success ? 'success' : 'error'}
-            >
-              {snackBar.message}
-            </Alert>
-          </Snackbar>
+          )}
+          <Spacer />
+          <Divider />
+          <Spacer />
+          <Grid container item justify="center">
+            <Button onClick={handleUpdate} variant="contained" color="primary">
+              Atualizar
+            </Button>
+          </Grid>
         </Grid>
-      </Grid>
+      </PaperContainer>
+      <Snackbar
+        open={snackBar.open}
+        onClose={handleCloseSnackbar}
+        autoHideDuration={3000}
+        key={snackBar.message}>
+        <Alert
+          variant="filled"
+          severity={snackBar.success ? "success" : "error"}>
+          {snackBar.message}
+        </Alert>
+      </Snackbar>
     </Content>
   )
 }

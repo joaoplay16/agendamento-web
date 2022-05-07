@@ -1,5 +1,5 @@
 import React from 'react'
-import { Route, Routes } from 'react-router-dom'
+import { Route, Switch } from 'react-router-dom'
 import {
   ADMIN_PROCEDURES,
   ADMIN_PROCEDURES_ADD,
