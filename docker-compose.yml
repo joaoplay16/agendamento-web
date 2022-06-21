@@ -1,0 +1,19 @@
+version: "3.2"
+services:
+  agweb:
+    image: node:latest
+    container_name: api
+    restart: always
+    env_file: 
+      - .env
+    ports: 
+      - 8088:8088
+    volumes: 
+      - .:/usr/src/app
+    working_dir: /usr/src/app
+    command: yarn start
+    logging: 
+      driver: "json-file"
+      options: 
+        max-size: "10m"
+        max-file: "5"             

@@ -25,7 +25,7 @@ const Scheduling = () => {
             justify='center'
           >
             <BigButton to={SCHEDULE}>Agendar</BigButton>
-            <BigButton backgroundColor='#34425a' to={RESERVATIONS}>Reservar</BigButton>
+            <BigButton backgroundColor='#34425a' to={RESERVATIONS}>Reservas</BigButton>
           </ButtonsContainer>
         </Grid>
       </Grid>

@@ -1,7 +1,8 @@
 import axios from 'axios'
 
-const HOST = process.env.NODE_ENV === 'production'
-  ? 'https://agendamentoweb.herokuapp.com' : 'http://localhost:8088'
+const HOST = process.env.REACT_APP_API_HOST
+
+console.log("HOst", HOST);
 
 const mpApi = axios.create({
   baseURL: HOST
