@@ -29,7 +29,7 @@
 ## Sobre o projeto
 > Agendamento de procedimentos estéticos online
 
-Agendamento Web  é um sistema de agendamento de horários para serviços de estética. **Demo** https://agendamentoweb.herokuapp.com/
+Agendamento Web  é um sistema de agendamento de horários para serviços de estética. **Demo** http://ec2-15-228-45-130.sa-east-1.compute.amazonaws.com/
 
 #### 🚧  🚀 Em construção...  🚧
 
@@ -54,6 +54,7 @@ Siga as instruções para conseguir executar o projeto localmente.
 3. Renomeie o arquivo** .env.example**  para **.env**
 4. Insira as respectivas credenciais 
 ```
+REACT_APP_API_HOST=http://localhost:8088
 MP_ACCESS_TOKEN=<ACCESS_TOKEN>
 REACT_APP_MP_PUBLISHABLE_KEY=<PUBLIC_KEY>
 ```
@@ -66,8 +67,8 @@ Executa o projeto no servidor de desenvolvimento.
 Abra http://localhost:3000 para visualizar no navegador
 ### `yarn start`
 Irá executar o servidor express que contém a api de pagamento e a build de produção. 
-Abra http://localhost:8080 no navegador para visualizar a build de produção.
-A rota para a api de pagamentos é a seguinte: http://localhost:3000/process_payment
+Abra http://localhost:8088 no navegador para visualizar a build de produção.
+A rota para a api de pagamentos é a seguinte: http://localhost:8088/process_payment
 
 ### `yarn build`
 Faz build do aplicativo para produção na pasta** /build.**
