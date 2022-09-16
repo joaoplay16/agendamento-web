@@ -1,9 +1,6 @@
-import firebase from 'firebase/app'
-import 'firebase/auth'
-import 'firebase/firestore'
+import { initializeApp } from 'firebase/app'
 
-if (!firebase.apps.length) {
-  firebase.initializeApp({
+  const app = initializeApp({
     apiKey: 'AIzaSyC7LoaM9pv0tdzjnPDFXNyXWrmqMwC7LXQ',
     authDomain: 'agendamento-web-ea083.firebaseapp.com',
     projectId: 'agendamento-web-ea083',
@@ -12,6 +9,5 @@ if (!firebase.apps.length) {
     appId: '1:227455752712:web:6b03c4cf23da9c14910fbd',
     measurementId: 'G-TEKG6V9T0W'
   })
-}
 
-export default firebase
+export default app
