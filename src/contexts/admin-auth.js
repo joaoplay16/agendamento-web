@@ -1,61 +1,60 @@
-import React, { createContext, useCallback, useState } from 'react'
-import PropTypes from 'prop-types'
-import firebase from 'services/firebase'
-
+import React, { createContext, useCallback, useState } from "react"
+import PropTypes from "prop-types"
+import { auth } from "services/firebase"
+import { signInWithEmailAndPassword, createUserWithEmailAndPassword, signOut } from "firebase/auth"
 const AdminAuthContext = createContext()
 
-function AdminAuthProvider ({ children }) {
+function AdminAuthProvider({ children }) {
   const [adminInfo, setAdminInfo] = useState({
     isUserLoggedIn: false,
-    user: null
+    user: null,
   })
 
   const login = useCallback((email, pass) => {
     console.log(email, pass)
-    firebase.auth()
-      .signInWithEmailAndPassword(email, pass)
+
+    signInWithEmailAndPassword(auth, email, pass)
       .then((user) => {
         setAdminInfo({
           isUserLoggedIn: !!user,
-          user
+          user,
         })
-        console.log('USUARIO ', user)
+        console.log("user ", user)
       })
       .catch((error) => {
         const errorCode = error.code
         const errorMessage = error.message
 
-        console.log('ERRO ADMIN LOGIN ', errorCode, errorMessage)
+        console.log("login error", errorCode, errorMessage)
       })
   }, [])
 
   const createUser = useCallback((email, pass) => {
-    firebase.auth()
-      .createUserWithEmailAndPassword(email, pass)
+ 
+      createUserWithEmailAndPassword(auth, email, pass)
       .then((user) => {
         setAdminInfo({
           isUserLoggedIn: !!user,
-          user
+          user,
         })
       })
       .catch((error) => {
         const errorCode = error.code
         const errorMessage = error.message
 
-        console.log('ERRRO CRIAR USER ', errorCode, errorMessage)
+        console.log("error on creating user", errorCode, errorMessage)
       })
   }, [])
 
   const logout = useCallback(() => {
-    firebase.auth()
-      .signOut()
-      .then(() => {
-        console.log('o cara deslogou')
-        setAdminInfo({
-          isUserLoggedIn: false,
-          user: null
-        })
+    signOut()
+    .then(() => {
+      console.log("admin disconnected")
+      setAdminInfo({
+        isUserLoggedIn: false,
+        user: null,
       })
+    })
   }, [])
 
   return (
@@ -65,16 +64,15 @@ function AdminAuthProvider ({ children }) {
         logout,
         createUser,
         adminInfo,
-        setAdminInfo
-      }}
-    >
+        setAdminInfo,
+      }}>
       {children}
     </AdminAuthContext.Provider>
   )
 }
 
 AdminAuthProvider.propTypes = {
-  children: PropTypes.node.isRequired
+  children: PropTypes.node.isRequired,
 }
 
 export { AdminAuthProvider, AdminAuthContext }

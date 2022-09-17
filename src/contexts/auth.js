@@ -4,7 +4,11 @@ import React, {
   useState
 } from 'react'
 import PropTypes from 'prop-types'
-import firebase from 'services/firebase'
+import { auth } from 'services/firebase'
+import { 
+  signInWithRedirect, 
+  signOut,
+  GoogleAuthProvider } from 'firebase/auth'
 
 const AuthContext = createContext()
 
@@ -15,12 +19,12 @@ function AuthProvider ({ children }) {
   })
 
   const login = useCallback(() => {
-    const provider = new firebase.auth.GoogleAuthProvider()
-    firebase.auth().signInWithRedirect(provider)
+    const provider = new GoogleAuthProvider()
+    signInWithRedirect(auth, provider)
   }, [])
 
   const logout = useCallback(() => {
-    firebase.auth().signOut().then(() => {
+     signOut(auth).then(() => {
       console.log('o cara deslogou')
       setUserInfo({
         isUserLoggedIn: false,

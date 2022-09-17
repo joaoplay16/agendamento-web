@@ -2,7 +2,8 @@ import React, { Suspense, lazy, useEffect, useState } from 'react'
 import { Route, Switch, Redirect } from 'react-router-dom'
 import PropTypes from 'prop-types'
 import { LinearProgress } from '@material-ui/core'
-import firebase from 'services/firebase'
+import { auth } from 'services/firebase'
+import { onAuthStateChanged } from 'firebase/auth'
 import { ADMIN, ADMIN_LOGIN } from 'routes'
 import { useAdminAuth } from 'hooks'
 
@@ -17,10 +18,9 @@ function AppForAdmin ({ location }) {
   const { isAdminUserLoggedIn } = adminInfo
 
   useEffect(() => {
-    firebase.auth().onAuthStateChanged((user) => {
+    onAuthStateChanged(auth, (user) => {
       setAdminInfo({
         isAdminUserLoggedIn: !!user,
-        // isUserLoggedIn: true,
         user
       })
       setDidCheckUserIn(true)
