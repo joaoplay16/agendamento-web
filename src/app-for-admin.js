@@ -21,6 +21,7 @@ function AppForAdmin ({ location }) {
     onAuthStateChanged(auth, (user) => {
       setAdminInfo({
         isAdminUserLoggedIn: !!user,
+        // isUserLoggedIn: true,
         user
       })
       setDidCheckUserIn(true)
