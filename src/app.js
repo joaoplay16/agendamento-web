@@ -8,7 +8,6 @@ import { useLocation } from 'react-router'
 
 function App (props) {
   const currentPathname = useLocation().pathname
-  console.log("currentPathname = ", currentPathname);
   if (pathStartWith(ADMIN, currentPathname)) {
     return (
       <AdminAuthProvider>

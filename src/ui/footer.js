@@ -7,20 +7,17 @@ import {
 
 import styled from 'styled-components'
 import { useApplication } from 'hooks'
-import { HOME } from 'routes'
+import { ROOT } from 'routes'
 import pathStartWith from 'utils/path-comparator'
 
 function Footer () {
   const { appState } = useApplication()
+  
   const location = useLocation()
   const currentPathName = location.pathname
 
-  useEffect(() => {
-    console.log('location', location)
-  })
-
   function isActiveItem (itemPathname) {
-    if (itemPathname === HOME) {
+    if (itemPathname === ROOT) {
       return itemPathname === currentPathName
     }
 

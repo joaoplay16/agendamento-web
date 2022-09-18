@@ -3,19 +3,13 @@ import {
   withStyles
 } from '@material-ui/core'
 import Header from './header'
-import { Routes, Route } from 'react-router-dom'
+import { Outlet } from 'react-router-dom'
 import { Footer } from 'ui'
-import { HOME, SCHEDULE, RESERVATIONS, MORE } from 'routes'
+import { ROOT, SCHEDULE, RESERVATIONS, MORE } from 'routes'
 
-const Scheduling = React.lazy(
-  () => import('pages/scheduling')
-)
-const Reservations = React.lazy(
-  () => import('pages/reservations')
-)
-const Schedule = React.lazy(
-  () => import('pages/schedule')
-)
+const Scheduling = React.lazy(() => import("pages/scheduling"))
+const Reservations = React.lazy(() => import("pages/reservations"))
+const Schedule = React.lazy(() => import("pages/schedule"))
 
 const Main = () => {
   return (
@@ -23,12 +17,7 @@ const Main = () => {
       <Header />
       <Spacer />
       <Suspense fallback='Loading'>
-        <Routes>
-          <Route path={HOME} element={<Scheduling/>} />
-          <Route path={SCHEDULE} element={<Schedule/>} />
-          <Route path={RESERVATIONS} element={<Reservations/>} />
-          <Route path={MORE} element={<Scheduling/>} />
-        </Routes>
+        <Outlet/>
       </Suspense>
       <Footer />
     </>

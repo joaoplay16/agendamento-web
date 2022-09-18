@@ -14,7 +14,7 @@ import * as mpApi from "services/mercadopago-api"
 import { RESERVATIONS, CHECKOUT } from "routes"
 import strings from "strings/mercadopago-response"
 import { toMoney, getPaymentStatusMessage } from "utils"
-const MercadoLivreCardForm = ({ history, schedules, price, userInfo }) => {
+const MercadoLivreCardForm = ({ schedules, price, userInfo }) => {
   let mercadopago = new MercadoPago(process.env.REACT_APP_MP_PUBLISHABLE_KEY)
 
   const { setPaymentStatusDetails, resetShoppingCart } = useShoppingCart()

@@ -1,7 +1,6 @@
 import React from "react"
-import { hot } from "react-hot-loader"
 import { ThemeProvider, createGlobalStyle } from "styled-components"
-import { BrowserRouter, Route, Routes } from "react-router-dom"
+import { BrowserRouter } from "react-router-dom"
 import {
   CssBaseline,
   createMuiTheme,
@@ -35,7 +34,6 @@ const theme = createMuiTheme({
   },
 })
 
-console.log("theme", theme)
 const Root = () => {
   return (
     <MuiThemeProvider theme={theme}>
@@ -47,9 +45,7 @@ const Root = () => {
                 <CssBaseline />
                 <GlobalStyle />
                 <BrowserRouter>
-                  <Routes>
-                    <Route index element={<App/>} />
-                  </Routes>
+                  <App />
                 </BrowserRouter>
               </ApplicationProvider>
             </ShoppingCartProvider>
@@ -68,4 +64,4 @@ const GlobalStyle = createGlobalStyle`
   }
 `
 
-export default hot(module)(Root)
+export default Root

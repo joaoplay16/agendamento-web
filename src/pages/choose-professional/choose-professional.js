@@ -1,5 +1,5 @@
-import React, { useEffect, useState } from 'react'
-import styled from 'styled-components'
+import React, { useEffect, useState } from "react"
+import styled from "styled-components"
 import {
   Avatar,
   List as MaterialList,
@@ -7,52 +7,49 @@ import {
   ListItemText,
   ListItemAvatar,
   ListItemSecondaryAction,
-  Grid as MaterialGrid
-} from '@material-ui/core'
-import { toMoney } from 'utils/index'
-import {
-  Button,
-  H4, H6
-} from 'ui'
-import { CHOOSE_DATE } from 'routes'
-import { useDatabase } from 'hooks'
-const ChooseProfessional = ({ location }) => {
-  const [professionals, setProfessionals] = useState(() => [])
-  const { procedure } = location.state
+  Grid as MaterialGrid,
+} from "@material-ui/core"
+import { toMoney } from "utils/index"
+import { Button, H4, H6 } from "ui"
+import { CHOOSE_DATE, SCHEDULE } from "routes"
+import { useDatabase } from "hooks"
+import { useLocation } from "react-router-dom"
+const ChooseProfessional = () => {
+  const location = useLocation()
 
-  const { professionals: fetchedProfessionals, fetchProfessionals } = useDatabase()
+  const [professionals, setProfessionals] = useState(() => [])
+  const procedure = location.state || {}
+
+  const { professionals: fetchedProfessionals, fetchProfessionals } =
+    useDatabase()
 
   useEffect(() => {
     fetchProfessionals()
+    console.log("location ", location)
   }, [])
 
   useEffect(() => {
     // procedure.price is an object with an id of the professional and a amount e.g. { Kajhfsaa4gfd : 200 }
-    const professionalsKeys = Object.keys(procedure.price)
-    if (fetchedProfessionals !== undefined) {
-      const result = professionalsKeys.map((professionalID) => ({
-        id: professionalID,
-        ...fetchedProfessionals[professionalID],
-        price: procedure.price[professionalID]
-      }))
-      setProfessionals(result)
-    }
-    console.log('proffisionais', fetchedProfessionals)
+    const professionalsKeys = Object.keys(procedure?.price || {})
+
+    const result = professionalsKeys?.map((professionalID) => ({
+      id: professionalID,
+      ...fetchedProfessionals[professionalID],
+      price: procedure?.price[professionalID],
+    }))
+    setProfessionals(result)
   }, [fetchedProfessionals])
 
   return (
     <ProfessionalsContainer>
       <Grid>
-        <H4>{procedure.name}</H4>
+        <H4>{procedure?.name}</H4>
         <H6> Escolha um profissional</H6>
-        <List element='nav'>
-          {professionals.map((professional) => (
-            <ListItem
-              key={professional.id}
-              alignItems='flex-start'
-            >
+        <List element="nav">
+          {professionals?.map((professional) => (
+            <ListItem key={professional.id} alignItems="flex-start">
               <ListItemAvatar>
-                <Avatar alt='Remy Sharp' src={professional.photo} />
+                <Avatar alt="Remy Sharp" src={professional.photo} />
               </ListItemAvatar>
               <ListItemText
                 primary={professional.name}
@@ -61,16 +58,13 @@ const ChooseProfessional = ({ location }) => {
 
               <ListItemSecondaryAction>
                 <Button
-                  to={{
-                    pathname: CHOOSE_DATE,
-                    state: {
-                      procedure,
-                      professional
-                    }
+                  to={`/${SCHEDULE}/${CHOOSE_DATE}`}
+                  state = {{
+                    procedure,
+                    professional
                   }}
-                  variant='outlined'
-                  color='primary'
-                >
+                  variant="outlined"
+                  color="primary">
                   Escolher
                 </Button>
               </ListItemSecondaryAction>
@@ -91,7 +85,7 @@ const ProfessionalsContainer = styled.main`
 const Grid = styled(MaterialGrid).attrs({
   container: true,
   xs: 12,
-  sm: 8
+  sm: 8,
 })`
   display: flex;
   flex-direction: column;

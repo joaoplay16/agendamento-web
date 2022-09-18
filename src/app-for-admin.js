@@ -1,5 +1,5 @@
 import React, { Suspense, lazy, useEffect, useState } from 'react'
-import { Route, Routes, Navigate } from 'react-router-dom'
+import { Route, Routes, Navigate, useLocation } from 'react-router-dom'
 import PropTypes from 'prop-types'
 import { LinearProgress } from '@material-ui/core'
 import { auth } from 'services/firebase'
@@ -8,11 +8,12 @@ import { ADMIN, ADMIN_LOGIN } from 'routes'
 import { useAdminAuth } from 'hooks'
 
 const Main = lazy(() => import('pages/admin/main'))
-const AdminLogin = React.lazy(
-  () => import('pages/admin/login')
-)
+const AdminLogin = lazy(() => import('pages/admin/login'))
 
-function AppForAdmin ({ location }) {
+function AppForAdmin () {
+
+  const location = useLocation()
+
   const { adminInfo, setAdminInfo } = useAdminAuth()
   const [didCheckUserIn, setDidCheckUserIn] = useState(false)
   const { isAdminUserLoggedIn } = adminInfo
@@ -48,10 +49,6 @@ function AppForAdmin ({ location }) {
       </Routes>
     </Suspense>
   )
-}
-
-AppForAdmin.propTypes = {
-  location: PropTypes.object.isRequired
 }
 
 export default AppForAdmin

@@ -29,7 +29,7 @@ const Header = () => {
     <AppBar>
       <Toolbar>
         <LogoContainer>
-          {/* <LinkLogo to={HOME}>
+          {/* <LinkLogo to={}>
             <Logo />
           </LinkLogo> */}
         </LogoContainer>

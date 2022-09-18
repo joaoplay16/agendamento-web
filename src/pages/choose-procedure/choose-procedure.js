@@ -66,10 +66,8 @@ const ChooseProcedure = () => {
                 />
                 <ListItemSecondaryAction>
                   <Button
-                    to={{
-                      pathname: CHOOSE_PROFESSIONAL,
-                      state: { procedure }
-                    }}
+                    to={ CHOOSE_PROFESSIONAL }
+                    state = { procedure }
                     variant='outlined'
                     color='primary'
                     size='small'

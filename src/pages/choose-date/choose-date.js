@@ -19,11 +19,13 @@ import {
   Divider,
   H4, H6
 } from 'ui'
-import { CHECKOUT } from 'routes'
+import { CHECKOUT, SCHEDULE } from 'routes'
 import scheduleConfigs from 'fake-data/schedule-configs'
 import { useShoppingCart } from 'hooks'
+import { useLocation } from 'react-router-dom'
 
-const ChooseDate = ({ location }) => {
+const ChooseDate = () => {
+  const location = useLocation()
   const currentDate = new Date()
 
   const { schedules, addScheduleToShoppingCart } = useShoppingCart()
@@ -107,13 +109,11 @@ const ChooseDate = ({ location }) => {
               <Grid item>
                 <H6>Horários</H6>
                 <TimeTable>
-                  {getTimeTable().map((time) => (
+                  {getTimeTable()?.map((time) => (
                     <Box p={2} key={time}>
                       <Button
                         onClick={addSchedule(time)}
-                        to={{
-                          pathname: CHECKOUT
-                        }}
+                        to={`/${SCHEDULE}/${CHECKOUT}`}
                         disabled={isPastTime(time)}
                         variant='outlined'
                         color='secondary'
