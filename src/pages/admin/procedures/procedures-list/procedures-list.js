@@ -130,7 +130,7 @@ function ProceduresList () {
                         procedure
                       }
                     }}
-                    component={Link}
+                    element={Link}
                     color='secondary'
                   >
                     <EditIcon />

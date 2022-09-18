@@ -4,7 +4,7 @@ import {
   CircularProgress
 } from '@material-ui/core'
 import ResponsiveDrawer from 'pages/admin/main/drawer'
-import { Switch, Route } from 'react-router-dom'
+import { Routes, Route } from 'react-router-dom'
 import { ADMIN, ADMIN_PROFESSIONALS, ADMIN_PROCEDURES, ADMIN_SETTINGS } from 'routes'
 
 const Dashboard = React.lazy(
@@ -25,12 +25,12 @@ const Main = () => {
     <>
       <ResponsiveDrawer>
         <Suspense fallback={<CircularProgress />}>
-          <Switch>
-            <Route exact path={ADMIN} component={Dashboard} />
-            <Route path={ADMIN_PROCEDURES} component={Procedures} />
-            <Route path={ADMIN_SETTINGS} component={Settings} />
-            <Route path={ADMIN_PROFESSIONALS} component={Professionals} />
-          </Switch>
+          <Routes>
+            <Route index path={ADMIN} element={<Dashboard/>} />
+            <Route path={ADMIN_PROCEDURES} element={<Procedures/>} />
+            <Route path={ADMIN_SETTINGS} element={<Settings/>} />
+            <Route path={ADMIN_PROFESSIONALS} element={<Professionals/>} />
+          </Routes>
         </Suspense>
       </ResponsiveDrawer>
     </>

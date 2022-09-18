@@ -45,7 +45,7 @@ const ChooseProfessional = ({ location }) => {
       <Grid>
         <H4>{procedure.name}</H4>
         <H6> Escolha um profissional</H6>
-        <List component='nav'>
+        <List element='nav'>
           {professionals.map((professional) => (
             <ListItem
               key={professional.id}

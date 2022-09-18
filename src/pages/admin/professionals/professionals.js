@@ -1,5 +1,5 @@
 import React from 'react'
-import { Route, Switch } from 'react-router-dom'
+import { Route, Routes } from 'react-router-dom'
 import {
   ADMIN_PROFESSIONALS,
   ADMIN_PROFESSIONALS_ADD,
@@ -18,11 +18,11 @@ const UpdateProfessional = React.lazy(() =>
 
 function Professionals () {
   return (
-    <Switch>
-      <Route exact path={ADMIN_PROFESSIONALS} component={ProfessionalsList} />
-      <Route path={ADMIN_PROFESSIONALS_ADD} component={AddProfessional} />
-      <Route path={ADMIN_PROFESSIONALS_UPDATE} component={UpdateProfessional} />
-    </Switch>
+    <Routes>
+      <Route path={ADMIN_PROFESSIONALS} element={<ProfessionalsList/>} />
+      <Route path={ADMIN_PROFESSIONALS_ADD} element={<AddProfessional/>} />
+      <Route path={ADMIN_PROFESSIONALS_UPDATE} element={<UpdateProfessional/>} />
+    </Routes>
   )
 }
 

@@ -145,7 +145,7 @@ function ProfessionalsList () {
                         professional
                       }
                     }}
-                    component={Link}
+                    element={Link}
                     color='secondary'
                   >
                     <EditIcon />

@@ -23,7 +23,7 @@ import {
   Divider
 } from 'ui'
 import { useDatabase } from 'hooks'
-import { Redirect } from 'react-router-dom'
+import { Navigate } from 'react-router-dom'
 import { ADMIN_PROFESSIONALS } from 'routes'
 
 function SlideTransition (props) {
@@ -32,7 +32,7 @@ function SlideTransition (props) {
 
 function UpdateProfessional ({ location }) {
   if (!location.state) {
-    return <Redirect to={ADMIN_PROFESSIONALS} />
+    return <Navigate to={ADMIN_PROFESSIONALS} />
   }
   const { updateProfessional } = useDatabase()
   const [professional, setProfessional] = useState(() => ({
@@ -136,7 +136,7 @@ function UpdateProfessional ({ location }) {
             <Divider />
             <Grid item xs={12}><H5>Horário</H5></Grid>
             <Grid container item xs={12} justify='center'>
-              <FormControl component='fieldset'>
+              <FormControl element='fieldset'>
                 <RadioGroup
                   row
                   aria-label='position'
@@ -211,7 +211,7 @@ function UpdateProfessional ({ location }) {
       <Snackbar
         open={snackBar.open}
         onClose={handleCloseSnackbar}
-        TransitionComponent={SlideTransition}
+        Transitionelement={SlideTransition}
         autoHideDuration={3000}
         key={snackBar.message}
       >

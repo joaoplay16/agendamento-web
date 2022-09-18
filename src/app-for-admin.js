@@ -1,5 +1,5 @@
 import React, { Suspense, lazy, useEffect, useState } from 'react'
-import { Route, Switch, Redirect } from 'react-router-dom'
+import { Route, Routes, Navigate } from 'react-router-dom'
 import PropTypes from 'prop-types'
 import { LinearProgress } from '@material-ui/core'
 import { auth } from 'services/firebase'
@@ -33,19 +33,19 @@ function AppForAdmin ({ location }) {
   }
 
   if (isAdminUserLoggedIn && location.pathname === ADMIN_LOGIN) {
-    return <Redirect to={ADMIN} />
+    return <Navigate to={ADMIN} />
   }
 
   if (!isAdminUserLoggedIn && location.pathname !== ADMIN_LOGIN) {
-    return <Redirect to={ADMIN_LOGIN} />
+    return <Navigate to={ADMIN_LOGIN} />
   }
 
   return (
     <Suspense fallback={<LinearProgress />}>
-      <Switch>
-        <Route path={ADMIN_LOGIN} component={AdminLogin} />
-        <Route component={Main} />
-      </Switch>
+      <Routes>
+        <Route  path={ADMIN_LOGIN} element={AdminLogin} />
+        <Route element={<Main/>} />
+      </Routes>
     </Suspense>
   )
 }

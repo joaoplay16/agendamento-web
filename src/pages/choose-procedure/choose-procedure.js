@@ -53,7 +53,7 @@ const ChooseProcedure = () => {
         />
       </Grid>
       <Grid>
-        <List component='nav'>
+        <List element='nav'>
           {procedures.map((procedure) => (
             <>
               <ListItem

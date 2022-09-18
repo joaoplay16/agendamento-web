@@ -1,5 +1,5 @@
 import React from 'react'
-import { Switch, Route } from 'react-router-dom'
+import { Routes, Route } from 'react-router-dom'
 import {
   SCHEDULE,
   CHOOSE_DATE,
@@ -26,12 +26,12 @@ const Checkout = React.lazy(
 const Schedule = () => {
   return (
     <>
-      <Switch>
-        <Route exact path={SCHEDULE} component={ChooseProcedure} />
-        <Route path={CHOOSE_PROFESSIONAL} component={ChooseProfessional} />
-        <Route path={CHOOSE_DATE} component={ChooseDate} />
-        <Route path={CHECKOUT} component={Checkout} />
-      </Switch>
+      <Routes>
+        <Route path={SCHEDULE} element={<ChooseProcedure/>} />
+        <Route path={CHOOSE_PROFESSIONAL} element={<ChooseProfessional/>} />
+        <Route path={CHOOSE_DATE} element={<ChooseDate/>} />
+        <Route path={CHECKOUT} element={<Checkout/>} />
+      </Routes>
     </>
   )
 }

@@ -3,7 +3,7 @@ import {
   withStyles
 } from '@material-ui/core'
 import Header from './header'
-import { Switch, Route } from 'react-router-dom'
+import { Routes, Route } from 'react-router-dom'
 import { Footer } from 'ui'
 import { HOME, SCHEDULE, RESERVATIONS, MORE } from 'routes'
 
@@ -23,12 +23,12 @@ const Main = () => {
       <Header />
       <Spacer />
       <Suspense fallback='Loading'>
-        <Switch>
-          <Route path={HOME} exact component={Scheduling} />
-          <Route path={SCHEDULE} component={Schedule} />
-          <Route path={RESERVATIONS} component={Reservations} />
-          <Route path={MORE} component={Scheduling} />
-        </Switch>
+        <Routes>
+          <Route path={HOME} element={<Scheduling/>} />
+          <Route path={SCHEDULE} element={<Schedule/>} />
+          <Route path={RESERVATIONS} element={<Reservations/>} />
+          <Route path={MORE} element={<Scheduling/>} />
+        </Routes>
       </Suspense>
       <Footer />
     </>

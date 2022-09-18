@@ -1,5 +1,5 @@
 import React, { useEffect } from 'react'
-import { NavLink, withRouter } from 'react-router-dom'
+import { NavLink, useLocation } from 'react-router-dom'
 import {
   Container,
   IconButton as MaterialIconButton
@@ -10,12 +10,13 @@ import { useApplication } from 'hooks'
 import { HOME } from 'routes'
 import pathStartWith from 'utils/path-comparator'
 
-function Footer ({ location }) {
+function Footer () {
   const { appState } = useApplication()
+  const location = useLocation()
   const currentPathName = location.pathname
 
   useEffect(() => {
-    // console.log('isActiveItem', isActiveItem('/reservas'))
+    console.log('location', location)
   })
 
   function isActiveItem (itemPathname) {
@@ -98,4 +99,4 @@ const IconLabel = styled.span`
   letter-spacing: ${({ theme }) => theme.typography.caption.letterSpacing};
 `
 
-export default withRouter(Footer)
+export default Footer

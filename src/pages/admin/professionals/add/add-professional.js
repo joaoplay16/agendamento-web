@@ -150,7 +150,7 @@ function AddProfessional () {
             <Divider />
             <Grid item xs={12}><H5>Horário</H5></Grid>
             <Grid container item xs={12} justify='center'>
-              <FormControl component='fieldset'>
+              <FormControl element='fieldset'>
                 <RadioGroup
                   row
                   aria-label='position'

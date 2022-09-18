@@ -39,7 +39,7 @@ export default function FullScreenDialog ({ children, isOpen, handleOpenClose })
         fullScreen
         open={isOpen}
         onClose={handleOpenClose}
-        TransitionComponent={Transition}
+        Transitionelement={Transition}
       >
         <AppBar className={classes.appBar}>
           <Toolbar>

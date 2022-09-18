@@ -1,5 +1,5 @@
 import React from 'react'
-import { Route, Switch } from 'react-router-dom'
+import { Route, Routes } from 'react-router-dom'
 import {
   ADMIN_PROCEDURES,
   ADMIN_PROCEDURES_ADD,
@@ -18,11 +18,11 @@ const UpdateProcedure = React.lazy(() =>
 
 function Procedures () {
   return (
-    <Switch>
-      <Route exact path={ADMIN_PROCEDURES} component={ProceduresList} />
-      <Route path={ADMIN_PROCEDURES_ADD} component={AddProcedure} />
-      <Route path={ADMIN_PROCEDURES_UPDATE} component={UpdateProcedure} />
-    </Switch>
+    <Routes>
+      <Route path={ADMIN_PROCEDURES} element={<ProceduresList/>} />
+      <Route path={ADMIN_PROCEDURES_ADD} element={<AddProcedure/>} />
+      <Route path={ADMIN_PROCEDURES_UPDATE} element={<UpdateProcedure/>} />
+    </Routes>
   )
 }
 

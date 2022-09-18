@@ -1,37 +1,41 @@
-import React from 'react'
-import { hot } from 'react-hot-loader'
-import { ThemeProvider, createGlobalStyle } from 'styled-components'
-import { BrowserRouter, Route } from 'react-router-dom'
+import React from "react"
+import { hot } from "react-hot-loader"
+import { ThemeProvider, createGlobalStyle } from "styled-components"
+import { BrowserRouter, Route, Routes } from "react-router-dom"
 import {
   CssBaseline,
   createMuiTheme,
-  MuiThemeProvider
-} from '@material-ui/core'
-import { AuthProvider, DatabaseProvider, ShoppingCartProvider, ApplicationProvider } from 'contexts'
-import App from './app'
+  MuiThemeProvider,
+} from "@material-ui/core"
+import {
+  AuthProvider,
+  DatabaseProvider,
+  ShoppingCartProvider,
+  ApplicationProvider,
+} from "contexts"
+import App from "./app"
 
 const theme = createMuiTheme({
   typography: {
-    useNextVariants: true
+    useNextVariants: true,
   },
   palette: {
     primary: {
-      contrastText: '#fff',
-      dark: '#560027',
-      light: '#bc477b',
-      main: '#880e4f'
+      contrastText: "#fff",
+      dark: "#560027",
+      light: "#bc477b",
+      main: "#880e4f",
     },
     secondary: {
-      contrastText: '#fff',
-      dark: '#78002e',
-      light: '#e35083',
-      main: '#ad1357'
-    }
-  }
+      contrastText: "#fff",
+      dark: "#78002e",
+      light: "#e35083",
+      main: "#ad1357",
+    },
+  },
 })
 
-console.log('theme', theme)
-
+console.log("theme", theme)
 const Root = () => {
   return (
     <MuiThemeProvider theme={theme}>
@@ -43,7 +47,9 @@ const Root = () => {
                 <CssBaseline />
                 <GlobalStyle />
                 <BrowserRouter>
-                  <Route component={App} />
+                  <Routes>
+                    <Route index element={<App/>} />
+                  </Routes>
                 </BrowserRouter>
               </ApplicationProvider>
             </ShoppingCartProvider>

@@ -9,7 +9,7 @@ const Snackbar = (props) =>
   (
     <MaterialSnackbar
       {...props}
-      TransitionComponent={SlideTransition}
+      Transitionelement={SlideTransition}
     >
       {props.children}
     </MaterialSnackbar>

@@ -1,5 +1,5 @@
 import React, { Suspense, lazy, useEffect, useState } from 'react'
-import { Route, Switch, Redirect } from 'react-router-dom'
+import { Route, Routes, Navigate, useLocation } from 'react-router-dom'
 import PropTypes from 'prop-types'
 import { LinearProgress } from '@material-ui/core'
 import { auth } from 'services/firebase'
@@ -10,8 +10,9 @@ import { useAuth } from 'hooks'
 const MainPage = lazy(() => import('pages/main'))
 const Login = lazy(() => import('pages/login'))
 
-function AppForUsers ({ location }) {
+function AppForUsers () {
 
+  const location = useLocation()
   const { userInfo, setUserInfo } = useAuth()
   const [didCheckUserIn, setDidCheckUserIn] = useState(false)
   const { isUserLoggedIn } = userInfo
@@ -21,7 +22,6 @@ function AppForUsers ({ location }) {
 
       setUserInfo({
         isUserLoggedIn: !!user,
-        // isUserLoggedIn: true,
         user: user && {
           ...user,
           firstName: user.displayName.split(' ')[0]
@@ -33,7 +33,7 @@ function AppForUsers ({ location }) {
   }, [])
 
   useEffect(()=>{
-    localStorage.setItem("currentUserId",isUserLoggedIn ? userInfo.user?.uid : "guest")
+    localStorage.setItem("currentUserId", isUserLoggedIn ? userInfo.user?.uid : "guest")
   },[isUserLoggedIn])
 
   if (!didCheckUserIn) {
@@ -41,23 +41,23 @@ function AppForUsers ({ location }) {
   }
 
   if (isUserLoggedIn && location.pathname === LOGIN) {
-    return <Redirect to={CHECKOUT} />
+    return <Navigate to={CHECKOUT} />
   }
 
   if (!isUserLoggedIn && location.pathname === CHECKOUT) {
-    return <Redirect to={LOGIN} />
+    return <Navigate to={LOGIN} />
   }
 
   if (!isUserLoggedIn && location.pathname === RESERVATIONS) {
-    return <Redirect to={LOGIN} />
+    return <Navigate to={LOGIN} />
   }
 
   return (
     <Suspense fallback={<LinearProgress />}>
-      <Switch>
-        <Route path={LOGIN} component={Login} />
-        <Route component={MainPage} />
-      </Switch>
+      <Routes>
+        <Route path={LOGIN} element={<Login/>} />
+        <Route index element={<MainPage/>} />
+      </Routes>
     </Suspense>
   )
 }
