@@ -1,7 +1,6 @@
 import React from "react"
 import { Routes, Route } from "react-router-dom"
 import {
-  SCHEDULE,
   CHOOSE_DATE,
   CHOOSE_PROFESSIONAL,
   CHECKOUT,

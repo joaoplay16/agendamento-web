@@ -1,6 +1,5 @@
 import React, { Suspense, lazy, useEffect, useState } from "react"
 import { Route, Routes, Navigate, useLocation } from "react-router-dom"
-import PropTypes from "prop-types"
 import { LinearProgress } from "@material-ui/core"
 import { auth } from "services/firebase"
 import { onAuthStateChanged } from "firebase/auth"

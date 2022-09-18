@@ -5,11 +5,6 @@ import {
 import Header from './header'
 import { Outlet } from 'react-router-dom'
 import { Footer } from 'ui'
-import { ROOT, SCHEDULE, RESERVATIONS, MORE } from 'routes'
-
-const Scheduling = React.lazy(() => import("pages/scheduling"))
-const Reservations = React.lazy(() => import("pages/reservations"))
-const Schedule = React.lazy(() => import("pages/schedule"))
 
 const Main = () => {
   return (
