@@ -19,7 +19,7 @@ import {
   Divider,
   H4, H6
 } from 'ui'
-import { CHECKOUT, SCHEDULE } from 'routes'
+import { navigationRoutes as navRoutes } from 'routes'
 import scheduleConfigs from 'fake-data/schedule-configs'
 import { useShoppingCart } from 'hooks'
 import { useLocation } from 'react-router-dom'
@@ -113,7 +113,7 @@ const ChooseDate = () => {
                     <Box p={2} key={time}>
                       <Button
                         onClick={addSchedule(time)}
-                        to={`/${SCHEDULE}/${CHECKOUT}`}
+                        to={navRoutes.CHECKOUT}
                         disabled={isPastTime(time)}
                         variant='outlined'
                         color='secondary'

@@ -11,7 +11,7 @@ import {
 } from "@material-ui/core"
 import { toMoney } from "utils/index"
 import { Button, H4, H6 } from "ui"
-import { CHOOSE_DATE, SCHEDULE } from "routes"
+import { navigationRoutes as navRoutes } from "routes"
 import { useDatabase } from "hooks"
 import { useLocation } from "react-router-dom"
 const ChooseProfessional = () => {
@@ -58,7 +58,7 @@ const ChooseProfessional = () => {
 
               <ListItemSecondaryAction>
                 <Button
-                  to={`/${SCHEDULE}/${CHOOSE_DATE}`}
+                  to={navRoutes.CHOOSE_DATE}
                   state = {{
                     procedure,
                     professional

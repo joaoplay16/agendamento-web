@@ -3,7 +3,7 @@ import { Route, Routes, Navigate, useLocation } from "react-router-dom"
 import { LinearProgress } from "@material-ui/core"
 import { auth } from "services/firebase"
 import { onAuthStateChanged } from "firebase/auth"
-import { CHECKOUT, LOGIN, RESERVATIONS, SCHEDULE, MORE } from "routes"
+import { navigationRoutes as navRoutes, CHECKOUT, LOGIN, RESERVATIONS, SCHEDULE, MORE } from "routes"
 import { useAuth } from "hooks"
 
 const MainPage = lazy(() => import("pages/main"))
@@ -22,7 +22,7 @@ function AppForUsers() {
   useEffect(() => {
     onAuthStateChanged(auth, (user) => {
       setUserInfo({
-        isUserLoggedIn: !!user,
+        isUserLoggedIn: user != null,
         user: user && {
           ...user,
           firstName: user.displayName?.split(" ")[0],
@@ -44,20 +44,18 @@ function AppForUsers() {
     return <LinearProgress />
   }
 
-  if (isUserLoggedIn && location.pathname === `/${LOGIN}`) {
-    return <Navigate to={`/${CHECKOUT}`} />
+  if (isUserLoggedIn && location.pathname === navRoutes.LOGIN) {
+    return <Navigate to={navRoutes.CHECKOUT} />
   }
 
-  if (!isUserLoggedIn && location.pathname === `/${CHECKOUT}`) {
-    return <Navigate to={`/${LOGIN}`} />
+  if (!isUserLoggedIn && location.pathname === navRoutes.CHECKOUT) {
+    return <Navigate to={navRoutes.LOGIN} />
   }
 
-  if (!isUserLoggedIn && location.pathname === `/${RESERVATIONS}`) {
-    return <Navigate to={`/${LOGIN}`} />
+  if (!isUserLoggedIn && location.pathname === navRoutes.RESERVATIONS) {
+    return <Navigate to={navRoutes.LOGIN} />
   }
-  const ChooseProcedure = React.lazy(
-    () => import('pages/choose-procedure')
-  )
+
   return (
     <Suspense fallback={<LinearProgress />}>
       <Routes>

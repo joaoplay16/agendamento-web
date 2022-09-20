@@ -14,7 +14,7 @@ import { DeleteSharp } from "@material-ui/icons"
 import { useAuth, useShoppingCart } from "hooks"
 import React, { useEffect, useState } from "react"
 import { useLocation } from "react-router-dom"
-import { SCHEDULE } from "routes"
+import { navigationRoutes as navRoutes } from "routes"
 import styled from "styled-components"
 import { Button, Content, H6, Modal, Spacer } from "ui"
 import { toMoney } from "utils"
@@ -126,7 +126,7 @@ function Checkout() {
           <Spacer />
           <Grid item xs={12}>
             <Grid container justify="center">
-              <Button to={`/${SCHEDULE}`} variant="outlined" color="primary">
+              <Button to={navRoutes.SCHEDULE} variant="outlined" color="primary">
                 Adicionar outro serviço
               </Button>
             </Grid>
@@ -203,7 +203,7 @@ function Checkout() {
         {schedules.length === 0 && (
           <Grid  item justify="center" >
           <H6>O carrinho está vazio.</H6>  
-          <Button to={`/${SCHEDULE}`} variant="outlined" color="primary">
+          <Button to={navRoutes.SCHEDULE} variant="outlined" color="primary">
             Adicionar um serviço
           </Button>
         </Grid>

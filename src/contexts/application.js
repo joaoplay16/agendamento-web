@@ -6,7 +6,7 @@ import {
   AddBox as AddBoxIcon,
   MoreHoriz as MoreHorizIcon
 } from '@material-ui/icons'
-import { ROOT, RESERVATIONS, SCHEDULE, MORE } from 'routes'
+import { RESERVATIONS, SCHEDULE, MORE } from 'routes'
 const ApplicationContext = createContext()
 
 function ApplicationProvider ({ children }) {
@@ -18,7 +18,7 @@ function ApplicationProvider ({ children }) {
     {
       label: 'Home',
       icon: <HomeIcon />,
-      to: { pathname: ROOT }
+      to: { pathname: "/" }
     },
     {
       label: 'Reservas',
