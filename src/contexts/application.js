@@ -6,7 +6,7 @@ import {
   AddBox as AddBoxIcon,
   MoreHoriz as MoreHorizIcon
 } from '@material-ui/icons'
-import { RESERVATIONS, SCHEDULE, MORE } from 'routes'
+import { navigationRoutes as navRoutes} from 'routes'
 const ApplicationContext = createContext()
 
 function ApplicationProvider ({ children }) {
@@ -23,17 +23,17 @@ function ApplicationProvider ({ children }) {
     {
       label: 'Reservas',
       icon: <EventIcon />,
-      to: { pathname: RESERVATIONS }
+      to: { pathname: navRoutes.RESERVATIONS }
     },
     {
       label: 'Agendar',
       icon: <AddBoxIcon />,
-      to: { pathname: SCHEDULE }
+      to: { pathname: navRoutes.SCHEDULE }
     },
     {
       label: 'Mais',
       icon: <MoreHorizIcon />,
-      to: { pathname: MORE }
+      to: { pathname: navRoutes.MORE }
     }
   ]
   const [toolbarItems] = useState(items)
