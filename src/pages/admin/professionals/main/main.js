@@ -1,4 +1,4 @@
-import React, { useEffect, useState } from 'react'
+import React, { useEffect, useState } from "react"
 import {
   Avatar,
   Dialog,
@@ -12,31 +12,32 @@ import {
   ListItem,
   ListItemText,
   ListItemAvatar,
-  ListItemSecondaryAction
-} from '@material-ui/core'
-import { Alert } from '@material-ui/lab'
-import {
-  Delete as DeleteIcon,
-  Edit as EditIcon
-} from '@material-ui/icons'
-import { PaperContainer, H5, Button, H3, Snackbar } from 'ui'
-import { useDatabase } from 'hooks'
-import { Link } from 'react-router-dom'
-import { ADMIN_PROFESSIONALS_UPDATE, ADMIN_PROFESSIONALS_ADD } from 'routes'
-function ProfessionalsList () {
+  ListItemSecondaryAction,
+} from "@material-ui/core"
+import { Alert } from "@material-ui/lab"
+import { Delete as DeleteIcon, Edit as EditIcon } from "@material-ui/icons"
+import { PaperContainer, H5, Button, H3, Snackbar } from "ui"
+import { useDatabase } from "hooks"
+import { Link } from "react-router-dom"
+import { adminNavigationRoutes as navRoutes } from "routes"
+function ProfessionalsList() {
   const [professionals, setProfessionals] = useState(() => [])
-  const { professionals: fetchedProfessionals, fetchProfessionals, deleteProfessional } = useDatabase()
-  const [selectedProfessional, setSelectedProfessional] = useState(() => { })
+  const {
+    professionals: fetchedProfessionals,
+    fetchProfessionals,
+    deleteProfessional,
+  } = useDatabase()
+  const [selectedProfessional, setSelectedProfessional] = useState(() => {})
 
   useEffect(() => {
     fetchProfessionals()
-    console.log('fetchProfessionals')
+    console.log("fetchProfessionals")
   }, [])
 
   const [snackBar, setSnackBar] = useState(() => ({
     open: false,
     success: false,
-    message: ''
+    message: "",
   }))
 
   const [dialogOpen, setDialogOpen] = useState(false)
@@ -53,11 +54,10 @@ function ProfessionalsList () {
   useEffect(() => {
     if (fetchedProfessionals) {
       setProfessionals([
-        ...Object.keys(fetchedProfessionals)
-          .map((key) => ({
-            id: key,
-            ...fetchedProfessionals[key]
-          }))
+        ...Object.keys(fetchedProfessionals).map((key) => ({
+          id: key,
+          ...fetchedProfessionals[key],
+        })),
       ])
       // console.log("profisionais", professionals);
     }
@@ -65,7 +65,6 @@ function ProfessionalsList () {
 
   useEffect(() => {
     // console.log("professionals restantes", professionals)
-
   })
 
   const handleDelete = async (e) => {
@@ -77,13 +76,13 @@ function ProfessionalsList () {
       setSnackBar({
         open: true,
         success: true,
-        message: result.message
+        message: result.message,
       })
     } else {
       setSnackBar({
         open: true,
         success: false,
-        message: result.message
+        message: result.message,
       })
     }
 
@@ -93,63 +92,51 @@ function ProfessionalsList () {
   const handleCloseSnackbar = () => {
     setSnackBar({
       open: false,
-      message: ''
+      message: "",
     })
   }
 
   return (
     <PaperContainer>
-      <Grid container justify='center'>
+      <Grid container justify="center">
         <Grid item xs={12}>
           <H5>Profissionais</H5>
         </Grid>
         <Grid item xs={11}>
-          <Grid
-            container
-            justify='flex-end'
-            direction='row'
-          >
+          <Grid container justify="flex-end" direction="row">
             <Button
-              to={ADMIN_PROFESSIONALS_ADD}
-              variant='contained'
-              color='primary'
-            >
+              to={navRoutes.ADMIN_PROFESSIONALS_ADD}
+              variant="contained"
+              color="primary">
               Novo
             </Button>
           </Grid>
-
         </Grid>
         <Grid item xs={12}>
-          {professionals.length == 0 && (<H5>Nenhum profissional encontrado</H5>)}
+          {professionals.length == 0 && <H5>Nenhum profissional encontrado</H5>}
           <List>
             {professionals.map((professional) => (
               <ListItem key={professional.id}>
                 <ListItemAvatar>
-                  <Avatar alt={professional.name.toUpperCase()} src={professional.photo} />
+                  <Avatar
+                    alt={professional.name.toUpperCase()}
+                    src={professional.photo}
+                  />
                 </ListItemAvatar>
-                <ListItemText
-                  primary={professional.name}
-                  secondary={null}
-                />
+                <ListItemText primary={professional.name} secondary={null} />
                 <ListItemSecondaryAction>
                   <IconButton
                     onClick={handleDialogOpen(professional)}
-                    color='secondary'
-                  >
+                    color="secondary">
                     <DeleteIcon />
                   </IconButton>
-                  <IconButton
-                    to={{
-                      pathname: ADMIN_PROFESSIONALS_UPDATE,
-                      state: {
-                        professional
-                      }
-                    }}
-                    element={Link}
-                    color='secondary'
-                  >
-                    <EditIcon />
-                  </IconButton>
+                  <Link
+                    to={navRoutes.ADMIN_PROFESSIONALS_UPDATE}
+                    state={professional}>
+                    <IconButton color="secondary">
+                      <EditIcon />
+                    </IconButton>
+                  </Link>
                 </ListItemSecondaryAction>
               </ListItem>
             ))}
@@ -160,9 +147,10 @@ function ProfessionalsList () {
           open={snackBar.open}
           onClose={handleCloseSnackbar}
           autoHideDuration={3000}
-          key={snackBar.message}
-        >
-          <Alert variant='filled' severity={snackBar.success ? 'success' : 'error'}>
+          key={snackBar.message}>
+          <Alert
+            variant="filled"
+            severity={snackBar.success ? "success" : "error"}>
             {snackBar.message}
           </Alert>
         </Snackbar>
@@ -170,25 +158,23 @@ function ProfessionalsList () {
         <Dialog
           open={dialogOpen}
           onClose={handleDialogClose}
-          aria-labelledby='alert-dialog-title'
-          aria-describedby='alert-dialog-description'
-        >
-          <DialogTitle id='alert-dialog-title'>
+          aria-labelledby="alert-dialog-title"
+          aria-describedby="alert-dialog-description">
+          <DialogTitle id="alert-dialog-title">
             Remover "{!!selectedProfessional && selectedProfessional.name}"?
           </DialogTitle>
 
           <DialogActions>
-            <Button onClick={handleDialogClose} color='secondary'>
+            <Button onClick={handleDialogClose} color="secondary">
               Cancelar
             </Button>
-            <Button onClick={handleDelete} color='secondary' autoFocus>
+            <Button onClick={handleDelete} color="secondary" autoFocus>
               OK
             </Button>
           </DialogActions>
         </Dialog>
       </Grid>
     </PaperContainer>
-
   )
 }
 

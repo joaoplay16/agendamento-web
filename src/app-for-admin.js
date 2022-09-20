@@ -1,17 +1,18 @@
-import React, { Suspense, lazy, useEffect, useState } from 'react'
-import { Route, Routes, Navigate, useLocation } from 'react-router-dom'
-import PropTypes from 'prop-types'
-import { LinearProgress } from '@material-ui/core'
-import { auth } from 'services/firebase'
-import { onAuthStateChanged } from 'firebase/auth'
-import { ADMIN, ADMIN_LOGIN } from 'routes'
-import { useAdminAuth } from 'hooks'
+import React, { Suspense, lazy, useEffect, useState } from "react"
+import { Route, Routes, Navigate, useLocation } from "react-router-dom"
+import PropTypes from "prop-types"
+import { LinearProgress } from "@material-ui/core"
+import { auth } from "services/firebase"
+import { onAuthStateChanged } from "firebase/auth"
+import {
+  adminNavigationRoutes as navRoutes,
+  ADMIN
+} from "routes"
+import { useAdminAuth } from "hooks"
 
-const Main = lazy(() => import('pages/admin/main'))
-const AdminLogin = lazy(() => import('pages/admin/login'))
+const Main = lazy(() => import("pages/admin/main"))
 
-function AppForAdmin () {
-
+function AppForAdmin() {
   const location = useLocation()
 
   const { adminInfo, setAdminInfo } = useAdminAuth()
@@ -23,7 +24,7 @@ function AppForAdmin () {
       setAdminInfo({
         isAdminUserLoggedIn: !!user,
         // isUserLoggedIn: true,
-        user
+        user,
       })
       setDidCheckUserIn(true)
     })
@@ -33,19 +34,18 @@ function AppForAdmin () {
     return <LinearProgress />
   }
 
-  if (isAdminUserLoggedIn && location.pathname === ADMIN_LOGIN) {
-    return <Navigate to={ADMIN} />
+  if (isAdminUserLoggedIn && location.pathname === navRoutes.ADMIN_LOGIN) {
+    return <Navigate to={navRoutes.ADMIN} />
   }
 
-  if (!isAdminUserLoggedIn && location.pathname !== ADMIN_LOGIN) {
-    return <Navigate to={ADMIN_LOGIN} />
+  if (!isAdminUserLoggedIn && location.pathname !== navRoutes.ADMIN_LOGIN) {
+    return <Navigate to={navRoutes.ADMIN_LOGIN} />
   }
 
   return (
     <Suspense fallback={<LinearProgress />}>
       <Routes>
-        <Route  path={ADMIN_LOGIN} element={AdminLogin} />
-        <Route element={<Main/>} />
+          <Route path={`${ADMIN}/*`} element={<Main />} />
       </Routes>
     </Suspense>
   )

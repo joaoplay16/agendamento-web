@@ -1,4 +1,4 @@
-import React, { useEffect, useState } from 'react'
+import React, { useState } from 'react'
 import {
   Button,
   Chip,
@@ -23,20 +23,23 @@ import {
   Divider
 } from 'ui'
 import { useDatabase } from 'hooks'
-import { Navigate } from 'react-router-dom'
-import { ADMIN_PROFESSIONALS } from 'routes'
+import { Navigate, useLocation } from 'react-router-dom'
+import { adminNavigationRoutes as navRoutes } from 'routes'
 
 function SlideTransition (props) {
   return <Slide {...props} direction='up' />
 }
 
-function UpdateProfessional ({ location }) {
+function UpdateProfessional () {
+
+  const location = useLocation()
+
   if (!location.state) {
-    return <Navigate to={ADMIN_PROFESSIONALS} />
+    return <Navigate to={navRoutes.ADMIN_PROFESSIONALS} />
   }
   const { updateProfessional } = useDatabase()
   const [professional, setProfessional] = useState(() => ({
-    ...location.state.professional
+    ...location.state
   }))
   const [timeTable, setTimeTable] = useState(() => (professional.timeTable))
   const [snackBar, setSnackBar] = useState(() => ({

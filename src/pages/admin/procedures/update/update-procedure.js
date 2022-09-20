@@ -18,17 +18,21 @@ import { Delete as DeleteIcon } from "@material-ui/icons"
 import { Alert } from "@material-ui/lab"
 import { useDatabase } from "hooks"
 import React, { useEffect, useRef, useState } from "react"
-import { Navigate } from "react-router-dom"
-import { ADMIN_PROCEDURES } from "routes"
+import { Navigate, useLocation, useNavigate } from "react-router-dom"
+import { adminNavigationRoutes as navRoutes } from "routes"
 import { Content, H5, PaperContainer, Spacer, TextField } from "ui"
 import { toMoney } from "utils"
 
-function UpdateProcedure({ location, history }) {
+function UpdateProcedure() {
+
+  const location = useLocation()
+  const navigate = useNavigate()
+
   if (!location.state) {
-    return <Navigate to={ADMIN_PROCEDURES} />
+    return <Navigate to={navRoutes.ADMIN_PROCEDURES} />
   }
 
-  const procedureToUpdate = location.state.procedure
+  const procedureToUpdate = location.state
 
   const { updateProcedure } = useDatabase()
 
@@ -142,7 +146,7 @@ function UpdateProcedure({ location, history }) {
       })
 
       setTimeout(() => {
-        history.goBack()
+          navigate(-1)
       }, 1800)
       clearFields()
     }

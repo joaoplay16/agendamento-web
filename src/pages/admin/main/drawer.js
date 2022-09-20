@@ -24,7 +24,7 @@ import {
 import { makeStyles, useTheme } from '@material-ui/core/styles'
 import styled from 'styled-components'
 import { Link } from 'react-router-dom'
-import { ADMIN_PROCEDURES, ADMIN_PROFESSIONALS, ADMIN_SETTINGS } from 'routes'
+import { adminNavigationRoutes as navRoutes } from 'routes'
 
 const drawerWidth = 240
 
@@ -82,15 +82,15 @@ function ResponsiveDrawer (props) {
           <ListItemIcon><BookIcon /></ListItemIcon>
           <ListItemText primary='Agendamentos' />
         </ListItem>
-        <ListItem button to={ADMIN_PROCEDURES}>
+        <ListItem button to={navRoutes.ADMIN_PROCEDURES}>
           <ListItemIcon><ListIcon /></ListItemIcon>
           <ListItemText primary='Procedimentos' />
         </ListItem>
-        <ListItem button to={ADMIN_PROFESSIONALS}>
+        <ListItem button to={navRoutes.ADMIN_PROFESSIONALS}>
           <ListItemIcon><PeopleIcon /></ListItemIcon>
           <ListItemText primary='Profissionais' />
         </ListItem>
-        <ListItem button to={ADMIN_SETTINGS}>
+        <ListItem button to={navRoutes.ADMIN_SETTINGS}>
           <ListItemIcon><SettingsIcon /></ListItemIcon>
           <ListItemText primary='Configurações' />
         </ListItem>

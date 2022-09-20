@@ -6,22 +6,24 @@ import {
   IconButton,
   List,
   ListItem,
-  ListItemSecondaryAction, ListItemText
-} from '@material-ui/core'
-import {
-  Delete as DeleteIcon,
-  Edit as EditIcon
-} from '@material-ui/icons'
-import { Alert } from '@material-ui/lab'
-import { useDatabase } from 'hooks'
-import React, { useEffect, useState } from 'react'
-import { Link } from 'react-router-dom'
-import { ADMIN_PROCEDURES_ADD, ADMIN_PROCEDURES_UPDATE } from 'routes'
-import { Button, H5, PaperContainer, Snackbar } from 'ui'
-function ProceduresList () {
+  ListItemSecondaryAction,
+  ListItemText,
+} from "@material-ui/core"
+import { Delete as DeleteIcon, Edit as EditIcon } from "@material-ui/icons"
+import { Alert } from "@material-ui/lab"
+import { useDatabase } from "hooks"
+import React, { useEffect, useState } from "react"
+import { Link } from "react-router-dom"
+import { adminNavigationRoutes as navRoutes } from "routes"
+import { Button, H5, PaperContainer, Snackbar } from "ui"
+function ProceduresList() {
   const [procedures, setProcedures] = useState(() => [])
-  const { procedures: fetchedProcedures, fetchProcedures, deleteProcedure } = useDatabase()
-  const [selectedProcedure, setSelectedProcedure] = useState(() => { })
+  const {
+    procedures: fetchedProcedures,
+    fetchProcedures,
+    deleteProcedure,
+  } = useDatabase()
+  const [selectedProcedure, setSelectedProcedure] = useState(() => {})
 
   useEffect(() => {
     fetchProcedures()
@@ -30,7 +32,7 @@ function ProceduresList () {
   const [snackBar, setSnackBar] = useState(() => ({
     open: false,
     success: false,
-    message: ''
+    message: "",
   }))
 
   const [dialogOpen, setDialogOpen] = useState(false)
@@ -47,18 +49,16 @@ function ProceduresList () {
   useEffect(() => {
     if (fetchedProcedures) {
       setProcedures([
-        ...Object.keys(fetchedProcedures)
-          .map((key) => ({
-            id: key,
-            ...fetchedProcedures[key]
-          }))
+        ...Object.keys(fetchedProcedures).map((key) => ({
+          id: key,
+          ...fetchedProcedures[key],
+        })),
       ])
     }
   }, [fetchedProcedures])
 
   useEffect(() => {
-  // console.log("procedimentos", procedures)
-
+    // console.log("procedimentos", procedures)
   })
 
   const handleDelete = async (e) => {
@@ -70,7 +70,7 @@ function ProceduresList () {
       setSnackBar({
         open: true,
         success: result.success,
-        message: result.message
+        message: result.message,
       })
     }
 
@@ -80,61 +80,45 @@ function ProceduresList () {
   const handleCloseSnackbar = () => {
     setSnackBar({
       open: false,
-      message: ''
+      message: "",
     })
   }
 
   return (
     <PaperContainer>
-      <Grid container justify='center'>
+      <Grid container justify="center">
         <Grid item xs={12}>
           <H5>Procedimentos</H5>
         </Grid>
         <Grid item xs={11}>
-          <Grid
-            container
-            justify='flex-end'
-            direction='row'
-          >
+          <Grid container justify="flex-end" direction="row">
             <Button
-              to={ADMIN_PROCEDURES_ADD}
-              variant='contained'
-              color='primary'
-            >
+              to={navRoutes.ADMIN_PROCEDURES_ADD}
+              variant="contained"
+              color="primary">
               Novo
             </Button>
           </Grid>
-
         </Grid>
         <Grid item xs={12}>
-          {procedures.length == 0 && (<H5>Nenhum procedimento encontrado</H5>)}
+          {procedures.length == 0 && <H5>Nenhum procedimento encontrado</H5>}
           <List>
             {procedures.map((procedure) => (
               <ListItem key={procedure.id}>
-
-                <ListItemText
-                  primary={procedure.name}
-                  secondary={null}
-                />
+                <ListItemText primary={procedure.name} secondary={null} />
                 <ListItemSecondaryAction>
                   <IconButton
                     onClick={handleDialogOpen(procedure)}
-                    color='secondary'
-                  >
+                    color="secondary">
                     <DeleteIcon />
                   </IconButton>
-                  <IconButton
-                    to={{
-                      pathname: ADMIN_PROCEDURES_UPDATE,
-                      state: {
-                        procedure
-                      }
-                    }}
-                    element={Link}
-                    color='secondary'
-                  >
-                    <EditIcon />
-                  </IconButton>
+                  <Link
+                    to={navRoutes.ADMIN_PROCEDURES_UPDATE}
+                    state={procedure}>
+                    <IconButton color="secondary">
+                      <EditIcon />
+                    </IconButton>
+                  </Link>
                 </ListItemSecondaryAction>
               </ListItem>
             ))}
@@ -145,9 +129,10 @@ function ProceduresList () {
           open={snackBar.open}
           onClose={handleCloseSnackbar}
           autoHideDuration={3000}
-          key={snackBar.message}
-        >
-          <Alert variant='filled' severity={snackBar.success ? 'success' : 'error'}>
+          key={snackBar.message}>
+          <Alert
+            variant="filled"
+            severity={snackBar.success ? "success" : "error"}>
             {snackBar.message}
           </Alert>
         </Snackbar>
@@ -155,25 +140,23 @@ function ProceduresList () {
         <Dialog
           open={dialogOpen}
           onClose={handleDialogClose}
-          aria-labelledby='alert-dialog-title'
-          aria-describedby='alert-dialog-description'
-        >
-          <DialogTitle id='alert-dialog-title'>
+          aria-labelledby="alert-dialog-title"
+          aria-describedby="alert-dialog-description">
+          <DialogTitle id="alert-dialog-title">
             Remover "{!!selectedProcedure && selectedProcedure.name}"?
           </DialogTitle>
 
           <DialogActions>
-            <Button to='#' onClick={handleDialogClose} color='secondary'>
+            <Button to="#" onClick={handleDialogClose} color="secondary">
               Cancelar
             </Button>
-            <Button to='#' onClick={handleDelete} color='secondary' autoFocus>
+            <Button to="#" onClick={handleDelete} color="secondary" autoFocus>
               OK
             </Button>
           </DialogActions>
         </Dialog>
       </Grid>
     </PaperContainer>
-
   )
 }
 
