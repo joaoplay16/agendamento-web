@@ -4,7 +4,6 @@ import {
   CHOOSE_DATE,
   CHOOSE_PROFESSIONAL,
   CHECKOUT,
-  ROOT,
 } from "routes"
 
 const ChooseProcedure = React.lazy(() => import("pages/choose-procedure"))

@@ -7,7 +7,6 @@ import {
   MuiThemeProvider,
 } from "@material-ui/core"
 import {
-  AuthProvider,
   DatabaseProvider,
   ShoppingCartProvider,
   ApplicationProvider,
@@ -38,7 +37,6 @@ const Root = () => {
   return (
     <MuiThemeProvider theme={theme}>
       <ThemeProvider theme={theme}>
-        <AuthProvider>
           <DatabaseProvider>
             <ShoppingCartProvider>
               <ApplicationProvider>
@@ -50,7 +48,6 @@ const Root = () => {
               </ApplicationProvider>
             </ShoppingCartProvider>
           </DatabaseProvider>
-        </AuthProvider>
       </ThemeProvider>
     </MuiThemeProvider>
   )

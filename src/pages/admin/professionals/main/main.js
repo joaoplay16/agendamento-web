@@ -3,8 +3,6 @@ import {
   Avatar,
   Dialog,
   DialogActions,
-  DialogContent,
-  DialogContentText,
   DialogTitle,
   Grid,
   IconButton,
