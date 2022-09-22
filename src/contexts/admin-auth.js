@@ -1,4 +1,4 @@
-import React, { createContext, useCallback, useState } from "react"
+import React, { createContext, useState } from "react"
 import PropTypes from "prop-types"
 import { auth } from "services/firebase"
 import { signInWithEmailAndPassword, createUserWithEmailAndPassword, signOut } from "firebase/auth"
@@ -10,7 +10,7 @@ function AdminAuthProvider({ children }) {
     user: null,
   })
 
-  const login = useCallback((email, pass) => {
+  const login = (email, pass) => {
     console.log(email, pass)
 
     signInWithEmailAndPassword(auth, email, pass)
@@ -27,9 +27,9 @@ function AdminAuthProvider({ children }) {
 
         console.log("login error", errorCode, errorMessage)
       })
-  }, [])
+  }
 
-  const createUser = useCallback((email, pass) => {
+  const createUser = (email, pass) => {
  
       createUserWithEmailAndPassword(auth, email, pass)
       .then((user) => {
@@ -44,9 +44,9 @@ function AdminAuthProvider({ children }) {
 
         console.log("error on creating user", errorCode, errorMessage)
       })
-  }, [])
+  }
 
-  const logout = useCallback(() => {
+  const logout = () => {
     signOut()
     .then(() => {
       console.log("admin disconnected")
@@ -55,7 +55,7 @@ function AdminAuthProvider({ children }) {
         user: null,
       })
     })
-  }, [])
+  }
 
   return (
     <AdminAuthContext.Provider

@@ -1,4 +1,4 @@
-import React, { createContext, useCallback, useState } from "react"
+import React, { createContext, useState } from "react"
 import PropTypes from "prop-types"
 import { db } from "services/firebase"
 import {
@@ -23,16 +23,16 @@ function DatabaseProvider({ children }) {
   const [professionals, setProfessionals] = useState(() => ({}))
   const [userSchedules, setUserSchedules] = useState(() => [])
 
-  const fetchUserSchedules = useCallback(async (userInfo) => {
+  const fetchUserSchedules = async (userInfo) => {
     const schedulesRef = collection(db, SCHEDULES)
     const q = query(schedulesRef, where("userEmail", "==", userInfo.user.email))
     const querySnapshot = await getDocs(q)
 
     const uSchedules = querySnapshot.docs.map((doc) => doc.data())
     setUserSchedules(uSchedules)
-  }, [])
+  }
 
-  const fetchProcedures = useCallback(async () => {
+  const fetchProcedures = async () => {
     const querySnapshot = await getDocs(collection(db, PROCEDURES))
 
     const procedures = querySnapshot.docs.map((doc) => ({
@@ -41,9 +41,9 @@ function DatabaseProvider({ children }) {
     }))
 
     setProcedures(procedures)
-  }, [])
+  }
 
-  const fetchSchedules = useCallback(async () => {
+  const fetchSchedules = async () => {
     const querySnapshot = await getDocs(collection(db, SCHEDULES))
 
     const schedules = querySnapshot.docs.map((doc) => ({
@@ -51,9 +51,9 @@ function DatabaseProvider({ children }) {
       ...doc.data(),
     }))
     setSchedules(schedules)
-  }, [])
+  }
 
-  const submitSchedule = useCallback((transation) => {
+  const submitSchedule = (transation) => {
     const procedureRef = addDoc(collection(db, SCHEDULES), transation)
 
     const res = procedureRef
@@ -73,9 +73,9 @@ function DatabaseProvider({ children }) {
         }
       })
     return res
-  }, [])
+  }
 
-  const addProcedure = useCallback((procedure) => {
+  const addProcedure = (procedure) => {
     const procedureRef = addDoc(collection(db, PROCEDURES), procedure)
 
     const res = procedureRef
@@ -92,9 +92,9 @@ function DatabaseProvider({ children }) {
         }
       })
     return res
-  }, [])
+  }
 
-  const updateProcedure = useCallback((procedure) => {
+  const updateProcedure = (procedure) => {
     const { id, ...procedureWithoutID } = procedure
 
     const procedureRef = doc(collection(db, PROCEDURES), id)
@@ -115,9 +115,9 @@ function DatabaseProvider({ children }) {
       })
 
     return res
-  }, [])
+  }
 
-  const deleteProcedure = useCallback((procedure) => {
+  const deleteProcedure = (procedure) => {
     const procedureRef = deleteDoc(
       doc(collection(db, PROCEDURES), procedure.id)
     )
@@ -135,9 +135,9 @@ function DatabaseProvider({ children }) {
         }
       })
     return res
-  }, [])
+  }
 
-  const fetchProfessionals = useCallback(async () => {
+  const fetchProfessionals = async () => {
     const querySnapshot = await getDocs(collection(db, PROFESSIONALS))
     const objects = {}
 
@@ -147,9 +147,9 @@ function DatabaseProvider({ children }) {
       })
     })
     setProfessionals(objects)
-  }, [])
+  }
 
-  const addProfessional = useCallback((professional) => {
+  const addProfessional = (professional) => {
     const procedureRef = addDoc(collection(db, PROFESSIONALS), professional)
 
     const res = procedureRef
@@ -166,9 +166,9 @@ function DatabaseProvider({ children }) {
         }
       })
     return res
-  }, [])
+  }
 
-  const updateProfessional = useCallback((professional) => {
+  const updateProfessional = (professional) => {
     const { id, ...professionalWithoutID } = professional
 
     const professionalRef = doc(collection(db, PROFESSIONALS), id)
@@ -189,9 +189,9 @@ function DatabaseProvider({ children }) {
       })
 
     return res
-  }, [])
+  }
 
-  const deleteProfessional = useCallback((professional) => {
+  const deleteProfessional = (professional) => {
     const professionalRef = deleteDoc(
       doc(collection(db, PROFESSIONALS), professional.id)
     )
@@ -209,7 +209,7 @@ function DatabaseProvider({ children }) {
         }
       })
     return res
-  }, [])
+  }
 
   return (
     <DatabaseContext.Provider

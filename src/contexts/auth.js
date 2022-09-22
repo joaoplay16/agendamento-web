@@ -1,6 +1,5 @@
 import React, {
   createContext,
-  useCallback,
   useState
 } from 'react'
 import PropTypes from 'prop-types'
@@ -18,12 +17,12 @@ function AuthProvider ({ children }) {
     user: null
   })
 
-  const login = useCallback(() => {
+  const login = () => {
     const provider = new GoogleAuthProvider()
     signInWithRedirect(auth, provider)
-  }, [])
+  }
 
-  const logout = useCallback(() => {
+  const logout = () => {
      signOut(auth).then(() => {
       console.log('o cara deslogou')
       setUserInfo({
@@ -31,7 +30,7 @@ function AuthProvider ({ children }) {
         user: null
       })
     })
-  }, [])
+  }
 
   return (
     <AuthContext.Provider value={{
