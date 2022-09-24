@@ -10,8 +10,8 @@ import {
 import React, { useEffect, useState } from "react"
 import { Dialog, PaperContainer, TextField, H5, Divider } from "ui"
 import { useDatabase, useShoppingCart } from "hooks"
-import * as mpApi from "services/mercadopago-api"
-import { RESERVATIONS, CHECKOUT } from "routes"
+import * as mpApi from "services/mercadopago"
+import { RESERVATIONS } from "routes"
 import strings from "strings/mercadopago-response"
 import { toMoney, getPaymentStatusMessage } from "utils"
 const MercadoLivreCardForm = ({ schedules, price, userInfo }) => {

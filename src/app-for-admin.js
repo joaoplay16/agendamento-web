@@ -1,8 +1,6 @@
 import React, { Suspense, lazy, useEffect, useState } from "react"
 import { Route, Routes, Navigate, useLocation } from "react-router-dom"
 import { LinearProgress } from "@material-ui/core"
-import { auth } from "services/firebase"
-import { onAuthStateChanged } from "firebase/auth"
 import { adminNavigationRoutes as navRoutes, ADMIN, ADMIN_LOGIN } from "routes"
 import { useAdminAuth } from "hooks"
 
@@ -12,33 +10,36 @@ const AdminLogin = React.lazy(() => import("pages/admin/login"))
 function AppForAdmin() {
   const location = useLocation()
 
-  const { adminInfo, setAdminInfo } = useAdminAuth()
+  const { adminInfo, verifyAdminIsLoggedIn } = useAdminAuth()
   const [didCheckUserIn, setDidCheckUserIn] = useState(false)
-  const { isAdminUserLoggedIn } = adminInfo
+  const isLoggedIn = adminInfo.isLoggedIn
 
   useEffect(() => {
-    onAuthStateChanged(auth, (user) => {
-      setAdminInfo({
-        isAdminUserLoggedIn: !!user,
-        // isUserLoggedIn: true,
-        user,
-      })
-      setDidCheckUserIn(true)
-    })
-  }, [setAdminInfo])
-  useEffect(() => {
-    console.log("admin logged? ", isAdminUserLoggedIn)
-  }, [isAdminUserLoggedIn])
+    verifyAdminIsLoggedIn()
 
-  if (!didCheckUserIn) {
+  }, [])
+  
+  useEffect(() => {
+    setDidCheckUserIn(true)
+  }, [isLoggedIn])
+
+  useEffect(() => {
+    console.log("admin logged? ", adminInfo.isLoggedIn)
+  }, [isLoggedIn])
+
+  useEffect(() => {
+    console.log("didCheckUserIn? ", didCheckUserIn)
+  }, [didCheckUserIn])
+
+  if (didCheckUserIn == false) {
     return <LinearProgress />
   }
 
-  if (isAdminUserLoggedIn && location.pathname === navRoutes.ADMIN_LOGIN) {
+  if (isLoggedIn && location.pathname === navRoutes.ADMIN_LOGIN) {
     return <Navigate to={navRoutes.ADMIN} />
   }
 
-  if (!isAdminUserLoggedIn && location.pathname !== navRoutes.ADMIN_LOGIN) {
+  if (!isLoggedIn && location.pathname !== navRoutes.ADMIN_LOGIN) {
     return <Navigate to={navRoutes.ADMIN_LOGIN} />
   }
 

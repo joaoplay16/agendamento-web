@@ -1,70 +1,67 @@
 import React, { createContext, useState } from "react"
 import PropTypes from "prop-types"
-import { auth } from "services/firebase"
-import { signInWithEmailAndPassword, createUserWithEmailAndPassword, signOut } from "firebase/auth"
+import { getAdminToken, adminTokenLogin } from "services/admin-authentication"
 const AdminAuthContext = createContext()
+
+const ADMIN_TOKEN = "adminToken"
 
 function AdminAuthProvider({ children }) {
   const [adminInfo, setAdminInfo] = useState({
-    isUserLoggedIn: false,
-    user: null,
+    isLoggedIn: false,
   })
 
   const login = (email, pass) => {
-    console.log(email, pass)
+    verifyAdminIsLoggedIn()
 
-    signInWithEmailAndPassword(auth, email, pass)
-      .then((user) => {
-        setAdminInfo({
-          isUserLoggedIn: !!user,
-          user,
+    //if admin is not authenticated, authenticate and get a new token
+    if (!adminInfo.isLoggedIn) {
+      getAdminToken({ email: email, password: pass })
+        .then((response) => {
+          setAdminInfo({ isLoggedIn: true })
+
+          const { token } = response.data
+          localStorage.setItem(ADMIN_TOKEN, token)
         })
-        console.log("user ", user)
+        .catch((error) => {
+          console.log("login error", error)
+        })
+    }
+  }
+
+  const loginWithToken = (token) => {
+    adminTokenLogin({ token })
+      .then((response) => {
+        if (response.status == 200) {
+          setAdminInfo({ isLoggedIn: true })
+        }
       })
       .catch((error) => {
-        const errorCode = error.code
-        const errorMessage = error.message
+        console.log("loginWithToken error", error)
 
-        console.log("login error", errorCode, errorMessage)
+        setAdminInfo({ isLoggedIn: false })
       })
   }
 
-  const createUser = (email, pass) => {
- 
-      createUserWithEmailAndPassword(auth, email, pass)
-      .then((user) => {
-        setAdminInfo({
-          isUserLoggedIn: !!user,
-          user,
-        })
-      })
-      .catch((error) => {
-        const errorCode = error.code
-        const errorMessage = error.message
+  const verifyAdminIsLoggedIn = () => {
+    const token = localStorage.getItem(ADMIN_TOKEN)
 
-        console.log("error on creating user", errorCode, errorMessage)
-      })
+    if (!token) {
+      setAdminInfo({ isLoggedIn: false })
+    } else {
+      loginWithToken(token)
+    }
   }
 
-  const logout = () => {
-    signOut()
-    .then(() => {
-      console.log("admin disconnected")
-      setAdminInfo({
-        isUserLoggedIn: false,
-        user: null,
-      })
-    })
-  }
+  const logout = () => {}
+  window.location.logout = logout
 
   return (
     <AdminAuthContext.Provider
       value={{
         login,
         logout,
-        createUser,
         adminInfo,
-        setAdminInfo,
+        verifyAdminIsLoggedIn,
       }}>
       {children}
     </AdminAuthContext.Provider>

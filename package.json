@@ -34,7 +34,7 @@
   },
   "scripts": {
     "start": "node server.js",
-    "dev": "rescripts start NODE_OPTIONS=--openssl-legacy-provider",
+    "dev": "rescripts start",
     "build": "rescripts build",
     "test": "rescripts test",
     "lint:fix": "standard --fix | snazzy"
