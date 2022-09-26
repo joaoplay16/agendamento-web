@@ -37,7 +37,6 @@ function AdminAuthProvider({ children }) {
       })
       .catch((error) => {
         console.log("loginWithToken error", error)
-
         setAdminInfo({ isLoggedIn: false })
       })
   }
@@ -48,6 +47,7 @@ function AdminAuthProvider({ children }) {
     if (!token) {
       setAdminInfo({ isLoggedIn: false })
     } else {
+      setAdminInfo({ isLoggedIn: true })
       loginWithToken(token)
     }
   }
