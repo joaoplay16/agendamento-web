@@ -37,12 +37,6 @@ const ChooseDate = () => {
     setSelectedDate(date)
   }
 
-  useEffect(() => {
-    window.horas = DateFnsUtils
-    window.datefns = dateFns
-    console.log('time', professional)
-  }, [])
-
   function disableDay (date) {
     const day = date.getDay()
     const dateString = lightFormat(date, 'dd/MM/yyyy')
@@ -64,10 +58,10 @@ const ChooseDate = () => {
     const currentWeekDay = selectedDate.getDay()
     const dateString = selectedDate.toLocaleDateString()
     const time_table = professional.timeTable
-    if (time_table.specificDate.hasOwnProperty(dateString)) {
-      return time_table.specificDate[dateString]
+    if (time_table?.specificDate?.hasOwnProperty(dateString)) {
+      return time_table?.specificDate[dateString]
     }
-    return time_table.week[currentWeekDay]
+    return time_table?.week[currentWeekDay]
   }
 
   const addSchedule = (time) => (_) => {
