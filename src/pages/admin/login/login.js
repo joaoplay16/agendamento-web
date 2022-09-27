@@ -1,14 +1,10 @@
-import React, { useState } from 'react'
-import styled from 'styled-components'
-import { Button, Grid, TextField } from '@material-ui/core'
-import { useAdminAuth } from 'hooks'
-function Login () {
-  const { login, createUser } = useAdminAuth()
-
-  const [adminUser, setAdminUser] = useState({
-    name: '',
-    pass: ''
-  })
+import React, { useState } from "react"
+import styled from "styled-components"
+import { Button, Grid, TextField, Paper } from "@material-ui/core"
+import { useAdminAuth } from "hooks"
+import { H4 } from "ui"
+function Login() {
+  const { login } = useAdminAuth()
 
   const handleSubmit = (e) => {
     e.preventDefault()
@@ -19,38 +15,62 @@ function Login () {
   }
 
   return (
-    <Container>
-      <form onSubmit={handleSubmit}>
-        <Grid container justify='center' spacing={5}>
-          <Grid item xs={12} container>
-            <TextField label='Usuário' variant='outlined' id='email' type='email' />
-            <TextField
-              label='Senha'
-              variant='outlined'
-              id='pass'
-              type='password'
-            />
-            <LoginButton type='submit'>Entrar</LoginButton>
+    <form onSubmit={handleSubmit}>
+      <Container container justifyContent="center" alignItems="center">
+        <Paper style={{ 
+          paddingTop: 60,
+          paddingBottom: 60,
+          paddingLeft: 100,
+          paddingRight: 100 
+          }}>
+          <Grid container spacing={2} direction="column">
+            <H4>Painel de controle</H4>
+            <Grid item>
+              <TextField
+                id="email"
+                label="Usuário"
+                variant="outlined"
+                type="email"
+                fullWidth
+              />
+            </Grid>
+            <Grid item>
+              <TextField
+                id="pass"
+                label="Senha"
+                variant="outlined"
+                type="password"
+                fullWidth
+              />
+            </Grid>
+            <Grid item>
+              <LoginButton
+                variant="contained"
+                color="secondary"
+                type="submit"
+                fullWidth>
+                Entrar
+              </LoginButton>
+            </Grid>
           </Grid>
-        </Grid>
-      </form>
-    </Container>
+        </Paper>
+      </Container>
+    </form>
   )
 }
 
-const Container = styled.div`
-  padding: ${({ theme }) => theme.spacing(3)}px;
+const Container = styled(Grid)`
+  height: 100vh;
 `
 // const Logo = styled(MainLogo)`
 //   width: 100%;
 // `
 const LoginButton = styled(Button).attrs({
-  variant: 'contained',
-  fullWidth: true
+  variant: "contained",
+  fullWidth: true,
 })`
   && {
-    font-size: ${({ theme }) => theme.typography.h5.fontSize};
-    max-width: 480px;
+    /* font-size: ${({ theme }) => theme.typography.h6.fontSize}; */
     padding: ${({ theme }) => theme.spacing(2)};
     text-transform: none;
   }
