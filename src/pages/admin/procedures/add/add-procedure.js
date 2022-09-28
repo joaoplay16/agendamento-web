@@ -145,7 +145,7 @@ function AddProcedure () {
             <Divider />
             <Spacer />
             <Grid item xs={12}>
-              <Grid container justify='center'>
+              <Grid container justifyContent='center'>
                 <Grid item lg={4} md={4} sm={10} xs={12}>
 
                   <List>
@@ -177,7 +177,7 @@ function AddProcedure () {
             </Grid>
             {!!professionalsArray && (
               <Grid item>
-                <Grid container spacing={2} direction='row' justify='center' alignItems='center'>
+                <Grid container spacing={2} direction='row' justifyContent='center' alignItems='center'>
                   <Grid item sm={4} xs={10}>
                     <FormControl variant='outlined' style={{ width: '100%' }}>
                       <Select
@@ -219,7 +219,7 @@ function AddProcedure () {
             <Spacer />
             <Divider />
             <Spacer />
-            <Grid container item justify='center'>
+            <Grid container item justifyContent='center'>
               <Button
                 onClick={handleSave}
                 to='#'

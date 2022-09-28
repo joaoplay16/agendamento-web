@@ -96,12 +96,12 @@ function ProfessionalsList() {
 
   return (
     <PaperContainer>
-      <Grid container justify="center">
+      <Grid container justifyContent="center">
         <Grid item xs={12}>
           <H5>Profissionais</H5>
         </Grid>
         <Grid item xs={11}>
-          <Grid container justify="flex-end" direction="row">
+          <Grid container justifyContent="flex-end" direction="row">
             <Button
               to={navRoutes.ADMIN_PROFESSIONALS_ADD}
               variant="contained"

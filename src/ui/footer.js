@@ -1,21 +1,18 @@
-import React from 'react'
-import { NavLink, useLocation } from 'react-router-dom'
-import {
-  Container,
-  IconButton as MaterialIconButton
-} from '@material-ui/core'
+import React from "react"
+import { NavLink, useLocation } from "react-router-dom"
+import { Container, IconButton as MaterialIconButton } from "@material-ui/core"
 
-import styled from 'styled-components'
-import { useApplication } from 'hooks'
-import pathStartWith from 'utils/path-comparator'
+import styled from "styled-components"
+import { useApplication } from "hooks"
+import pathStartWith from "utils/path-comparator"
 
-function Footer () {
+function Footer() {
   const { appState } = useApplication()
-  
+
   const location = useLocation()
   const currentPathName = location.pathname
 
-  function isActiveItem (itemPathname) {
+  function isActiveItem(itemPathname) {
     if (itemPathname === "/") {
       return itemPathname === currentPathName
     }
@@ -30,16 +27,11 @@ function Footer () {
           const isActive = isActiveItem(item.to.pathname)
           return (
             <ToolbarItem
-              active={isActive}
+              active={isActive ? 1 : 0}
               to={item.to.pathname}
-              key={index}
-            >
-              <IconButton active={isActive}>
-                {item.icon}
-              </IconButton>
-              <IconLabel>
-                {item.label}
-              </IconLabel>
+              key={index}>
+              <IconButton active={isActive ? 1 : 0}>{item.icon}</IconButton>
+              <IconLabel>{item.label}</IconLabel>
             </ToolbarItem>
           )
         })}
@@ -64,9 +56,9 @@ const ToolbarContainer = styled(Container)`
 `
 
 const ToolbarItem = styled(NavLink).attrs(({ active, theme }) => ({
-  activeStyle: {
-    color: active ? theme.palette.primary.main : ''
-  }
+  style: {
+    color: active ? theme.palette.primary.main : "",
+  },
 }))`
   align-items: center;
   display: flex;
@@ -80,13 +72,13 @@ const ToolbarItem = styled(NavLink).attrs(({ active, theme }) => ({
 const IconButton = styled(MaterialIconButton)`
   padding: 5px;
   span {
-      svg{
-        path {
-          fill: ${({ active, theme }) => active
-    ? theme.palette.primary.main : ''};
-        }
+    svg {
+      path {
+        fill: ${({ active, theme }) =>
+          active ? theme.palette.primary.main : ""};
       }
-    };
+    }
+  }
 `
 const IconLabel = styled.span`
   font-family: ${({ theme }) => theme.typography.caption.fontFamily};

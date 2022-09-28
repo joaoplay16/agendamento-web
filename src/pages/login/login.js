@@ -8,11 +8,11 @@ function Login () {
 
   return (
     <Container>
-      <Grid container justify='center' spacing={5}>
+      <Grid container justifyContent='center' spacing={5}>
         {/* <Grid item>
           <Logo />
         </Grid> */}
-        <Grid item xs={12} container justify='center'>
+        <Grid item xs={12} container  justifyContent='center'>
           <GitHubButton onClick={login}>
             Entrar com Google
           </GitHubButton>

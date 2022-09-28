@@ -74,7 +74,7 @@ function Checkout() {
 
   return (
     <Content>
-      <Grid container justify="center">
+      <Grid container justifyContent="center">
         { schedules.length > 0 &&  <Grid item sm={8} lg={6} md={6} xs={12}>
           <Grid container>
             {schedules?.map((schedule, index) => (
@@ -125,14 +125,14 @@ function Checkout() {
           </Grid>
           <Spacer />
           <Grid item xs={12}>
-            <Grid container justify="center">
+            <Grid container justifyContent="center">
               <Button to={navRoutes.SCHEDULE} variant="outlined" color="primary">
                 Adicionar outro serviço
               </Button>
             </Grid>
             <Spacer />
             <Grid item xs={12}>
-              <Grid container justify="center">
+              <Grid container justifyContent="center">
                 <Grid item xs={6}>
                   <Typography variant="body2" noWrap>
                     TOTAL
@@ -146,7 +146,7 @@ function Checkout() {
               </Grid>
             </Grid>
             <Grid item xs={12}>
-              <Grid container justify="center">
+              <Grid container justifyContent="center">
                 <Grid item xs={6}>
                   <Typography variant="body1" noWrap>
                     Você pagará
@@ -186,7 +186,7 @@ function Checkout() {
               </RadioGroup>
             </FormControl>
             <Spacer />
-            <Grid container justify="center">
+            <Grid container justifyContent="center">
               <Modal isOpen={open} handleOpenClose={handleOpenCloseModal}>
                 <MercadoLivreCardForm
                   schedules={schedules}
@@ -201,7 +201,7 @@ function Checkout() {
           </Grid>
         </Grid>}
         {schedules.length === 0 && (
-          <Grid  item justify="center" >
+          <Grid item>
           <H6>O carrinho está vazio.</H6>  
           <Button to={navRoutes.SCHEDULE} variant="outlined" color="primary">
             Adicionar um serviço

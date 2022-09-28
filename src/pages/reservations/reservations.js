@@ -28,7 +28,7 @@ const Reservations = () => {
 
   return (
     <Content>
-      <Grid container justify='center'>
+      <Grid container justifyContent='center'>
         <Grid item sm={10} lg={8} md={6} xs={12}>
           <Grid container>
             {userSchedules.map((us, index) => {

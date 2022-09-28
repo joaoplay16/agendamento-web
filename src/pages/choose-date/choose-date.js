@@ -75,7 +75,7 @@ const ChooseDate = () => {
 
   return (
     <Content>
-      <Grid container justify='center'>
+      <Grid container justifyContent='center'>
         <Grid item xs={12} sm={10} md={8}>
           <H4>Escolher data</H4>
 

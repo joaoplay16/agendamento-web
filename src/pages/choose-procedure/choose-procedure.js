@@ -7,7 +7,7 @@ import {
   ListItemSecondaryAction,
   Divider,
   Button as MaterialButton,
-  Grid as MaterialGrid,
+  Grid,
   TextField as MaterialTextField,
   InputLabel
 } from '@material-ui/core'
@@ -44,7 +44,12 @@ const ChooseProcedure = () => {
 
   return (
     <ProcedureContainer>
-      <Grid container justify='center' style={{ padding: 10 }}>
+      <Grid 
+        container item
+        direction="column"
+        justifyContent='center' 
+        style={{ padding: 10 }}
+        xs={12} sm={8}>
         <InputLabel>Escolha um serviço</InputLabel>
         <TextField
           label='Buscar'
@@ -52,14 +57,16 @@ const ChooseProcedure = () => {
           onChange={handleSearch}
         />
       </Grid>
-      <Grid>
+      <Grid 
+        container item
+        direction="column"
+        justifyContent='center' 
+        xs={12} sm={8}>
         <List element='nav'>
           {procedures.map((procedure) => (
-            <>
+            <React.Fragment  key={procedure.id}>
               <ListItem
-                alignItems='center'
-                key={procedure.id}
-              >
+                alignItems='center'>
                 <ListItemText
                   primary={procedure.name}
                   secondary={`${procedure.time}`}
@@ -77,7 +84,7 @@ const ChooseProcedure = () => {
                 </ListItemSecondaryAction>
               </ListItem>
               <Divider />
-            </>
+            </React.Fragment>
           ))}
         </List>
       </Grid>
@@ -98,15 +105,15 @@ const ProcedureContainer = styled.main`
   margin-bottom: ${({ theme }) => theme.spacing(8)}px;
 `
 
-const Grid = styled(MaterialGrid).attrs({
-  container: true,
-  xs: 12,
-  sm: 8
-})`
-  display: flex;
-  flex-direction: column;
-  justify-content: center;
-`
+// const Grid = styled(MaterialGrid).attrs({
+//   container: true,
+//   xs: 12,
+//   sm: 8
+// })`
+//   display: flex;
+//   flex-direction: column;
+//   justify-content: center;
+// `
 
 const List = styled(MaterialList)`
   width: 100%;

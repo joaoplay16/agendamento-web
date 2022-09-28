@@ -138,7 +138,7 @@ function UpdateProfessional () {
             </Grid>
             <Divider />
             <Grid item xs={12}><H5>Horário</H5></Grid>
-            <Grid container item xs={12} justify='center'>
+            <Grid container item xs={12}  justifyContent='center'>
               <FormControl element='fieldset'>
                 <RadioGroup
                   row
@@ -161,7 +161,7 @@ function UpdateProfessional () {
             </Grid>
             <Divider />
             <Grid item xs={12}>
-              <Grid container justify='center' spacing={1}>
+              <Grid container justifyContent='center' spacing={1}>
                 {timeTable.week[selectedWeek]?.length == 0 &&
                   <Typography>
                     Nenhum horário definido
@@ -180,7 +180,7 @@ function UpdateProfessional () {
               </Grid>
             </Grid>
             <Divider />
-            <Grid container item xs={12} justify='center' spacing={1}>
+            <Grid container item xs={12}  justifyContent='center' spacing={1}>
               {hours.map(hour => (
                 <Grid item key={hour}>
                   <Button
@@ -196,7 +196,7 @@ function UpdateProfessional () {
                 </Grid>
               ))}
             </Grid>
-            <Grid container item xs={12} justify='center' spacing={1}>
+            <Grid container item xs={12}  justifyContent='center' spacing={1}>
               <Spacer />
               <Button
                 variant='contained'

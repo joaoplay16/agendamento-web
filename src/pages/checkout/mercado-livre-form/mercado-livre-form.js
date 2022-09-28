@@ -245,7 +245,7 @@ const MercadoLivreCardForm = ({ schedules, price, userInfo }) => {
                   : `${name} (${date})`
 
               return (
-                <Grid item>
+                <Grid item key={name + index}>
                   <Chip color="primary" label={description} size="small" />
                 </Grid>
               )
@@ -260,11 +260,11 @@ const MercadoLivreCardForm = ({ schedules, price, userInfo }) => {
           <Grid
             container
             direction="row"
-            justify="center"
+             justifyContent="center"
             alignItems="center"
             spacing={1}>
             <Grid item md={3} sm={3} xs={12}>
-              <FormLabel for="docType">E-mail</FormLabel>
+              <FormLabel htmlFor="docType">E-mail</FormLabel>
               <TextField
                 required
                 id="form-checkout__cardholderEmail"
@@ -336,13 +336,13 @@ const MercadoLivreCardForm = ({ schedules, price, userInfo }) => {
                 autoComplete="off"
               />
             </Grid>
-            <div id="issuerInput" class="form-group col-sm-12 hidden">
+            <div id="issuerInput" className="form-group col-sm-12 hidden">
               <Select
                 native
                 id="form-checkout__issuer"
                 name="issuer"
                 hidden
-                class="form-control"
+                className="form-control"
               />
             </div>
             <Grid item md={4} sm={5} xs={12}>
@@ -361,7 +361,7 @@ const MercadoLivreCardForm = ({ schedules, price, userInfo }) => {
               item
               container
               direction="column"
-              justify="center"
+               justifyContent="center"
               alignItems="center">
               <Button
                 color="secondary"
@@ -373,9 +373,6 @@ const MercadoLivreCardForm = ({ schedules, price, userInfo }) => {
             </Grid>
             <input type="hidden" name="paymentMethodId" id="paymentMethodId" />
             <input type="hidden" name="description" id="description" />
-            {/* <progress value="0" class="progress-bar">
-              Carregando...
-            </progress> */}
           </Grid>
 
           <Dialog

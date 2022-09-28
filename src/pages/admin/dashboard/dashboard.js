@@ -14,7 +14,7 @@ function Dashboard () {
     <Content>
       {schedules.length > 0 &&
         schedules.map((schedule) => (
-          <p>
+          <p key={schedule.paymentInfo.id}>
             {schedule.paymentInfo.id} {schedule.paymentInfo.description}{' '}
             {' -->> '} {schedule.paymentInfo.status}
           </p>

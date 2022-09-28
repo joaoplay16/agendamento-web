@@ -3,7 +3,7 @@ import { ThemeProvider, createGlobalStyle } from "styled-components"
 import { BrowserRouter } from "react-router-dom"
 import {
   CssBaseline,
-  createMuiTheme,
+  createTheme,
   MuiThemeProvider,
 } from "@material-ui/core"
 import {
@@ -13,7 +13,7 @@ import {
 } from "contexts"
 import App from "./app"
 
-const theme = createMuiTheme({
+const theme = createTheme({
   typography: {
     useNextVariants: true,
   },

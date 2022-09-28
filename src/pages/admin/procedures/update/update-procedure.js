@@ -155,7 +155,7 @@ function UpdateProcedure() {
   return (
     <Content>
       <PaperContainer>
-        <Grid container spacing={1} justify="center" alignItems="center" lg={10}>
+        <Grid container spacing={1}  justifyContent="center" alignItems="center">
           <Grid item>
             <H5>Atualizar procedimento</H5>
           </Grid>
@@ -260,7 +260,7 @@ function UpdateProcedure() {
           <Spacer />
           <Divider />
           <Spacer />
-          <Grid container item justify="center">
+          <Grid container item  justifyContent="center">
             <Button onClick={handleUpdate} variant="contained" color="primary">
               Atualizar
             </Button>

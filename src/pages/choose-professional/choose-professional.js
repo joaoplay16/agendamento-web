@@ -7,7 +7,7 @@ import {
   ListItemText,
   ListItemAvatar,
   ListItemSecondaryAction,
-  Grid as MaterialGrid,
+  Grid,
 } from "@material-ui/core"
 import { toMoney } from "utils/index"
 import { Button, H4, H6 } from "ui"
@@ -42,7 +42,12 @@ const ChooseProfessional = () => {
 
   return (
     <ProfessionalsContainer>
-      <Grid>
+     <Grid 
+        container item
+        direction="column"
+        justifyContent='center' 
+        style={{ padding: 10 }}
+        xs={12} sm={8}>
         <H4>{procedure?.name}</H4>
         <H6> Escolha um profissional</H6>
         <List element="nav">
@@ -80,16 +85,6 @@ const ProfessionalsContainer = styled.main`
   display: flex;
   justify-content: center;
   margin-top: ${({ theme }) => theme.spacing(3)}px;
-`
-
-const Grid = styled(MaterialGrid).attrs({
-  container: true,
-  xs: 12,
-  sm: 8,
-})`
-  display: flex;
-  flex-direction: column;
-  justify-content: center;
 `
 
 const List = styled(MaterialList)`
