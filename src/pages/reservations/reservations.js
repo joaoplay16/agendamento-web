@@ -29,8 +29,7 @@ const Reservations = () => {
   return (
     <Content>
       <Grid container justifyContent="center">
-        <Grid item sm={10} lg={8} md={6} xs={12}>
-          <Grid container>
+        <Grid container item direction="column" sm={10} lg={8} md={6} xs={12}>
             {userSchedules.map((us, index) => {
               return us.schedules.map((schedule) => {
                 const dateInMillis = schedule.scheduleDate.seconds * 1000
@@ -85,7 +84,6 @@ const Reservations = () => {
             })}
           </Grid>
         </Grid>
-      </Grid>
     </Content>
   )
 }
