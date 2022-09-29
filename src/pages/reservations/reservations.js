@@ -1,17 +1,17 @@
-import React, { useEffect } from 'react'
-import styled from 'styled-components'
+import React, { useEffect } from "react"
+import styled from "styled-components"
 import {
   Card as MaterialCard,
   CardContent as MaterialCardContent,
   CardActions,
   Grid,
   Paper,
-  Typography
-} from '@material-ui/core'
+  Typography,
+} from "@material-ui/core"
 
-import { Content } from 'ui'
-import { useDatabase, useAuth } from 'hooks'
-import { toMoney, getPercentage } from 'utils'
+import { Content } from "ui"
+import { useDatabase, useAuth } from "hooks"
+import { toMoney, getPercentage } from "utils"
 
 const Reservations = () => {
   const { userSchedules, fetchUserSchedules } = useDatabase()
@@ -20,57 +20,68 @@ const Reservations = () => {
 
   useEffect(() => {
     fetchUserSchedules(userInfo)
-    console.log(getPercentage(30, 100))
   }, [])
 
   useEffect(() => {
+    console.log("userSchedules", userSchedules)
   }, [userSchedules])
 
   return (
     <Content>
-      <Grid container justifyContent='center'>
+      <Grid container justifyContent="center">
         <Grid item sm={10} lg={8} md={6} xs={12}>
           <Grid container>
             {userSchedules.map((us, index) => {
-              { return us.schedules.map(schedule => (
-                <Card key={schedule.scheduleDate.seconds * 1000}>
-                  <CardContent className='card-info'>
-                    <CardText variant='inherit'>
-                      {new Date(schedule.scheduleDate).toLocaleDateString(
-                        'pt-BR',
-                        {
-                          weekday: 'long',
-                          day: 'numeric',
-                          month: 'long',
-                          year: 'numeric'
-                        }
-                      )}{' '}
-                      - {schedule.scheduleTime}
-                    </CardText>
-                    <CardText variant='subtitle1'>
-                      {schedule.procedure.name}
-                    </CardText>
-                    <CardText variant='subtitle1' noWrap>
-                      {schedule.professional.name}
-                    </CardText>
-                    <CardText variant='subtitle1'>
-                      {toMoney(schedule.professional.price)}
-                    </CardText>
-                  </CardContent>
-                  <CardContent className='card-action'>
-                    <CardText variant='body1' noWrap>
-                      {us.paymentInfo.status === "approved" && ("Pagamento aprovado")}
-                      {us.paymentInfo.status === "in_process" && ("Pagamento pendente")}
-                    </CardText>
-                    <CardText variant='body2' noWrap>
-                      sinal {toMoney(getPercentage(schedule.professional.price))}
-                    </CardText>
-                    <CardText variant='body2' noWrap>
-                      restante {toMoney(schedule.professional.price - getPercentage(schedule.professional.price))}
-                    </CardText>
-                  </CardContent>
-                </Card>
-              )) }
+              return us.schedules.map((schedule) => {
+                const dateInMillis = schedule.scheduleDate.seconds * 1000
+                return (
+                  <Card key={dateInMillis}>
+                    <CardContent className="card-info">
+                      <CardText variant="inherit">
+                        {new Date(dateInMillis).toLocaleDateString(
+                          "pt-BR",
+                          {
+                            weekday: "long",
+                            day: "numeric",
+                            month: "long",
+                            year: "numeric",
+                          }
+                        )}{" "}
+                        {console.log(schedule.scheduleDate)}-{" "}
+                        {schedule.scheduleTime}
+                      </CardText>
+                      <CardText variant="subtitle1">
+                        {schedule.procedure.name}
+                      </CardText>
+                      <CardText variant="subtitle1" noWrap>
+                        {schedule.professional.name}
+                      </CardText>
+                      <CardText variant="subtitle1">
+                        {toMoney(schedule.professional.price)}
+                      </CardText>
+                    </CardContent>
+                    <CardContent className="card-action">
+                      <CardText variant="body1" noWrap>
+                        {us.paymentInfo.status === "approved" &&
+                          "Pagamento aprovado"}
+                        {us.paymentInfo.status === "in_process" &&
+                          "Pagamento pendente"}
+                      </CardText>
+                      <CardText variant="body2" noWrap>
+                        sinal{" "}
+                        {toMoney(getPercentage(schedule.professional.price))}
+                      </CardText>
+                      <CardText variant="body2" noWrap>
+                        restante{" "}
+                        {toMoney(
+                          schedule.professional.price -
+                            getPercentage(schedule.professional.price)
+                        )}
+                      </CardText>
+                    </CardContent>
+                  </Card>
+                )
+              })
             })}
           </Grid>
         </Grid>
