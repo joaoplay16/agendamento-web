@@ -1,10 +1,13 @@
-import React, { useState } from "react"
+import React, { useEffect, useState } from "react"
 import styled from "styled-components"
 import { Button, Grid, TextField, Paper } from "@material-ui/core"
 import { useAdminAuth } from "hooks"
 import { H4 } from "ui"
+import { Alert } from "@material-ui/lab"
 function Login() {
-  const { login } = useAdminAuth()
+  const { login, adminInfo } = useAdminAuth()
+
+  const { errorCode, errorMessage } = adminInfo?.error
 
   const handleSubmit = (e) => {
     e.preventDefault()
@@ -44,6 +47,9 @@ function Login() {
               />
             </Grid>
             <Grid item>
+              {errorMessage && 
+               <Alert severity="error">{errorMessage}</Alert>
+              }
               <LoginButton
                 variant="contained"
                 color="secondary"

@@ -10,8 +10,8 @@ function AdminAuthProvider({ children }) {
     isLoggedIn: false,
     error: {
       errorCode: null,
-      errorMessage: null
-    }
+      errorMessage: null,
+    },
   })
 
   const login = (email, pass) => {
@@ -21,19 +21,22 @@ function AdminAuthProvider({ children }) {
     if (!adminInfo.isLoggedIn) {
       getAdminToken({ email: email, password: pass })
         .then((response) => {
-          setAdminInfo({ isLoggedIn: true })
+          setAdminInfo((prevState) => ({
+            ...prevState,
+            isLoggedIn: true,
+          }))
 
           const { token } = response.data
           localStorage.setItem(ADMIN_TOKEN, token)
         })
         .catch((e) => {
-          const {error_code, error_message} = e.response.data
+          const { error_code, error_message } = e.response.data
           setAdminInfo({
             isLoggedIn: false,
             error: {
               errorCode: error_code,
-              errorMessage: error_message
-            }
+              errorMessage: error_message,
+            },
           })
         })
     }
@@ -43,18 +46,21 @@ function AdminAuthProvider({ children }) {
     adminTokenLogin({ token })
       .then((response) => {
         if (response.status == 200) {
-          setAdminInfo({ isLoggedIn: true })
+          setAdminInfo((prevState) => ({
+            ...prevState,
+            isLoggedIn: true,
+          }))
         }
       })
       .catch((e) => {
-        const {error_code, error_message} = e.response.data
-          setAdminInfo({
-            isLoggedIn: false,
-            error: {
-              errorCode: error_code,
-              errorMessage: error_message
-            }
-          })
+        const { error_code, error_message } = e.response.data
+        setAdminInfo({
+          isLoggedIn: false,
+          error: {
+            errorCode: error_code,
+            errorMessage: error_message,
+          },
+        })
       })
   }
 
@@ -62,9 +68,15 @@ function AdminAuthProvider({ children }) {
     const token = localStorage.getItem(ADMIN_TOKEN)
 
     if (!token) {
-      setAdminInfo({ isLoggedIn: false })
+      setAdminInfo((prevState) => ({
+        ...prevState,
+        isLoggedIn: false,
+      }))
     } else {
-      setAdminInfo({ isLoggedIn: true })
+      setAdminInfo((prevState) => ({
+        ...prevState,
+        isLoggedIn: true,
+      }))
       loginWithToken(token)
     }
   }
