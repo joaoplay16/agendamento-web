@@ -8,6 +8,10 @@ const ADMIN_TOKEN = "adminToken"
 function AdminAuthProvider({ children }) {
   const [adminInfo, setAdminInfo] = useState({
     isLoggedIn: false,
+    error: {
+      errorCode: null,
+      errorMessage: null
+    }
   })
 
   const login = (email, pass) => {
@@ -22,8 +26,15 @@ function AdminAuthProvider({ children }) {
           const { token } = response.data
           localStorage.setItem(ADMIN_TOKEN, token)
         })
-        .catch((error) => {
-          console.log("login error", error)
+        .catch((e) => {
+          const {error_code, error_message} = e.response.data
+          setAdminInfo({
+            isLoggedIn: false,
+            error: {
+              errorCode: error_code,
+              errorMessage: error_message
+            }
+          })
         })
     }
   }
@@ -35,9 +46,15 @@ function AdminAuthProvider({ children }) {
           setAdminInfo({ isLoggedIn: true })
         }
       })
-      .catch((error) => {
-        console.log("loginWithToken error", error)
-        setAdminInfo({ isLoggedIn: false })
+      .catch((e) => {
+        const {error_code, error_message} = e.response.data
+          setAdminInfo({
+            isLoggedIn: false,
+            error: {
+              errorCode: error_code,
+              errorMessage: error_message
+            }
+          })
       })
   }
 
