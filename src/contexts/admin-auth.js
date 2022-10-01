@@ -1,6 +1,9 @@
 import React, { createContext, useState } from "react"
 import PropTypes from "prop-types"
-import { getAdminToken, adminTokenLogin } from "services/admin-authentication"
+import { 
+  getAdminToken, 
+  adminTokenLogin,
+} from "services/admin-authentication"
 const AdminAuthContext = createContext()
 
 const ADMIN_TOKEN = "adminToken"
@@ -81,8 +84,9 @@ function AdminAuthProvider({ children }) {
     }
   }
 
-  const logout = () => {}
-  window.location.logout = logout
+  const logout = () => {
+    localStorage.setItem(ADMIN_TOKEN, null)
+  }
 
   return (
     <AdminAuthContext.Provider
