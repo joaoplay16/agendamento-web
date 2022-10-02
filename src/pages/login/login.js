@@ -1,42 +1,74 @@
-import React from 'react'
-import styled from 'styled-components'
-import { Button, Grid } from '@material-ui/core'
-// import { ReactComponent as MainLogo } from 'images/logo-react-zzaria.svg'
-import { useAuth } from 'hooks'
-function Login () {
+import React from "react"
+import styled from "styled-components"
+import { Grid } from "@material-ui/core"
+import { useAuth } from "hooks"
+import { Content, PaperContainer } from "ui"
+import { VisitorIcon, GoogleIcon } from "icons"
+function Login() {
   const { login } = useAuth()
 
   return (
-    <Container>
-      <Grid container justifyContent='center' spacing={5}>
-        {/* <Grid item>
-          <Logo />
-        </Grid> */}
-        <Grid item xs={12} container  justifyContent='center'>
+    <Content container alignItems="center" justifyContent="center">
+      <PaperContainer>
+        <Grid item container justifyContent="center" direction="column">
+          <Greeting>
+            <img src={VisitorIcon} alt="visitor icon" />
+            <h1>Olá, <span>visitante!</span></h1>
+          </Greeting>
           <GitHubButton onClick={login}>
-            Entrar com Google
+            <img src={GoogleIcon} alt="google icon" />
+           <span>Login com Google</span> 
           </GitHubButton>
         </Grid>
-      </Grid>
-    </Container>
+      </PaperContainer>
+    </Content>
   )
 }
 
-const Container = styled.div`
-  padding: ${({ theme }) => theme.spacing(3)}px;
+const GitHubButton = styled.div`
+  display: grid;
+  grid-template-columns: auto 1fr;
+  gap: 8px;
+  justify-content: center;
+  align-items: center;
+
+  background-color: #efecef;
+  padding: 12px;
+  max-width: 280px;
+  border-radius: 30px;
+  cursor: pointer;
+
+  span {
+    font-size: ${({ theme }) => theme.typography.h5.fontSize};
+    font-weight: bold;
+    color: #343434;
+  }
+
+  img {
+    width: 38px;
+    height: 38px;
+  }
 `
-// const Logo = styled(MainLogo)`
-//   width: 100%;
-// `
-const GitHubButton = styled(Button).attrs({
-  variant: 'contained',
-  fullWidth: true
-})`
-  &&{
-    font-size: ${({ theme }) => theme.typography.h5.fontSize};;
-    max-width: 480px;
-    padding: ${({ theme }) => theme.spacing(2)};
-    text-transform: none;
+
+const Greeting = styled.div`
+  display: flex;
+  flex-direction: column;
+  padding: 20px 0px;
+
+  h1 {
+    margin-top: 10px;
+    margin-bottom: 0px;
+    text-align: center;
+    font-size: ${({ theme }) => theme.typography.h5.fontSize};
+  }
+
+  h1 span {
+    color: rgb(92 69 191 / 90%);
+  }
+
+  img{
+    width: 280px;
+    height: 280px;
   }
 `
 
