@@ -1,0 +1,1 @@
+export { default as CloudsBackgroud } from "./clouds.svg"
