@@ -1,12 +1,12 @@
-import React, { useEffect } from "react"
+import React from "react"
 import styled from "styled-components"
 import { Grid, Card as MaterialCard } from "@material-ui/core"
 import { Content, H2 } from "ui"
 import { SCHEDULE, RESERVATIONS } from "routes"
 import { Link } from "react-router-dom"
-const Scheduling = () => {
-  useEffect(() => {}, [])
+import { CloudsBackgroud } from "assets"
 
+const Scheduling = () => {
   return (
     <MainContent>
       <Grid direction="column" container spacing={6}>
@@ -46,23 +46,11 @@ const BigButton = styled(Link)`
 const MainContent = styled(Content)`
   align-content: space-around;
   padding-top: ${({ theme }) => theme.spacing(15)}px;
-  background: linear-gradient(
-      rgba(254, 254, 254, 0.3),
-      rgba(254, 254, 254, 0.3)
-    ),
-    url(https://cdn.pixabay.com/photo/2018/09/24/15/54/background-3700256_960_720.jpg);
-  /* Background image is centered vertically and horizontally at all times */
+  background: url(${CloudsBackgroud});
   background-position: center center;
-  /* Background image doesn't tile */
-  background-repeat: no-repeat;
-  /* Background image is fixed in the viewport so that it doesn't move when 
-     the content's height is greater than the image's height */
-  background-attachment: fixed;
-  /* This is what makes the background image rescale based
-     on the container's size */
-  background-size: cover;
-  /* Set a background color that will be displayed
-     while the background image is loading */
+  background-repeat: repeat;
+  background-attachment: initial;
+  background-size: auto;
 
   @media (max-width: 600px) {
     padding-top: ${({ theme }) => theme.spacing(5)}px;
