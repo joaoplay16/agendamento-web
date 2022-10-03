@@ -76,7 +76,7 @@ function Checkout() {
     <Content>
       <Grid container justifyContent="center">
         { schedules.length > 0 &&  <Grid item sm={8} lg={6} md={6} xs={12}>
-          <Grid container>
+          <Grid container direction="column">
             {schedules?.map((schedule, index) => (
               <Card key={index}>
                 <CardContent className="first-card-content">
