@@ -1,1 +1,1 @@
-export { default as CloudsBackgroud } from "./clouds.svg"
+export { default as BricksBackground } from "./bricks.svg"

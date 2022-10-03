@@ -4,7 +4,7 @@ import { Grid, Card as MaterialCard } from "@material-ui/core"
 import { Content, H2 } from "ui"
 import { SCHEDULE, RESERVATIONS } from "routes"
 import { Link } from "react-router-dom"
-import { CloudsBackgroud } from "assets"
+import { BricksBackground } from "assets"
 
 const Scheduling = () => {
   return (
@@ -46,10 +46,9 @@ const BigButton = styled(Link)`
 const MainContent = styled(Content)`
   align-content: space-around;
   padding-top: ${({ theme }) => theme.spacing(15)}px;
-  background: url(${CloudsBackgroud});
+  background: url(${BricksBackground});
   background-position: center center;
   background-repeat: repeat;
-  background-attachment: initial;
   background-size: auto;
 
   @media (max-width: 600px) {
