@@ -80,12 +80,12 @@ function Checkout() {
             {schedules?.map((schedule, index) => (
               <Card key={index}>
                 <CardContent className="first-card-content">
-                  <CardText variant="subtitle1">
+                  <CardDateText variant="subtitle1">
                     {new Date(schedule.selectedDate).toLocaleDateString(
                       "pt-BR",
                       { weekday: "short" }
                     )}
-                  </CardText>
+                  </CardDateText>
                   <CardText noWrap variant="h5">
                     {new Date(schedule.selectedDate).getDate()}
                     <CardText noWrap variant="caption">
@@ -250,6 +250,10 @@ const CardContent = styled(MaterialCardContent)`
 const CardText = styled(Typography)`
   max-width: 100%;
   width: 100%;
+`
+
+const CardDateText = styled(Typography)`
+  width: 75px;
 `
 
 export default Checkout
