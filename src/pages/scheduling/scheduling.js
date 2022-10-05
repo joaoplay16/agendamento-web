@@ -5,7 +5,6 @@ import { Content, H2 } from "ui"
 import { SCHEDULE, RESERVATIONS } from "routes"
 import { Link } from "react-router-dom"
 import { BricksBackground } from "assets"
-
 const Scheduling = () => {
   return (
     <MainContent>
@@ -57,12 +56,11 @@ const MainContent = styled(Content)`
 `
 
 const MainTitle = styled(H2)`
-  color: ${({ theme }) => theme.palette.text.secondary};
-  font-family: ${({ theme }) => theme.typography.subtitle2.fontFamily};
-  font-weight: ${({ theme }) => theme.typography.subtitle2.fontWeight};
-  line-height: ${({ theme }) => theme.typography.subtitle2.lineHeight};
-  letter-spacing: ${({ theme }) => theme.typography.subtitle2.letterSpacing};
-  text-shadow: rgba(0, 0, 0, 0.4) 0px 1px 1px;
+
+  color: rgb(52 66 90 / 85%);
+  font-family: 'Comfortaa';
+  font-size: 4.5rem;
+  /* text-shadow: rgba(0, 0, 0, 0.4) 0px 1px 1px; */
 
   @media (max-width: 600px) {
     font-size: 3rem;

@@ -33,6 +33,8 @@ const theme = createTheme({
   },
 })
 
+console.log("theme", theme);
+
 const Root = () => {
   return (
     <MuiThemeProvider theme={theme}>
