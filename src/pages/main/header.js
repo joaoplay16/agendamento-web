@@ -1,9 +1,6 @@
-import React, { useState } from "react"
+import React, { useEffect, useState } from "react"
 import styled from "styled-components"
-import {
-  AccountCircle,
-  ShoppingCart,
-} from "@material-ui/icons"
+import { AccountCircle, ShoppingCart } from "@material-ui/icons"
 import {
   AppBar,
   IconButton,
@@ -14,13 +11,18 @@ import {
   Badge,
 } from "@material-ui/core"
 import { Button } from "ui"
-import { useAuth } from "hooks"
+import { useAuth, useShoppingCart } from "hooks"
 import { Link } from "react-router-dom"
 import { navigationRoutes as navRoutes } from "routes"
 
 const Header = () => {
   const { userInfo, logout } = useAuth()
+  const { fetchLocalSchedules, schedules } = useShoppingCart()
   const [anchorElement, setAnchorElement] = useState(null)
+
+  useEffect(() => {
+    fetchLocalSchedules()
+  }, [])
 
   const handleOpenMenu = (e) => {
     setAnchorElement(e.target)
@@ -41,9 +43,9 @@ const Header = () => {
           <>
             <IconButton color="inherit">
               <LinkIcon to={navRoutes.CHECKOUT}>
-              <Badge badgeContent={0} color="secondary">
-                <ShoppingCart/>
-              </Badge>
+                <Badge badgeContent={schedules.length} color="secondary">
+                  <ShoppingCart />
+                </Badge>
               </LinkIcon>
             </IconButton>
             <Typography color="inherit">
