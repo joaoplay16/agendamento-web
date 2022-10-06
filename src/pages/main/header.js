@@ -1,18 +1,22 @@
-import React, { useState } from 'react'
-import styled from 'styled-components'
-import { AccountCircle } from '@material-ui/icons'
+import React, { useState } from "react"
+import styled from "styled-components"
+import {
+  AccountCircle,
+  ShoppingCart,
+} from "@material-ui/icons"
 import {
   AppBar,
   IconButton,
   Toolbar as MaterialToobar,
   Menu,
   MenuItem,
-  Typography
-} from '@material-ui/core'
-import { Button } from 'ui'
-// import { ReactComponent as MainLogo } from 'images/logo-react-zzaria.svg'
-import { useAuth } from 'hooks'
-import { Link } from 'react-router-dom'
+  Typography,
+  Badge,
+} from "@material-ui/core"
+import { Button } from "ui"
+import { useAuth } from "hooks"
+import { Link } from "react-router-dom"
+import { navigationRoutes as navRoutes } from "routes"
 
 const Header = () => {
   const { userInfo, logout } = useAuth()
@@ -35,37 +39,43 @@ const Header = () => {
         </LogoContainer>
         {userInfo.user && (
           <>
-            <Typography color='inherit'>
+            <IconButton color="inherit">
+              <LinkIcon to={navRoutes.CHECKOUT}>
+              <Badge badgeContent={0} color="secondary">
+                <ShoppingCart/>
+              </Badge>
+              </LinkIcon>
+            </IconButton>
+            <Typography color="inherit">
               Olá {userInfo.user.firstName}
             </Typography>
-            <IconButton color='inherit' onClick={handleOpenMenu}>
+            <IconButton color="inherit" onClick={handleOpenMenu}>
               <AccountCircle />
             </IconButton>
-
             <Menu
               open={Boolean(anchorElement)}
               onClose={handleClose}
-              anchorEl={anchorElement}
-            >
+              anchorEl={anchorElement}>
               <MenuItem onClick={logout}>Sair</MenuItem>
             </Menu>
           </>
         )}
 
         {!userInfo.user && (
-          <Button to='/login' color='inherit'>Login</Button>
+          <Button to="/login" color="inherit">
+            Login
+          </Button>
         )}
-
       </Toolbar>
     </AppBar>
   )
 }
 
 const Toolbar = styled(MaterialToobar)`
-  &&{
-  margin: 0 auto;
-  max-width: ${({ theme }) => theme.breakpoints.values.lg}px;
-  width: 100%;
+  && {
+    margin: 0 auto;
+    max-width: ${({ theme }) => theme.breakpoints.values.lg}px;
+    width: 100%;
   }
 `
 
@@ -74,8 +84,9 @@ const LogoContainer = styled.div`
   flex-grow: 1;
 `
 
-const LinkLogo = styled(Link)`
-  display: inline-block
+const LinkIcon = styled(Link)`
+  text-decoration: none;
+  color: unset;
 `
 
 /* const Logo = styled(MainLogo)`
