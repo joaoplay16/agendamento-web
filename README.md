@@ -29,7 +29,7 @@
 ## Sobre o projeto
 > Agendamento de procedimentos estéticos online
 
-Agendamento Web  é um sistema de agendamento de horários para serviços de estética. **Demo** http://ec2-15-228-45-130.sa-east-1.compute.amazonaws.com/
+Agendamento Web  é um sistema de agendamento de horários para serviços de estética. **Demo** https://agendamento-web-mu.vercel.app/
 
 #### 🚧  🚀 Em construção...  🚧
 
