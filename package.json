@@ -31,9 +31,9 @@
   },
   "scripts": {
     "start": "node server.js",
-    "dev": "rescripts start",
-    "build": "rescripts build",
-    "test": "rescripts test",
+    "dev": "react-scripts start",
+    "build": "react-scripts build",
+    "test": "react-scripts test",
     "lint:fix": "standard --fix | snazzy"
   },
   "eslintConfig": {},
@@ -54,8 +54,6 @@
     ]
   },
   "devDependencies": {
-    "@rescripts/cli": "0.0.16",
-    "@rescripts/rescript-env": "0.0.14",
     "babel-eslint": "10.1.0",
     "eslint-config-standard": "17.0.0",
     "eslint-config-standard-jsx": "11.0.0",
