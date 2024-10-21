@@ -68,7 +68,9 @@ function AddProfessional () {
   const removeHour = (hour) => (e) => {
     setTimeTable((timeTable) => ({
       ...timeTable,
-      week: { [selectedWeek]: timeTableOfSelectedWeek.filter(h => h !== hour) }
+      week: { 
+        ...timeTable.week,
+        [selectedWeek]: timeTableOfSelectedWeek.filter(h => h !== hour) }
     }))
   }
 
